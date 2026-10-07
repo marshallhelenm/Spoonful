@@ -6,8 +6,8 @@ class MealPlanEntry < ApplicationRecord
                        uniqueness: { scope: :meal_plan_id }
   validates :recipe, same_owner_as: :meal_plan
 
-  # { recipe_id => most recent plan start date } across the entries in scope
-  # (scope it to one user's plans first).
+  # { recipe_id => most recent plan start date } across the entries in scope.
+  # Use User#last_made_on_by_recipe, which scopes it to one user's plans.
   def self.last_made_on_by_recipe
     joins(:meal_plan).group(:recipe_id).maximum("meal_plans.starts_on")
   end

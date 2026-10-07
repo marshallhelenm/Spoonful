@@ -18,6 +18,12 @@ class User < ApplicationRecord
     email_address == DemoAccount::EMAIL
   end
 
+  # { recipe_id => start date of the latest plan it's in } across this user's
+  # plans, leaving out `except` (so a plan being refilled doesn't count itself).
+  def last_made_on_by_recipe(except: nil)
+    MealPlanEntry.where(meal_plan: meal_plans.excluding(except)).last_made_on_by_recipe
+  end
+
   private
     # The demo login is public, so nobody gets to lock everyone else out of it.
     def demo_login_unchanged

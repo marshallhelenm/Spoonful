@@ -3,7 +3,7 @@ class RecipesController < InertiaController
 
   def index
     recipes = Current.user.recipes
-    last_made_on = MealPlanEntry.where(meal_plan: Current.user.meal_plans).last_made_on_by_recipe
+    last_made_on = Current.user.last_made_on_by_recipe
     ingredient_counts = RecipeIngredient.where(recipe: recipes).group(:recipe_id).count
 
     render inertia: {

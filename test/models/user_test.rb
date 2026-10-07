@@ -14,6 +14,17 @@ class UserTest < ActiveSupport::TestCase
     assert User.new(email_address: "a@example.com", password: "long enough").valid?
   end
 
+  test "last_made_on_by_recipe covers only this user's plans, minus the one excepted" do
+    user = users(:one)
+    newer = user.meal_plans.create!(starts_on: Date.new(2026, 10, 5), spoon_budget: 5)
+    newer.entries.create!(recipe: recipes(:pasta), position: 0)
+    users(:two).meal_plans.first.entries.create!(recipe: recipes(:secret_soup), position: 0)
+
+    assert_equal({ recipes(:chili).id => Date.new(2026, 9, 28), recipes(:pasta).id => Date.new(2026, 10, 5) },
+                 user.last_made_on_by_recipe)
+    assert_equal({ recipes(:chili).id => Date.new(2026, 9, 28) }, user.last_made_on_by_recipe(except: newer))
+  end
+
   test "deleting a user deletes all their data" do
     user = users(:one)
     assert_difference({ "Recipe.count" => -3, "MealPlan.count" => -1, "Ingredient.count" => -3 }) do

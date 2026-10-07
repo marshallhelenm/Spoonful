@@ -64,7 +64,7 @@ class MealPlan < ApplicationRecord
       max_spoons: max_spoons,
       budget_is_ceiling: budget_is_ceiling,
       # Only other plans count as "recently made", not this one.
-      last_made_on: MealPlanEntry.where(meal_plan: user.meal_plans.where.not(id: id)).last_made_on_by_recipe,
+      last_made_on: user.last_made_on_by_recipe(except: self),
       today: starts_on,
       random: random
     )
