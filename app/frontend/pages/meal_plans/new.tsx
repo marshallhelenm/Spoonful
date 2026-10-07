@@ -61,7 +61,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
           <Field id="spoon_budget" label="Spoon budget" error={errors.spoon_budget}>
             {({ id, describedBy, invalid }) => (
               <>
-                <div className="mt-2 flex flex-wrap gap-2" aria-label="Budget presets">
+                <div className="mt-2 flex flex-wrap gap-2 mb-2" aria-label="Budget presets">
                   {BUDGET_PRESETS.map((preset) => (
                     <button
                       key={preset.label}

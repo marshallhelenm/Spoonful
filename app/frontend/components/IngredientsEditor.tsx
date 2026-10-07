@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import IngredientNameInput from '@/components/IngredientNameInput'
 import { calloutButton, calloutQuietButton, inputBase, secondaryButton } from '@/components/ui'
 import { findNearMatch } from '@/lib/ingredientMatch'
+import { withMember } from '@/lib/sets'
 
 export type IngredientRow = {
   // Client-only id so React can track rows as they're added and removed.
@@ -46,17 +47,10 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
   const update = (id: string, changes: Partial<IngredientRow>) =>
     onChange(rows.map((row) => (row.id === id ? { ...row, ...changes } : row)))
 
-  const withId = (set: Set<string>, id: string, present: boolean) => {
-    const next = new Set(set)
-    if (present) next.add(id)
-    else next.delete(id)
-    return next
-  }
-
   function changeName(id: string, name: string) {
     update(id, { name })
-    setCheckedIds((set) => withId(set, id, false))
-    setKeptIds((set) => withId(set, id, false))
+    setCheckedIds((set) => withMember(set, id, false))
+    setKeptIds((set) => withMember(set, id, false))
   }
 
   function addRow() {
@@ -135,7 +129,7 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
                     value={row.name}
                     savedNames={savedNames}
                     onChange={(name) => changeName(row.id, name)}
-                    onBlur={() => setCheckedIds((set) => withId(set, row.id, true))}
+                    onBlur={() => setCheckedIds((set) => withMember(set, row.id, true))}
                     onEnter={() => amountInputs.current.get(row.id)?.focus()}
                   />
                   <input
@@ -183,7 +177,7 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
                         </button>
                         <button
                           type="button"
-                          onClick={() => setKeptIds((set) => withId(set, row.id, true))}
+                          onClick={() => setKeptIds((set) => withMember(set, row.id, true))}
                           className={calloutQuietButton}
                         >
                           Keep “{row.name.trim()}”

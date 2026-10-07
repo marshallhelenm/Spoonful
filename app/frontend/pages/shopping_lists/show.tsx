@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { callout, card, checkbox, pageHeading, textLink } from '@/components/ui'
 import { formatDate } from '@/lib/format'
+import { withMember } from '@/lib/sets'
 import type { ShoppingListItem, ShoppingListUse } from '@/types'
 
 type Props = {
@@ -29,12 +30,7 @@ export default function ShowShoppingList({ meal_plan: plan, items, recipes_witho
 
   function toggle(item: ShoppingListItem) {
     const nowChecked = !checked.has(item.ingredient_id)
-    setChecked((current) => {
-      const next = new Set(current)
-      if (nowChecked) next.add(item.ingredient_id)
-      else next.delete(item.ingredient_id)
-      return next
-    })
+    setChecked((current) => withMember(current, item.ingredient_id, nowChecked))
     router.patch(
       `/meal_plans/${plan.id}/shopping_list/items/${item.ingredient_id}`,
       { checked: nowChecked },
