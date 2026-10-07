@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react'
 
-import { card, primaryButton } from '@/components/ui'
+import { card, pageHeading, primaryButton } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
 import type { MealPlanSummary } from '@/types'
 
@@ -9,7 +9,7 @@ export default function MealPlansIndex({ meal_plans: plans }: { meal_plans: Meal
     <>
       <Head title="History" />
       <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">Past plans</h1>
+        <h1 className={pageHeading}>Past plans</h1>
         <Link href="/" className={primaryButton}>
           New plan
         </Link>

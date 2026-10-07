@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react'
 
 import RecipeForm from '@/components/RecipeForm'
-import { dangerButton } from '@/components/ui'
+import { dangerButton, pageHeading } from '@/components/ui'
 import type { Recipe } from '@/types'
 
 export default function EditRecipe({ recipe }: { recipe: Recipe }) {
@@ -14,7 +14,7 @@ export default function EditRecipe({ recipe }: { recipe: Recipe }) {
   return (
     <>
       <Head title={`Edit ${recipe.name}`} />
-      <h1 className="mb-6 text-2xl font-bold">Edit recipe</h1>
+      <h1 className={`mb-6 ${pageHeading}`}>Edit recipe</h1>
       <RecipeForm
         recipe={recipe}
         submitLabel="Save"

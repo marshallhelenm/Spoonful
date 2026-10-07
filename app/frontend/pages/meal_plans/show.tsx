@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import MealRow from '@/components/MealRow'
 import Spoons from '@/components/Spoons'
-import { card, dangerButton, primaryButton } from '@/components/ui'
+import { card, dangerButton, pageHeading, primaryButton } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
 import type { MealPlan, MealPlanEntry, RecipeOption } from '@/types'
 
@@ -67,7 +67,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
   return (
     <>
       <Head title={`Week of ${formatDate(plan.starts_on)}`} />
-      <h1 className="text-2xl font-bold">Week of {formatDate(plan.starts_on)}</h1>
+      <h1 className={pageHeading}>Week of {formatDate(plan.starts_on)}</h1>
       {(plan.budget_is_ceiling || plan.max_spoons !== null) && (
         <p className="mt-1 text-sm text-muted">
           {[

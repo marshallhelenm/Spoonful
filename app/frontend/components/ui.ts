@@ -9,6 +9,8 @@ export const primaryButton = `${buttonBase} bg-accent text-on-accent hover:bg-ac
 export const secondaryButton = `${buttonBase} bg-surface text-ink ring-1 ring-line-strong hover:bg-surface-hover`
 export const dangerButton = `${buttonBase} bg-surface text-danger ring-1 ring-danger-line hover:bg-danger-soft`
 
+export const pageHeading = 'font-display text-2xl leading-tight text-ink'
+
 export const card = 'rounded-2xl bg-surface p-4 shadow-sm ring-1 ring-line'
 
 export const label = 'block text-sm font-semibold text-ink'

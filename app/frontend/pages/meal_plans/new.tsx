@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import FieldError from '@/components/FieldError'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { card, checkbox, input, label, primaryButton } from '@/components/ui'
+import { card, checkbox, input, label, pageHeading, primaryButton } from '@/components/ui'
 
 type Props = {
   defaults: { meal_count: number; starts_on: string }
@@ -39,7 +39,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
   return (
     <>
       <Head title="Plan your week" />
-      <h1 className="text-2xl font-bold">How many spoons this week?</h1>
+      <h1 className={pageHeading}>How many spoons this week?</h1>
       <p className="mt-1 text-muted">
         Set a spoon budget and Spoonful will pick meals that add up to about that much effort.
       </p>
