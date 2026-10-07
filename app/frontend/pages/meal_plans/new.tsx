@@ -11,9 +11,11 @@ type Props = {
   recipe_count: number
 }
 
+const MEDIUM_BUDGET = 12
+
 const BUDGET_PRESETS = [
   { label: 'Low', value: 5 },
-  { label: 'Medium', value: 12 },
+  { label: 'Medium', value: MEDIUM_BUDGET },
   { label: 'High', value: 20 },
 ]
 
@@ -21,7 +23,7 @@ const DEFAULT_CAP = 3
 
 export default function NewMealPlan({ defaults, recipe_count }: Props) {
   const { data, setData, post, errors, processing } = useForm({
-    spoon_budget: '' as number | '',
+    spoon_budget: MEDIUM_BUDGET as number | '',
     meal_count: defaults.meal_count as number | '',
     starts_on: defaults.starts_on,
     max_spoons: null as number | null,
