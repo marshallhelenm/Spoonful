@@ -57,6 +57,54 @@ class RecipeTest < ActiveSupport::TestCase
     assert_not recipes(:pasta).filler?
   end
 
+  test "save_with_ingredients saves lines in order, reusing existing ingredients" do
+    recipe = build_recipe(name: "Salsa")
+
+    assert_difference -> { Ingredient.count }, 1 do # only Cilantro is new
+      assert recipe.save_with_ingredients([
+        { name: "tomato", amount: "4" },
+        { name: "Cilantro", amount: "" },
+        { name: "  ", amount: "ignored" },
+        { name: "ONION", amount: "half" }
+      ])
+    end
+
+    assert_equal(
+      [ { name: "Tomato", amount: "4" }, { name: "Cilantro", amount: nil }, { name: "Onion", amount: "half" } ],
+      recipe.ingredient_lines
+    )
+  end
+
+  test "save_with_ingredients replaces the existing list" do
+    chili = recipes(:chili)
+    assert chili.save_with_ingredients([ { name: "Tomato", amount: "1 can" } ])
+    assert_equal [ { name: "Tomato", amount: "1 can" } ], chili.ingredient_lines
+  end
+
+  test "save_with_ingredients with nil leaves the ingredients alone" do
+    chili = recipes(:chili)
+    chili.spoons = 4
+    assert chili.save_with_ingredients(nil)
+    assert_equal [ "Kidney beans", "Onion" ], chili.reload.ingredient_lines.map { it[:name] }
+  end
+
+  test "save_with_ingredients saves nothing when the recipe is invalid" do
+    recipe = build_recipe(name: "")
+    assert_no_difference [ "Recipe.count", "Ingredient.count", "RecipeIngredient.count" ] do
+      assert_not recipe.save_with_ingredients([ { name: "Brand new thing", amount: nil } ])
+    end
+  end
+
+  test "deleting a recipe removes its ingredient lines but keeps the ingredients" do
+    pasta = recipes(:pasta)
+    pasta.save_with_ingredients([ { name: "Tomato", amount: nil } ])
+
+    assert_difference -> { RecipeIngredient.count }, -1 do
+      pasta.destroy
+    end
+    assert Ingredient.exists?(ingredients(:tomato).id)
+  end
+
   test "database rejects out-of-range spoons even if validations are skipped" do
     recipe = build_recipe(spoons: 9)
     assert_raises(ActiveRecord::StatementInvalid) { recipe.save!(validate: false) }

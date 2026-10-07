@@ -2,6 +2,7 @@ import { Link, useForm } from '@inertiajs/react'
 import type { FormEvent, ReactNode } from 'react'
 
 import FieldError from '@/components/FieldError'
+import IngredientsEditor, { newIngredientRow } from '@/components/IngredientsEditor'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
 import { input, label, primaryButton, secondaryButton } from '@/components/ui'
@@ -9,6 +10,8 @@ import type { Recipe } from '@/types'
 
 type Props = {
   recipe: Partial<Recipe>
+  // Every saved ingredient name, for suggestions.
+  ingredientNames: string[]
   submitLabel: string
   onSubmit: (form: ReturnType<typeof useRecipeForm>) => void
   extraActions?: ReactNode
@@ -20,15 +23,25 @@ export function useRecipeForm(recipe: Partial<Recipe>) {
     spoons: recipe.spoons ?? (null as number | null),
     meals_covered: (recipe.meals_covered ?? 1) as number | '',
     notes: recipe.notes ?? '',
+    ingredients: (recipe.ingredients ?? []).map((line) => newIngredientRow(line.name, line.amount ?? '')),
   })
 }
 
-export default function RecipeForm({ recipe, submitLabel, onSubmit, extraActions }: Props) {
+export default function RecipeForm({ recipe, ingredientNames, submitLabel, onSubmit, extraActions }: Props) {
   const form = useRecipeForm(recipe)
   const { data, setData, errors, processing } = form
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    // Send everything under `recipe`, dropping empty ingredient rows and the client-only row ids.
+    form.transform((data) => ({
+      recipe: {
+        ...data,
+        ingredients: data.ingredients
+          .filter((row) => row.name.trim() !== '')
+          .map((row) => ({ name: row.name, amount: row.amount })),
+      },
+    }))
     onSubmit(form)
   }
 
@@ -78,6 +91,16 @@ export default function RecipeForm({ recipe, submitLabel, onSubmit, extraActions
         />
         <FieldError id="meals_covered-error" error={errors.meals_covered} />
       </div>
+
+      <fieldset>
+        <legend className={label}>Ingredients</legend>
+        <p className="mb-2 text-sm text-muted">One per line. Amounts are optional.</p>
+        <IngredientsEditor
+          rows={data.ingredients}
+          onChange={(rows) => setData('ingredients', rows)}
+          savedNames={ingredientNames}
+        />
+      </fieldset>
 
       <div>
         <label htmlFor="notes" className={label}>

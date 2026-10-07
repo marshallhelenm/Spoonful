@@ -5,16 +5,23 @@ export type FlashData = {
 
 export type SharedProps = {}
 
+export type IngredientLine = {
+  name: string
+  amount: string | null
+}
+
 export type Recipe = {
   id: number
   name: string
   spoons: number
   meals_covered: number
   notes: string | null
+  ingredients: IngredientLine[]
 }
 
-export type RecipeWithHistory = Recipe & {
+export type RecipeWithHistory = Omit<Recipe, 'ingredients'> & {
   last_made_on: string | null
+  ingredient_count: number
 }
 
 export type MealPlanSummary = {

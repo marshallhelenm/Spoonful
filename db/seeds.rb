@@ -18,3 +18,21 @@
 ].each do |attrs|
   Recipe.find_or_create_by!(name: attrs[:name]) { |recipe| recipe.assign_attributes(attrs) }
 end
+
+# Sample ingredient lists (only for recipes that don't have any yet).
+{
+  "Big pot chili" => [ [ "Ground beef", "1 lb" ], [ "Kidney beans", "2 cans" ], [ "Diced tomatoes", "1 can" ],
+                       [ "Onion", "1" ], [ "Garlic", "3 cloves" ], [ "Chili powder", "2 tbsp" ] ],
+  "Weeknight pasta" => [ [ "Spaghetti", "1 lb" ], [ "Garlic", "2 cloves" ], [ "Olive oil", "1/4 cup" ],
+                         [ "Parmesan", "to taste" ] ],
+  "Quesadillas" => [ [ "Flour tortillas", "4" ], [ "Cheddar cheese", "1 cup" ], [ "Black beans", "1 can" ] ],
+  "Stir fry" => [ [ "Rice", "1 cup" ], [ "Broccoli", "1 head" ], [ "Soy sauce", "3 tbsp" ], [ "Garlic", "2 cloves" ],
+                  [ "Ginger", "1 inch" ] ],
+  "Lentil soup" => [ [ "Red lentils", "1 1/2 cups" ], [ "Onion", "1" ], [ "Carrot", "2" ], [ "Cumin", "1 tsp" ],
+                     [ "Vegetable broth", "6 cups" ] ]
+}.each do |recipe_name, lines|
+  recipe = Recipe.find_by(name: recipe_name)
+  next if recipe.nil? || recipe.recipe_ingredients.any?
+
+  recipe.save_with_ingredients(lines.map { |name, amount| { name: name, amount: amount } })
+end

@@ -23,6 +23,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `bin/dev` — Rails on http://localhost:3000 + Vite dev server (3036), via Foreman and `Procfile.dev`
 - `bin/rails test` — Ruby tests
 - `npm run check` — TypeScript type-check
+- `npm test` — Vitest unit tests for plain TS in `app/frontend` (`*.test.ts`)
 - `bin/rails db:seed` — load sample recipes (idempotent)
 
 **Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
@@ -43,6 +44,12 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - If the last pick covers more meals than slots remain, allow it — the extra meals are leftovers
 - **Recency weighting**: prefer recipes not made recently, but recent ones still have a non-zero chance
 - "Last made" is derived from past meal plan entries (no separate field for now)
+
+**Ingredients**
+- `Ingredient` is a shared catalog of names, unique ignoring case (`lower(name)` index); `RecipeIngredient` links a recipe to an ingredient with an optional free-text `amount` and a `position`
+- `Recipe#save_with_ingredients(lines)` saves the recipe and replaces its list in one transaction; `nil` lines leave the list alone (so partial updates don't wipe it)
+- The form suggests saved names as you type and asks "did you mean …?" for plural/typo near-matches (`app/frontend/lib/ingredientMatch.ts`); the user can keep their spelling
+- Ingredients stay in the catalog when no recipe uses them (still useful for suggestions)
 
 ## Future (not MVP)
 

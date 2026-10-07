@@ -37,6 +37,7 @@ export default function RecipesIndex({ recipes }: { recipes: RecipeWithHistory[]
                 </div>
                 <p className="mt-2 text-sm text-muted">
                   Makes {pluralize(recipe.meals_covered, 'meal')}
+                  {recipe.ingredient_count > 0 && ` · ${pluralize(recipe.ingredient_count, 'ingredient')}`}
                   {' · '}
                   {recipe.last_made_on ? `Last planned ${formatDate(recipe.last_made_on)}` : 'Never planned'}
                 </p>

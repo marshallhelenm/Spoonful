@@ -1,0 +1,11 @@
+chili_beans:
+  recipe: chili
+  ingredient: kidney_beans
+  amount: 2 cans
+  position: 0
+
+chili_onion:
+  recipe: chili
+  ingredient: onion
+  amount: 1
+  position: 1
