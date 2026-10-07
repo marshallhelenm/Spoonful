@@ -86,7 +86,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
             {plan.total_spoons}
             <span className="text-base font-medium text-subtle"> / {plan.spoon_budget}</span>
           </dd>
-          <dd className={`mt-1 text-sm font-medium ${budget.tone}`}>{budget.text}</dd>
+          <dd className={`mt-1 text-sm font-semibold ${budget.tone}`}>{budget.text}</dd>
         </div>
         <div className={card}>
           <dt className="text-sm text-muted">Meals</dt>
@@ -94,7 +94,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
             {plan.meals_planned}
             <span className="text-base font-medium text-subtle"> / {plan.meal_count}</span>
           </dd>
-          {meals && <dd className="mt-1 text-sm font-medium text-ink-soft">{meals}</dd>}
+          {meals && <dd className="mt-1 text-sm font-semibold text-ink-soft">{meals}</dd>}
         </div>
       </dl>
 

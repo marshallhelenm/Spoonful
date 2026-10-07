@@ -116,4 +116,6 @@
 body {
   background-color: var(--color-page);
   color: var(--color-ink);
+  /* Quicksand's regular (400) is thin, so body text is medium. Use semibold/bold for emphasis. */
+  font-weight: 500;
 }

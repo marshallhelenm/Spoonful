@@ -46,7 +46,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
 
       {recipe_count === 0 && (
         <div className={`${card} mt-6 bg-accent-soft ring-accent-line`}>
-          <p className="font-medium">You don't have any recipes yet.</p>
+          <p className="font-semibold">You don't have any recipes yet.</p>
           <p className="mt-1 text-sm text-ink-soft">
             <Link href="/recipes/new" className="font-semibold text-accent-ink underline">
               Add a few recipes

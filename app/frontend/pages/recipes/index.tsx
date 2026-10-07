@@ -18,7 +18,7 @@ export default function RecipesIndex({ recipes }: { recipes: RecipeWithHistory[]
 
       {recipes.length === 0 ? (
         <div className={`${card} text-center text-muted`}>
-          <p className="font-medium text-ink">No recipes yet.</p>
+          <p className="font-semibold text-ink">No recipes yet.</p>
           <p className="mt-1 text-sm">
             Add the meals you make, plus a few 0-spoon options like takeout or leftovers.
           </p>

@@ -81,7 +81,7 @@ export default function RecipeForm({ recipe, submitLabel, onSubmit, extraActions
 
       <div>
         <label htmlFor="notes" className={label}>
-          Notes <span className="font-normal text-subtle">(optional)</span>
+          Notes <span className="font-medium text-subtle">(optional)</span>
         </label>
         <textarea
           id="notes"
