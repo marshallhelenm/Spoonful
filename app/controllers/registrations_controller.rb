@@ -1,11 +1,10 @@
 # Sign up: create an account and sign straight in.
 class RegistrationsController < InertiaController
   allow_unauthenticated_access
-  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to sign_up_path, alert: "Too many attempts. Try again in a few minutes." }
+  before_action :redirect_if_signed_in, only: :new
+  rate_limit_attempts back_to: :sign_up_path
 
   def new
-    return redirect_to root_path if authenticated?
-
     render inertia: {}
   end
 

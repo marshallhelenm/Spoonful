@@ -1,7 +1,7 @@
 class PasswordsController < InertiaController
   allow_unauthenticated_access
   before_action :set_user_by_token, only: %i[ edit update ]
-  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_password_path, alert: "Too many attempts. Try again in a few minutes." }
+  rate_limit_attempts back_to: :new_password_path
 
   def new
     render inertia: {}

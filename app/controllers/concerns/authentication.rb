@@ -10,6 +10,13 @@ module Authentication
     def allow_unauthenticated_access(**options)
       skip_before_action :require_authentication, **options
     end
+
+    # Limits form posts to `create` (sign in, sign up, reset requests) to 10
+    # per 3 minutes, sending visitors over the limit back to `back_to`.
+    def rate_limit_attempts(back_to:)
+      rate_limit to: 10, within: 3.minutes, only: :create,
+                 with: -> { redirect_to send(back_to), alert: "Too many attempts. Try again in a few minutes." }
+    end
   end
 
   private
@@ -27,6 +34,11 @@ module Authentication
 
     def find_session_by_cookie
       Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+    end
+
+    # For the sign-in and sign-up pages, which make no sense once signed in.
+    def redirect_if_signed_in
+      redirect_to root_path if authenticated?
     end
 
     def request_authentication
