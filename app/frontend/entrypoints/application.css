@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+/* Bagel Fat One (SIL Open Font License), bundled from npm instead of loaded from Google */
+@import '@fontsource/bagel-fat-one/latin-400.css';
 
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
@@ -9,6 +11,8 @@
   redefine the roles below.
 */
 @theme {
+  --font-display: 'Bagel Fat One', ui-rounded, system-ui, sans-serif;
+
   --color-page: #fafaf9;
   --color-surface: #ffffff;
   --color-surface-hover: #f5f5f4;
