@@ -30,6 +30,15 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
                  Recipe.find_by!(name: "Salsa").ingredient_lines
   end
 
+  test "update saves ingredients in the order they're sent" do
+    patch recipe_path(recipes(:chili)), params: { recipe: {
+      name: "Big Pot Chili",
+      ingredients: [ { name: "Onion", amount: "1" }, { name: "Kidney beans", amount: "2 cans" } ]
+    } }, as: :json
+
+    assert_equal [ "Onion", "Kidney beans" ], recipes(:chili).reload.ingredient_lines.map { it[:name] }
+  end
+
   test "update with an empty ingredient list clears it" do
     patch recipe_path(recipes(:chili)), params: { recipe: { name: "Big Pot Chili", ingredients: [] } },
                                         as: :json

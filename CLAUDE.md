@@ -49,6 +49,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `Ingredient` is a shared catalog of names, unique ignoring case (`lower(name)` index); `RecipeIngredient` links a recipe to an ingredient with an optional free-text `amount` and a `position`
 - `Recipe#save_with_ingredients(lines)` saves the recipe and replaces its list in one transaction; `nil` lines leave the list alone (so partial updates don't wipe it)
 - The form suggests saved names as you type and asks "did you mean …?" for plural/typo near-matches (`app/frontend/lib/ingredientMatch.ts`); the user can keep their spelling
+- Rows reorder with ▲▼ buttons (not drag and drop, for touch and keyboard); the server saves lines in the order sent
 - Ingredients stay in the catalog when no recipe uses them (still useful for suggestions)
 - `/ingredients` (linked from Recipes): rename, delete unused, and `Ingredient#merge_into!(target)` — moves recipe lines and shopping checks to the target; if a recipe lists both, they become one line with amounts joined ("1 + half"). The page flags likely duplicate pairs (`findLikelyDuplicates`) with one-tap merges
 
@@ -59,6 +60,5 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 
 ## Future (not MVP)
 
-- **Planned next:** up/down reordering of ingredient rows on the recipe form
 - **Maybe later:** structured amounts (separate number + unit) so the shopping list can add up totals — keep `ShoppingList` uses as data, not pre-formatted strings, to make that switch easy
 - Multiple users / accounts

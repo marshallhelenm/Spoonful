@@ -33,6 +33,8 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
   const nameInputs = useRef(new Map<string, HTMLInputElement>())
   const amountInputs = useRef(new Map<string, HTMLInputElement>())
   const [focusRowId, setFocusRowId] = useState<string | null>(null)
+  // Screen-reader announcement after a row moves.
+  const [moveAnnouncement, setMoveAnnouncement] = useState('')
 
   useEffect(() => {
     if (focusRowId) {
@@ -67,8 +69,27 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
     onChange(rows.filter((row) => row.id !== id))
   }
 
+  function moveRow(id: string, offset: -1 | 1) {
+    const from = rows.findIndex((row) => row.id === id)
+    const to = from + offset
+    if (from < 0 || to < 0 || to >= rows.length) return
+
+    const reordered = [...rows]
+    const [row] = reordered.splice(from, 1)
+    reordered.splice(to, 0, row)
+    onChange(reordered)
+    setMoveAnnouncement(`${row.name.trim() || 'Ingredient'} moved to position ${to + 1} of ${rows.length}`)
+  }
+
+  const moveButton =
+    'flex h-6 w-8 items-center justify-center rounded-md text-xs text-subtle hover:bg-surface-hover hover:text-ink ' +
+    'aria-disabled:cursor-default aria-disabled:opacity-30 aria-disabled:hover:bg-transparent'
+
   return (
     <div>
+      <p className="sr-only" aria-live="polite">
+        {moveAnnouncement}
+      </p>
       {rows.length === 0 ? (
         <p className="text-sm text-muted">No ingredients yet.</p>
       ) : (
@@ -77,10 +98,34 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
             const number = index + 1
             const nearMatch =
               checkedIds.has(row.id) && !keptIds.has(row.id) ? findNearMatch(row.name, savedNames) : null
+            const description = `ingredient ${number}${row.name ? ` (${row.name})` : ''}`
+            const isFirst = index === 0
+            const isLast = index === rows.length - 1
 
             return (
               <li key={row.id}>
                 <div className="flex items-center gap-2">
+                  {/* aria-disabled instead of disabled, so keyboard focus stays put when a row reaches the end */}
+                  <div className="flex shrink-0 flex-col">
+                    <button
+                      type="button"
+                      aria-label={`Move ${description} up`}
+                      aria-disabled={isFirst}
+                      onClick={() => !isFirst && moveRow(row.id, -1)}
+                      className={moveButton}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Move ${description} down`}
+                      aria-disabled={isLast}
+                      onClick={() => !isLast && moveRow(row.id, 1)}
+                      className={moveButton}
+                    >
+                      ▼
+                    </button>
+                  </div>
                   <IngredientNameInput
                     ref={(element) => {
                       if (element) nameInputs.current.set(row.id, element)
@@ -115,8 +160,8 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
                   <button
                     type="button"
                     onClick={() => removeRow(row.id)}
-                    aria-label={`Remove ingredient ${number}${row.name ? ` (${row.name})` : ''}`}
-                    className="flex size-11 shrink-0 items-center justify-center rounded-xl text-xl text-subtle hover:bg-surface-hover hover:text-danger"
+                    aria-label={`Remove ${description}`}
+                    className="flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-xl text-subtle hover:bg-surface-hover hover:text-danger"
                   >
                     ×
                   </button>
