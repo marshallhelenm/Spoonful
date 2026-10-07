@@ -7,6 +7,8 @@
 #   - fit: recipes whose spoons match the remaining budget per meal are likelier,
 # so candidates cluster near the target instead of being pure luck.
 #
+# An optional `max_spoons` cap excludes any recipe harder than that.
+#
 # Pure Ruby, no database access: callers pass recipes and last-made dates in.
 class MealPlanner
   Result = Data.define(:recipes) do
@@ -22,15 +24,15 @@ class MealPlanner
   # How strongly to avoid picks that blow past the remaining budget.
   OVERSHOOT_PENALTY = 2
 
-  def initialize(recipes:, meal_count:, spoon_budget:, last_made_on: {}, today: Date.current,
+  def initialize(recipes:, meal_count:, spoon_budget:, max_spoons: nil, last_made_on: {}, today: Date.current,
                  attempts: DEFAULT_ATTEMPTS, random: Random.new)
-    @recipes = recipes
+    @recipes = max_spoons ? recipes.select { |recipe| recipe.spoons <= max_spoons } : recipes
     @meal_count = meal_count
     @spoon_budget = spoon_budget
     @today = today
     @attempts = attempts
     @random = random
-    @recency_weights = recipes.to_h { |recipe| [ recipe.id, recency_weight(last_made_on[recipe.id]) ] }
+    @recency_weights = @recipes.to_h { |recipe| [ recipe.id, recency_weight(last_made_on[recipe.id]) ] }
   end
 
   def call

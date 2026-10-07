@@ -59,6 +59,11 @@ export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan 
     <>
       <Head title={`Week of ${formatDate(plan.starts_on)}`} />
       <h1 className="text-2xl font-bold">Week of {formatDate(plan.starts_on)}</h1>
+      {plan.max_spoons !== null && (
+        <p className="mt-1 text-sm text-stone-600">
+          No meal harder than {pluralize(plan.max_spoons, 'spoon')}
+        </p>
+      )}
 
       <dl className="mt-4 grid grid-cols-2 gap-3">
         <div className={card}>

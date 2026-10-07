@@ -10,6 +10,7 @@ class MealPlan < ApplicationRecord
   validates :starts_on, presence: true
   validates :meal_count, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :spoon_budget, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :max_spoons, numericality: { only_integer: true, in: Recipe::SPOON_RANGE, allow_nil: true }
 
   # Saves the plan and picks its recipes. Returns false if the plan is invalid.
   def save_and_fill(random: Random.new)
@@ -26,6 +27,7 @@ class MealPlan < ApplicationRecord
         recipes: Recipe.all.to_a,
         meal_count: meal_count,
         spoon_budget: spoon_budget,
+        max_spoons: max_spoons,
         last_made_on: MealPlanEntry.last_made_on_by_recipe,
         today: starts_on,
         random: random

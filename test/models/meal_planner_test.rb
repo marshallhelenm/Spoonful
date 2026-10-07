@@ -8,8 +8,8 @@ class MealPlannerTest < ActiveSupport::TestCase
     Recipe.new(id: id, name: "Recipe #{id}", spoons: spoons, meals_covered: meals_covered)
   end
 
-  def plan(recipes, meal_count:, spoon_budget:, last_made_on: {}, seed: 1)
-    MealPlanner.new(recipes: recipes, meal_count: meal_count, spoon_budget: spoon_budget,
+  def plan(recipes, meal_count:, spoon_budget:, max_spoons: nil, last_made_on: {}, seed: 1)
+    MealPlanner.new(recipes: recipes, meal_count: meal_count, spoon_budget: spoon_budget, max_spoons: max_spoons,
                     last_made_on: last_made_on, today: TODAY, random: Random.new(seed)).call
   end
 
@@ -37,6 +37,19 @@ class MealPlannerTest < ActiveSupport::TestCase
   test "a high budget can go over a little when it can't be hit exactly" do
     result = plan([ recipe(1, 5), recipe(2, 5) ], meal_count: 2, spoon_budget: 9)
     assert_equal 10, result.total_spoons
+  end
+
+  test "a spoon cap excludes harder recipes, even when they'd fit the budget" do
+    [ 1, 2, 3, 4, 5 ].each do |seed|
+      result = plan(varied_recipes, meal_count: 14, spoon_budget: 20, max_spoons: 2, seed: seed)
+      assert result.recipes.any?, "seed #{seed}"
+      assert result.recipes.all? { it.spoons <= 2 }, "seed #{seed}"
+    end
+  end
+
+  test "without a cap, one hard recipe can still land in a low budget" do
+    result = plan([ recipe(1, 5), recipe(2, 0) ], meal_count: 3, spoon_budget: 5)
+    assert_includes result.recipes.map(&:id), 1
   end
 
   test "never repeats a non-filler recipe" do

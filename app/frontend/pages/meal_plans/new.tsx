@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 
 import FieldError from '@/components/FieldError'
 import NumberStepper from '@/components/NumberStepper'
+import SpoonPicker from '@/components/SpoonPicker'
 import { card, input, label, primaryButton } from '@/components/ui'
 
 type Props = {
@@ -16,12 +17,16 @@ const BUDGET_PRESETS = [
   { label: 'High', value: 20 },
 ]
 
+const DEFAULT_CAP = 3
+
 export default function NewMealPlan({ defaults, recipe_count }: Props) {
   const { data, setData, post, errors, processing } = useForm({
     spoon_budget: '' as number | '',
     meal_count: defaults.meal_count as number | '',
     starts_on: defaults.starts_on,
+    max_spoons: null as number | null,
   })
+  const capEnabled = data.max_spoons !== null
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -78,6 +83,38 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
             describedBy={errors.spoon_budget ? 'spoon_budget-error' : undefined}
           />
           <FieldError id="spoon_budget-error" error={errors.spoon_budget} />
+        </div>
+
+        <div>
+          <div className="flex items-start gap-3">
+            <input
+              id="cap_enabled"
+              type="checkbox"
+              checked={capEnabled}
+              onChange={(event) => setData('max_spoons', event.target.checked ? DEFAULT_CAP : null)}
+              className="mt-0.5 size-5 rounded border-stone-300 text-amber-700 focus:ring-amber-600"
+            />
+            <label htmlFor="cap_enabled" className="text-sm">
+              <span className="font-semibold text-stone-800">Limit how hard any one meal can be</span>
+              <span className="block text-stone-600">
+                Leave this off if one big cooking day is fine this week.
+              </span>
+            </label>
+          </div>
+          {capEnabled && (
+            <div className="mt-3">
+              <span className={label}>
+                Hardest meal allowed
+              </span>
+              <SpoonPicker
+                label="Hardest meal allowed, in spoons"
+                value={data.max_spoons}
+                onChange={(value) => setData('max_spoons', value)}
+                describedBy={errors.max_spoons ? 'max_spoons-error' : undefined}
+              />
+              <FieldError id="max_spoons-error" error={errors.max_spoons} />
+            </div>
+          )}
         </div>
 
         <div>

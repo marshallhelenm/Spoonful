@@ -22,6 +22,7 @@ export type MealPlanSummary = {
   starts_on: string
   meal_count: number
   spoon_budget: number
+  max_spoons: number | null
   total_spoons: number
   meals_planned: number
 }

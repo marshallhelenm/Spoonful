@@ -53,11 +53,11 @@ class MealPlansController < InertiaController
   end
 
   def meal_plan_params
-    params.expect(meal_plan: %i[spoon_budget meal_count starts_on])
+    params.expect(meal_plan: %i[spoon_budget meal_count starts_on max_spoons])
   end
 
   def summary(plan)
-    plan.as_json(only: %i[id starts_on meal_count spoon_budget]).merge(
+    plan.as_json(only: %i[id starts_on meal_count spoon_budget max_spoons]).merge(
       total_spoons: plan.total_spoons,
       meals_planned: plan.meals_planned
     )

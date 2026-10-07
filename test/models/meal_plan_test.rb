@@ -12,6 +12,22 @@ class MealPlanTest < ActiveSupport::TestCase
     assert plan.errors[:spoon_budget].any?
   end
 
+  test "max spoons is optional but must be 0 to 5 when set" do
+    plan = MealPlan.new(starts_on: Date.current, spoon_budget: 5)
+    assert plan.valid?
+    plan.max_spoons = 3
+    assert plan.valid?
+    plan.max_spoons = 6
+    assert_not plan.valid?
+  end
+
+  test "fill! respects the plan's spoon cap" do
+    plan = MealPlan.new(spoon_budget: 10, meal_count: 6, max_spoons: 2)
+    plan.save_and_fill(random: Random.new(3))
+    assert plan.recipes.any?
+    assert plan.recipes.all? { it.spoons <= 2 }
+  end
+
   test "meal count must be at least 1" do
     assert_not MealPlan.new(starts_on: Date.current, spoon_budget: 5, meal_count: 0).valid?
   end

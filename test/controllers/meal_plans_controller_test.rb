@@ -18,6 +18,15 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     assert plan.entries.any?
   end
 
+  test "create saves the spoon cap and the plan view shows it" do
+    post meal_plans_path, params: { meal_plan: { spoon_budget: 5, meal_count: 4, max_spoons: 2 } }
+    plan = MealPlan.order(:created_at).last
+    assert_equal 2, plan.max_spoons
+
+    follow_redirect!
+    assert_equal 2, inertia.props[:meal_plan][:max_spoons]
+  end
+
   test "create with an invalid budget redirects back with errors" do
     assert_no_difference -> { MealPlan.count } do
       post meal_plans_path, params: { meal_plan: { spoon_budget: "", meal_count: 14 } }
