@@ -1,6 +1,8 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 
+import ThemeSwitcher from '@/components/ThemeSwitcher'
+
 const navItems = [
   { href: '/', label: 'Plan', matches: (url: string) => url === '/' || url === '/meal_plans/new' },
   { href: '/recipes', label: 'Recipes', matches: (url: string) => url.startsWith('/recipes') },
@@ -41,7 +43,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-6 pb-16">
+      <main className="mx-auto max-w-3xl px-4 py-6 pb-10">
         {flash.notice && (
           <p role="status" className="mb-4 rounded-xl bg-success-soft px-4 py-3 text-sm text-success ring-1 ring-success-line">
             {flash.notice}
@@ -54,6 +56,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         )}
         {children}
       </main>
+
+      <footer className="mx-auto flex max-w-3xl items-center justify-end gap-3 px-4 pb-8 text-sm text-muted">
+        <span aria-hidden="true">Theme</span>
+        <ThemeSwitcher />
+      </footer>
     </div>
   )
 }

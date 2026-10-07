@@ -14,7 +14,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 
 - React pages: `app/frontend/pages/<controller>/<action>.tsx`, rendered from controllers with `render inertia: ...`
 - Vite entrypoints: `app/frontend/entrypoints/` (`inertia.tsx`, `application.css`)
-- Colors: use the semantic roles from `application.css` (`bg-surface`, `text-muted`, `bg-accent`, `text-danger`, ...), never raw palette classes like `text-stone-600` — dark mode (follows the OS setting) works by redefining those roles
+- Colors: use the semantic roles from `application.css` (`bg-surface`, `text-muted`, `bg-accent`, `text-danger`, ...), never raw palette classes like `text-stone-600` — dark mode works by redefining those roles. Theme follows the OS unless the footer switcher sets `<html data-theme>` (saved in localStorage; see `app/frontend/lib/theme.ts`)
 - Shared class strings (buttons, cards, inputs) live in `app/frontend/components/ui.ts`
 
 ## Commands

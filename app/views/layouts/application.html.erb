@@ -8,6 +8,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Spoonful">
     <meta name="mobile-web-app-capable" content="yes">
+    <%# Apply a saved light/dark choice before anything paints (see app/frontend/lib/theme.ts). %>
+    <%= javascript_tag nonce: true do %>
+      try {
+        var theme = localStorage.getItem("spoonful-theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+            meta.content = theme === "dark" ? "#292524" : "#ffffff";
+          });
+        }
+      } catch (e) {}
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
