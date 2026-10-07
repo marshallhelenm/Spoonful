@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import FieldError from '@/components/FieldError'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { card, checkbox, input, label, pageHeading, primaryButton } from '@/components/ui'
+import { callout, card, checkbox, input, label, pageHeading, primaryButton } from '@/components/ui'
 
 type Props = {
   defaults: { meal_count: number; starts_on: string }
@@ -45,7 +45,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
       </p>
 
       {recipe_count === 0 && (
-        <div className={`${card} mt-6 bg-accent-soft ring-accent-line`}>
+        <div className={`${callout} mt-6`}>
           <p className="font-semibold">You don't have any recipes yet.</p>
           <p className="mt-1 text-sm text-ink-soft">
             <Link href="/recipes/new" className="font-semibold text-accent-ink underline">

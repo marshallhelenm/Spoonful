@@ -51,8 +51,13 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - The form suggests saved names as you type and asks "did you mean …?" for plural/typo near-matches (`app/frontend/lib/ingredientMatch.ts`); the user can keep their spelling
 - Ingredients stay in the catalog when no recipe uses them (still useful for suggestions)
 
+**Shopping list** (per meal plan, `ShoppingList` PORO + `/meal_plans/:id/shopping_list`)
+- One item per ingredient across the plan's recipes, listing each recipe's amount ("Garlic noodles: 6 cloves · Stir fry: 2 cloves"); amounts are free text, so they aren't summed. A recipe planned twice shows "×2"
+- Checkmarks are saved server-side (`ShoppingListCheck` row = checked) so they follow you across devices; the page updates optimistically and sends `async` Inertia requests so rapid taps don't cancel each other
+- Recipes in the plan with no ingredients (excluding 0-spoon fillers) are listed with links to add them
+
 ## Future (not MVP)
 
+- **Planned next:** ingredient management (rename / merge duplicates / delete unused), then up/down reordering of ingredient rows on the recipe form
+- **Maybe later:** structured amounts (separate number + unit) so the shopping list can add up totals — keep `ShoppingList` uses as data, not pre-formatted strings, to make that switch easy
 - Multiple users / accounts
-- Swapping a single meal in a generated plan
-- Ingredients / shopping lists

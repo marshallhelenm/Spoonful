@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import MealRow from '@/components/MealRow'
 import Spoons from '@/components/Spoons'
-import { card, dangerButton, pageHeading, primaryButton } from '@/components/ui'
+import { card, dangerButton, pageHeading, primaryButton, secondaryButton } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
 import type { MealPlan, MealPlanEntry, RecipeOption } from '@/types'
 
@@ -97,6 +97,10 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
           {meals && <dd className="mt-1 text-sm font-semibold text-ink-soft">{meals}</dd>}
         </div>
       </dl>
+
+      <Link href={`/meal_plans/${plan.id}/shopping_list`} className={`${secondaryButton} mt-4 w-full sm:w-auto`}>
+        <span aria-hidden="true">🛒</span> Shopping list
+      </Link>
 
       {plan.entries.length === 0 ? (
         <div className={`${card} mt-6 text-ink-soft`}>

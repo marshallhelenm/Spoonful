@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_161435) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_162520) do
   create_table "ingredients", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -67,8 +67,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_161435) do
     t.check_constraint "spoons BETWEEN 0 AND 5", name: "spoons_range"
   end
 
+  create_table "shopping_list_checks", force: :cascade do |t|
+    t.integer "meal_plan_id", null: false
+    t.integer "ingredient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id"], name: "index_shopping_list_checks_on_ingredient_id"
+    t.index ["meal_plan_id", "ingredient_id"], name: "index_shopping_list_checks_on_meal_plan_id_and_ingredient_id", unique: true
+  end
+
   add_foreign_key "meal_plan_entries", "meal_plans"
   add_foreign_key "meal_plan_entries", "recipes"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
+  add_foreign_key "shopping_list_checks", "ingredients"
+  add_foreign_key "shopping_list_checks", "meal_plans"
 end

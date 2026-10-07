@@ -12,6 +12,8 @@ export const dangerButton = `${buttonBase} bg-surface text-danger ring-1 ring-da
 export const pageHeading = 'font-display text-2xl font-normal leading-tight text-ink'
 
 export const card = 'rounded-2xl bg-surface p-4 shadow-sm ring-1 ring-line'
+// A highlighted notice box (its own class rather than card + overrides, which conflict).
+export const callout = 'rounded-2xl bg-accent-soft p-4 text-ink ring-1 ring-accent-line'
 
 export const label = 'block text-sm font-semibold text-ink'
 export const inputBase =

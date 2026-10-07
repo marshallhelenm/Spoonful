@@ -3,6 +3,7 @@ class MealPlan < ApplicationRecord
 
   has_many :entries, -> { order(:position) }, class_name: "MealPlanEntry", dependent: :destroy
   has_many :recipes, through: :entries
+  has_many :shopping_list_checks, dependent: :delete_all
 
   attribute :meal_count, default: DEFAULT_MEAL_COUNT
   attribute :starts_on, default: -> { Date.current }
@@ -37,6 +38,10 @@ class MealPlan < ApplicationRecord
   def replacement_for(entry, random: Random.new)
     others = entries.where.not(id: entry.id).includes(:recipe).map(&:recipe)
     planner(random).pick_replacement(others: others, replacing: entry.recipe)
+  end
+
+  def shopping_list
+    ShoppingList.new(self)
   end
 
   def total_spoons

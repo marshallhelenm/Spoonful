@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     resources :entries, only: %i[update destroy], controller: "meal_plan_entries" do
       post :shuffle, on: :member
     end
+    resource :shopping_list, only: :show do
+      resources :items, only: :update, controller: "shopping_list_items", param: :ingredient_id
+    end
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

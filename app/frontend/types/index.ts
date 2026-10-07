@@ -44,3 +44,17 @@ export type RecipeOption = Pick<Recipe, 'id' | 'name' | 'spoons'>
 export type MealPlan = MealPlanSummary & {
   entries: MealPlanEntry[]
 }
+
+export type ShoppingListUse = {
+  recipe_name: string
+  amount: string | null
+  // How many times the recipe is in the plan.
+  times: number
+}
+
+export type ShoppingListItem = {
+  ingredient_id: number
+  name: string
+  checked: boolean
+  uses: ShoppingListUse[]
+}
