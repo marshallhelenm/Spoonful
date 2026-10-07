@@ -17,30 +17,31 @@
   --font-display: 'Bagel Fat One', ui-rounded, system-ui, sans-serif;
   --font-sans: 'Quicksand Variable', ui-rounded, system-ui, sans-serif;
 
-  --color-page: #fafaf9;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f5f5f4;
-  --color-ink: #1c1917;
-  --color-ink-soft: #44403c;
-  --color-muted: #57534e;
-  --color-subtle: #78716c;
-  --color-line: #e7e5e4;
-  --color-line-strong: #d6d3d1;
+  /* Cozy kitchen: butter-yellow page, cream cards, coffee-brown ink, paprika, sage, tomato */
+  --color-page: #fbf0c9;
+  --color-surface: #fffbea;
+  --color-surface-hover: #f7ebc0;
+  --color-ink: #3b2a20;
+  --color-ink-soft: #54402f;
+  --color-muted: #6b5544;
+  --color-subtle: #7a6453;
+  --color-line: #efe0ae;
+  --color-line-strong: #e0cc8a;
 
-  --color-accent: #b45309;
-  --color-accent-hover: #92400e;
-  --color-on-accent: #ffffff;
-  --color-accent-ink: #92400e;
-  --color-accent-soft: #fef3c7;
-  --color-accent-line: #fcd34d;
+  --color-accent: #b8371a;
+  --color-accent-hover: #962a12;
+  --color-on-accent: #fffbea;
+  --color-accent-ink: #922c14;
+  --color-accent-soft: #fbe0d2;
+  --color-accent-line: #efae95;
 
-  --color-success: #047857;
-  --color-success-soft: #ecfdf5;
-  --color-success-line: #a7f3d0;
+  --color-success: #4a7339;
+  --color-success-soft: #edf3e4;
+  --color-success-line: #c4d8b0;
 
-  --color-danger: #b91c1c;
-  --color-danger-soft: #fef2f2;
-  --color-danger-line: #fecaca;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fde8e4;
+  --color-danger-line: #f3b9ae;
 }
 
 /*
@@ -58,59 +59,59 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-page: #1c1917;
-    --color-surface: #292524;
-    --color-surface-hover: #3a3532;
-    --color-ink: #f5f5f4;
-    --color-ink-soft: #e7e5e4;
-    --color-muted: #d6d3d1;
-    --color-subtle: #a8a29e;
-    --color-line: #44403c;
-    --color-line-strong: #57534e;
+    --color-page: #221a0f;
+    --color-surface: #2e2414;
+    --color-surface-hover: #3d311c;
+    --color-ink: #f6ead8;
+    --color-ink-soft: #e9d8c0;
+    --color-muted: #d4bfa3;
+    --color-subtle: #a89077;
+    --color-line: #4a3b22;
+    --color-line-strong: #614e2e;
 
-    --color-accent: #f59e0b;
-    --color-accent-hover: #fbbf24;
-    --color-on-accent: #1c1917;
-    --color-accent-ink: #fcd34d;
-    --color-accent-soft: #451a03;
-    --color-accent-line: #92400e;
+    --color-accent: #ef7a5a;
+    --color-accent-hover: #f59a80;
+    --color-on-accent: #221a0f;
+    --color-accent-ink: #f7ab95;
+    --color-accent-soft: #4a1d12;
+    --color-accent-line: #8f3420;
 
-    --color-success: #6ee7b7;
-    --color-success-soft: #022c22;
-    --color-success-line: #065f46;
+    --color-success: #a9cf8f;
+    --color-success-soft: #1f2a18;
+    --color-success-line: #3f5a30;
 
-    --color-danger: #fca5a5;
-    --color-danger-soft: #450a0a;
-    --color-danger-line: #991b1b;
+    --color-danger: #f4a197;
+    --color-danger-soft: #4a1a15;
+    --color-danger-line: #8f2f25;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --color-page: #1c1917;
-  --color-surface: #292524;
-  --color-surface-hover: #3a3532;
-  --color-ink: #f5f5f4;
-  --color-ink-soft: #e7e5e4;
-  --color-muted: #d6d3d1;
-  --color-subtle: #a8a29e;
-  --color-line: #44403c;
-  --color-line-strong: #57534e;
+  --color-page: #221a0f;
+  --color-surface: #2e2414;
+  --color-surface-hover: #3d311c;
+  --color-ink: #f6ead8;
+  --color-ink-soft: #e9d8c0;
+  --color-muted: #d4bfa3;
+  --color-subtle: #a89077;
+  --color-line: #4a3b22;
+  --color-line-strong: #614e2e;
 
-  --color-accent: #f59e0b;
-  --color-accent-hover: #fbbf24;
-  --color-on-accent: #1c1917;
-  --color-accent-ink: #fcd34d;
-  --color-accent-soft: #451a03;
-  --color-accent-line: #92400e;
+  --color-accent: #ef7a5a;
+  --color-accent-hover: #f59a80;
+  --color-on-accent: #221a0f;
+  --color-accent-ink: #f7ab95;
+  --color-accent-soft: #4a1d12;
+  --color-accent-line: #8f3420;
 
-  --color-success: #6ee7b7;
-  --color-success-soft: #022c22;
-  --color-success-line: #065f46;
+  --color-success: #a9cf8f;
+  --color-success-soft: #1f2a18;
+  --color-success-line: #3f5a30;
 
-  --color-danger: #fca5a5;
-  --color-danger-soft: #450a0a;
-  --color-danger-line: #991b1b;
+  --color-danger: #f4a197;
+  --color-danger-soft: #4a1a15;
+  --color-danger-line: #8f2f25;
 }
 
 body {

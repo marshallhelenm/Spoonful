@@ -8,7 +8,7 @@ export type ThemePreference = 'system' | 'light' | 'dark'
 const STORAGE_KEY = 'spoonful-theme'
 
 // Browser bar colors, matching --color-surface in each theme.
-const THEME_COLORS = { light: '#ffffff', dark: '#292524' }
+const THEME_COLORS = { light: '#fffbea', dark: '#2e2414' }
 
 export function getThemePreference(): ThemePreference {
   try {
