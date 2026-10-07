@@ -5,7 +5,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 ## Stack
 
 - Rails 8.1 (Ruby 4.0.3 via chruby, pinned in `.ruby-version`) + Inertia.js + React 19 (TypeScript), Vite via `vite_ruby`, Tailwind v4
-- SQLite
+- SQLite in development/test; Postgres in production (Heroku, see Deploy)
 - One responsive, mobile-first web app (no separate mobile build); PWA later maybe
 - Accounts: Rails 8 authentication generator (email + password, `Session` cookie, password reset by email), open sign-up via `RegistrationsController`. Auth pages are Inertia pages (`sessions/new`, `registrations/new`, `passwords/*`)
 - Generated without Hotwire, Jbuilder, Action Mailbox, Action Text
@@ -28,6 +28,14 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - http://localhost:3000/letter_opener — emails "sent" in development (e.g. password resets) via `letter_opener_web`
 
 **Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
+
+## Deploy
+
+- Heroku app on an Eco dyno, separate from the portfolio app, served at a subdomain of the portfolio's domain. Buildpacks: `heroku/nodejs` then `heroku/ruby` (Vite builds during `assets:precompile`, so `vite` and `vite-plugin-ruby` are regular `dependencies`)
+- `Procfile`: Puma web process; `release` runs migrations on each deploy
+- One Heroku Postgres database (`DATABASE_URL`). No Solid Cache/Queue/Cable databases in production: cache is `:memory_store`, jobs use `:async` (only password-reset emails), Action Cable is unused
+- Config vars: `APP_HOST` (for links in emails), `MAILER_FROM`, `SMTP_ADDRESS`/`SMTP_PORT`/`SMTP_USERNAME`/`SMTP_PASSWORD`
+- `config/deploy.yml` and `Dockerfile` are leftover Kamal scaffolding and no longer match production
 
 ## Accounts and data ownership
 
@@ -71,4 +79,3 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - **Maybe later:** structured amounts (separate number + unit) so the shopping list can add up totals — keep `ShoppingList` uses as data, not pre-formatted strings, to make that switch easy
 - Account settings: change email/password, delete account
 - Households: share recipes and plans between accounts
-- Production email: set `MAILER_FROM` and configure a mail delivery service before deploying
