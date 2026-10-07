@@ -57,14 +57,8 @@ class MealPlanner
   # the spoon cap, and the ceiling if set. Prefers recipes that cover as many
   # meals as the one being replaced. Returns nil if nothing else fits.
   def pick_replacement(others:, replacing:)
-    used_ids = others.reject(&:filler?).to_set(&:id)
     target = @spoon_budget - others.sum(&:spoons)
-
-    candidates = @recipes.reject do |recipe|
-      recipe.id == replacing.id ||
-        (used_ids.include?(recipe.id) && !recipe.filler?) ||
-        (@budget_is_ceiling && recipe.spoons > target)
-    end
+    candidates = allowed(used_ids: others.to_set(&:id), spoons_left: target).reject { it.id == replacing.id }
     return if candidates.empty?
 
     weighted_pick(candidates, candidates.map do |recipe|
@@ -83,9 +77,7 @@ class MealPlanner
     spoons_left = @spoon_budget
 
     while meals_left.positive?
-      available = @recipes.reject do |recipe|
-        (used_ids.include?(recipe.id) && !recipe.filler?) || (@budget_is_ceiling && recipe.spoons > spoons_left)
-      end
+      available = allowed(used_ids: used_ids, spoons_left: spoons_left)
       break if available.empty?
 
       recipe = weighted_pick(available, available.map do |candidate|
@@ -98,6 +90,15 @@ class MealPlanner
     end
 
     Result.new(recipes: picks)
+  end
+
+  # Recipes that can go in next: nothing already used (0-spoon fillers may
+  # repeat), and with a ceiling budget, nothing that would go over it.
+  def allowed(used_ids:, spoons_left:)
+    @recipes.select do |recipe|
+      (recipe.filler? || !used_ids.include?(recipe.id)) &&
+        !(@budget_is_ceiling && recipe.spoons > spoons_left)
+    end
   end
 
   def weighted_pick(items, weights)
