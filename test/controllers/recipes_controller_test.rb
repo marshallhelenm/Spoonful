@@ -1,6 +1,8 @@
 require "test_helper"
 
 class RecipesControllerTest < ActionDispatch::IntegrationTest
+  setup { sign_in_as(users(:one)) }
+
   test "index lists recipes alphabetically with when each was last planned" do
     get recipes_path
 

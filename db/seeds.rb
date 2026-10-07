@@ -1,4 +1,9 @@
-# Sample recipes for development. Safe to run repeatedly: `bin/rails db:seed`.
+# Development sample data: a demo account with sample recipes.
+# Safe to run repeatedly: `bin/rails db:seed`. Sign in as the demo user below.
+demo = User.find_or_create_by!(email_address: "demo@example.com") do |user|
+  user.password = "spoonful-demo"
+end
+
 [
   { name: "Takeout", spoons: 0, meals_covered: 1 },
   { name: "Leftovers", spoons: 0, meals_covered: 1 },
@@ -16,7 +21,7 @@
   { name: "Lasagna", spoons: 5, meals_covered: 4 },
   { name: "Roast chicken dinner", spoons: 5, meals_covered: 3 }
 ].each do |attrs|
-  Recipe.find_or_create_by!(name: attrs[:name]) { |recipe| recipe.assign_attributes(attrs) }
+  demo.recipes.find_or_create_by!(name: attrs[:name]) { |recipe| recipe.assign_attributes(attrs) }
 end
 
 # Sample ingredient lists (only for recipes that don't have any yet).
@@ -31,7 +36,7 @@ end
   "Lentil soup" => [ [ "Red lentils", "1 1/2 cups" ], [ "Onion", "1" ], [ "Carrot", "2" ], [ "Cumin", "1 tsp" ],
                      [ "Vegetable broth", "6 cups" ] ]
 }.each do |recipe_name, lines|
-  recipe = Recipe.find_by(name: recipe_name)
+  recipe = demo.recipes.find_by(name: recipe_name)
   next if recipe.nil? || recipe.recipe_ingredients.any?
 
   recipe.save_with_ingredients(lines.map { |name, amount| { name: name, amount: amount } })

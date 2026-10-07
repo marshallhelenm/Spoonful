@@ -3,7 +3,7 @@ class IngredientsController < InertiaController
   before_action :set_ingredient, only: %i[update destroy merge]
 
   def index
-    ingredients = Ingredient.includes(:recipes).order(Arel.sql("lower(name)"))
+    ingredients = Current.user.ingredients.includes(:recipes).order(Arel.sql("lower(name)"))
 
     render inertia: {
       ingredients: ingredients.map do |ingredient|
@@ -26,7 +26,7 @@ class IngredientsController < InertiaController
   end
 
   def merge
-    target = Ingredient.find(params.expect(:target_id))
+    target = Current.user.ingredients.find(params.expect(:target_id))
 
     if target == @ingredient
       redirect_to ingredients_path, alert: "Pick a different ingredient to merge into."
@@ -48,14 +48,14 @@ class IngredientsController < InertiaController
   private
 
   def set_ingredient
-    @ingredient = Ingredient.find(params[:id])
+    @ingredient = Current.user.ingredients.find(params[:id])
   end
 
   # Turns "has already been taken" into a pointer toward merging, naming the
   # existing ingredient as it's actually spelled.
   def rename_errors
     if @ingredient.errors.of_kind?(:name, :taken)
-      existing = Ingredient.where.not(id: @ingredient.id).find_by("lower(name) = ?", @ingredient.name.downcase)
+      existing = Current.user.ingredients.where.not(id: @ingredient.id).find_by("lower(name) = ?", @ingredient.name.downcase)
       { name: [ "There's already an ingredient called #{existing.name}. Use “Merge into” to combine them." ] }
     else
       @ingredient.errors.to_hash

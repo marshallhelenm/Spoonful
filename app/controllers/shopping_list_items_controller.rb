@@ -1,8 +1,8 @@
 # Checks an ingredient off (or back on) a meal plan's shopping list.
 class ShoppingListItemsController < InertiaController
   def update
-    meal_plan = MealPlan.find(params[:meal_plan_id])
-    ingredient = Ingredient.find(params[:ingredient_id])
+    meal_plan = Current.user.meal_plans.find(params[:meal_plan_id])
+    ingredient = Current.user.ingredients.find(params[:ingredient_id])
     checks = meal_plan.shopping_list_checks
 
     if ActiveModel::Type::Boolean.new.cast(params.expect(:checked))

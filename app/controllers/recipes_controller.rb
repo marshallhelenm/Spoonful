@@ -2,11 +2,12 @@ class RecipesController < InertiaController
   before_action :set_recipe, only: %i[edit update destroy]
 
   def index
-    last_made_on = MealPlanEntry.last_made_on_by_recipe
-    ingredient_counts = RecipeIngredient.group(:recipe_id).count
+    recipes = Current.user.recipes
+    last_made_on = MealPlanEntry.where(meal_plan: Current.user.meal_plans).last_made_on_by_recipe
+    ingredient_counts = RecipeIngredient.where(recipe: recipes).group(:recipe_id).count
 
     render inertia: {
-      recipes: Recipe.order(:name).map do |recipe|
+      recipes: recipes.order(:name).map do |recipe|
         serialize(recipe).merge(
           last_made_on: last_made_on[recipe.id],
           ingredient_count: ingredient_counts.fetch(recipe.id, 0)
@@ -16,11 +17,11 @@ class RecipesController < InertiaController
   end
 
   def new
-    render inertia: form_props(Recipe.new)
+    render inertia: form_props(Current.user.recipes.new)
   end
 
   def create
-    recipe = Recipe.new(recipe_params)
+    recipe = Current.user.recipes.new(recipe_params)
 
     if recipe.save_with_ingredients(ingredient_lines_param)
       redirect_to recipes_path, notice: "Added #{recipe.name}."
@@ -55,7 +56,7 @@ class RecipesController < InertiaController
   private
 
   def set_recipe
-    @recipe = Recipe.find(params[:id])
+    @recipe = Current.user.recipes.find(params[:id])
   end
 
   def recipe_params
@@ -75,7 +76,7 @@ class RecipesController < InertiaController
     {
       recipe: serialize(recipe).merge(ingredients: recipe.ingredient_lines),
       # Every saved ingredient name, for suggestions while typing.
-      ingredient_names: Ingredient.order(:name).pluck(:name)
+      ingredient_names: Current.user.ingredients.order(:name).pluck(:name)
     }
   end
 

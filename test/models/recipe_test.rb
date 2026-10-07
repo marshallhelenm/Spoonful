@@ -2,7 +2,7 @@ require "test_helper"
 
 class RecipeTest < ActiveSupport::TestCase
   def build_recipe(**attrs)
-    Recipe.new(name: "Soup", spoons: 2, meals_covered: 1, **attrs)
+    users(:one).recipes.new(name: "Soup", spoons: 2, meals_covered: 1, **attrs)
   end
 
   test "valid with name, spoons, and meals covered" do

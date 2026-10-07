@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resource :session, only: %i[new create destroy]
+  get "sign_up", to: "registrations#new"
+  post "sign_up", to: "registrations#create"
+  resources :passwords, param: :token
   # Redirect to localhost from 127.0.0.1 to use same IP address with Vite server
   constraints(host: "127.0.0.1") do
     get "(*path)", to: redirect { |params, req| "#{req.protocol}localhost:#{req.port}/#{params[:path]}" }
@@ -19,6 +23,9 @@ Rails.application.routes.draw do
       resources :items, only: :update, controller: "shopping_list_items", param: :ingredient_id
     end
   end
+
+  # Emails "sent" in development (e.g. password resets) show up here.
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "test_helpers/session_test_helper"
 require "inertia_rails/minitest"
 
 # Build frontend assets once, before tests fork into parallel workers. Otherwise

@@ -1,14 +1,23 @@
 chili:
+  user: one
   name: Big Pot Chili
   spoons: 3
   meals_covered: 4
 
 pasta:
+  user: one
   name: Weeknight Pasta
   spoons: 2
   meals_covered: 1
 
 takeout:
+  user: one
   name: Takeout
   spoons: 0
   meals_covered: 1
+
+secret_soup:
+  user: two
+  name: Secret Soup
+  spoons: 2
+  meals_covered: 2

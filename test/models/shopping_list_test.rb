@@ -2,7 +2,7 @@ require "test_helper"
 
 class ShoppingListTest < ActiveSupport::TestCase
   setup do
-    @plan = MealPlan.create!(spoon_budget: 10)
+    @plan = users(:one).meal_plans.create!(spoon_budget: 10)
     recipes(:pasta).save_with_ingredients([ { name: "Spaghetti", amount: "1 lb" }, { name: "Onion", amount: "half" } ])
     # chili (fixtures): Kidney beans "2 cans", Onion "1"
   end
@@ -38,7 +38,7 @@ class ShoppingListTest < ActiveSupport::TestCase
 
   test "lists planned recipes that have no ingredients yet, ignoring 0-spoon fillers" do
     plan_recipes(:chili, :takeout)
-    Recipe.create!(name: "Soup", spoons: 2).tap { @plan.entries.create!(recipe: it, position: 5) }
+    users(:one).recipes.create!(name: "Soup", spoons: 2).tap { @plan.entries.create!(recipe: it, position: 5) }
 
     assert_equal [ "Soup" ], @plan.shopping_list.recipes_without_ingredients.map(&:name)
   end

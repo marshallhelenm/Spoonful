@@ -7,7 +7,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - Rails 8.1 (Ruby 4.0.3 via chruby, pinned in `.ruby-version`) + Inertia.js + React 19 (TypeScript), Vite via `vite_ruby`, Tailwind v4
 - SQLite
 - One responsive, mobile-first web app (no separate mobile build); PWA later maybe
-- Single user for MVP; no auth until the MVP works
+- Accounts: Rails 8 authentication generator (email + password, `Session` cookie, password reset by email), open sign-up via `RegistrationsController`. Auth pages are Inertia pages (`sessions/new`, `registrations/new`, `passwords/*`)
 - Generated without Hotwire, Jbuilder, Action Mailbox, Action Text
 
 ## Layout
@@ -24,9 +24,17 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `bin/rails test` — Ruby tests
 - `npm run check` — TypeScript type-check
 - `npm test` — Vitest unit tests for plain TS in `app/frontend` (`*.test.ts`)
-- `bin/rails db:seed` — load sample recipes (idempotent)
+- `bin/rails db:seed` — creates a demo account with sample recipes (idempotent; credentials in `db/seeds.rb`)
+- http://localhost:3000/letter_opener — emails "sent" in development (e.g. password resets) via `letter_opener_web`
 
 **Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
+
+## Accounts and data ownership
+
+- `Recipe`, `Ingredient`, and `MealPlan` belong to a `User`; entries, ingredient lines, and shopping checks are owned through those. Each user has a separate ingredient catalog; names are unique per user
+- **Always load records through `Current.user`** (`Current.user.recipes.find(id)`), never `Recipe.find` — another user's id then 404s. Models also validate that linked records share an owner (e.g. a plan entry's recipe)
+- Every controller requires sign-in by default (`Authentication` concern); public actions opt out with `allow_unauthenticated_access`. `current_user` is shared to all pages
+- `test/controllers/data_isolation_test.rb` covers cross-user access; controller tests `sign_in_as(users(:one))`
 
 ## MVP domain rules
 
@@ -61,4 +69,6 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 ## Future (not MVP)
 
 - **Maybe later:** structured amounts (separate number + unit) so the shopping list can add up totals — keep `ShoppingList` uses as data, not pre-formatted strings, to make that switch easy
-- Multiple users / accounts
+- Account settings: change email/password, delete account
+- Households: share recipes and plans between accounts
+- Production email: set `MAILER_FROM` and configure a mail delivery service before deploying

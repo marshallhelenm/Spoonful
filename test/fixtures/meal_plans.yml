@@ -1,4 +1,11 @@
 last_week:
+  user: one
   starts_on: 2026-09-28
   meal_count: 14
   spoon_budget: 10
+
+someone_elses_week:
+  user: two
+  starts_on: 2026-09-28
+  meal_count: 14
+  spoon_budget: 8

@@ -1,8 +1,15 @@
 tomato:
+  user: one
   name: Tomato
 
 onion:
+  user: one
   name: Onion
 
 kidney_beans:
+  user: one
   name: Kidney beans
+
+secret_spice:
+  user: two
+  name: Secret spice

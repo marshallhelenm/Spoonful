@@ -4,7 +4,7 @@ class MealPlanEntriesController < InertiaController
   before_action :set_entry
 
   def update
-    recipe = Recipe.find(params.expect(meal_plan_entry: [ :recipe_id ])[:recipe_id])
+    recipe = Current.user.recipes.find(params.expect(meal_plan_entry: [ :recipe_id ])[:recipe_id])
     replaced = @entry.recipe
     @entry.update!(recipe: recipe)
     redirect_to meal_plan_path(@meal_plan), notice: "Swapped #{replaced.name} for #{recipe.name}."
@@ -30,7 +30,7 @@ class MealPlanEntriesController < InertiaController
   private
 
   def set_entry
-    @meal_plan = MealPlan.find(params[:meal_plan_id])
+    @meal_plan = Current.user.meal_plans.find(params[:meal_plan_id])
     @entry = @meal_plan.entries.find(params[:id])
   end
 end

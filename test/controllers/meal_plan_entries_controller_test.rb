@@ -1,6 +1,8 @@
 require "test_helper"
 
 class MealPlanEntriesControllerTest < ActionDispatch::IntegrationTest
+  setup { sign_in_as(users(:one)) }
+
   setup do
     @plan = meal_plans(:last_week)
     @entry = meal_plan_entries(:last_week_chili)
@@ -48,7 +50,7 @@ class MealPlanEntriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "entries from a different plan can't be changed through this plan" do
-    other_plan = MealPlan.create!(spoon_budget: 3)
+    other_plan = users(:one).meal_plans.create!(spoon_budget: 3)
     delete meal_plan_entry_path(other_plan, @entry)
     assert_response :not_found
     assert MealPlanEntry.exists?(@entry.id)

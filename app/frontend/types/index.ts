@@ -3,7 +3,14 @@ export type FlashData = {
   alert?: string
 }
 
-export type SharedProps = {}
+export type CurrentUser = {
+  id: number
+  email_address: string
+}
+
+export type SharedProps = {
+  current_user: CurrentUser | null
+}
 
 export type IngredientLine = {
   name: string

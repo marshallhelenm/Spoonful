@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
@@ -18,7 +18,8 @@ const navItems = [
 ]
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { url, flash } = usePage()
+  const { url, flash, props } = usePage()
+  const user = props.current_user
 
   return (
     <div className="min-h-screen bg-page text-ink">
@@ -27,23 +28,25 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Link href="/" className="font-display text-xl font-normal text-accent-ink">
             <span aria-hidden="true" className="mr-1">🥄</span> Spoonful
           </Link>
-          <nav aria-label="Main" className="flex gap-1">
-            {navItems.map((item) => {
-              const active = item.matches(url)
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? 'page' : undefined}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                    active ? 'bg-accent-soft text-accent-ink' : 'text-muted hover:bg-surface-hover'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
+          {user && (
+            <nav aria-label="Main" className="flex gap-1">
+              {navItems.map((item) => {
+                const active = item.matches(url)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                    className={`rounded-lg px-3 py-2 text-sm font-medium ${
+                      active ? 'bg-accent-soft text-accent-ink' : 'text-muted hover:bg-surface-hover'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </nav>
+          )}
         </div>
       </header>
 
@@ -61,9 +64,25 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mx-auto flex max-w-3xl items-center justify-end gap-3 px-4 pb-8 text-sm text-muted">
-        <span aria-hidden="true">Theme</span>
-        <ThemeSwitcher />
+      <footer className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 pb-8 text-sm text-muted">
+        {user ? (
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="truncate">{user.email_address}</span>
+            <button
+              type="button"
+              onClick={() => router.delete('/session')}
+              className="min-h-9 shrink-0 rounded-lg px-2 font-semibold text-accent-ink hover:bg-accent-soft"
+            >
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <span />
+        )}
+        <div className="flex items-center gap-3">
+          <span aria-hidden="true">Theme</span>
+          <ThemeSwitcher />
+        </div>
       </footer>
     </div>
   )

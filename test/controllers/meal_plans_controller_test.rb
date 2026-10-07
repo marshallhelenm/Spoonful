@@ -1,6 +1,8 @@
 require "test_helper"
 
 class MealPlansControllerTest < ActionDispatch::IntegrationTest
+  setup { sign_in_as(users(:one)) }
+
   test "root shows the new plan form with defaults" do
     get root_path
 

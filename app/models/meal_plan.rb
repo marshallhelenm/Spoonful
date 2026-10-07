@@ -1,6 +1,8 @@
 class MealPlan < ApplicationRecord
   DEFAULT_MEAL_COUNT = 14
 
+  belongs_to :user
+
   has_many :entries, -> { order(:position) }, class_name: "MealPlanEntry", dependent: :destroy
   has_many :recipes, through: :entries
   has_many :shopping_list_checks, dependent: :delete_all
@@ -56,13 +58,13 @@ class MealPlan < ApplicationRecord
 
   def planner(random)
     MealPlanner.new(
-      recipes: Recipe.all.to_a,
+      recipes: user.recipes.to_a,
       meal_count: meal_count,
       spoon_budget: spoon_budget,
       max_spoons: max_spoons,
       budget_is_ceiling: budget_is_ceiling,
       # Only other plans count as "recently made", not this one.
-      last_made_on: MealPlanEntry.where.not(meal_plan_id: id).last_made_on_by_recipe,
+      last_made_on: MealPlanEntry.where(meal_plan: user.meal_plans.where.not(id: id)).last_made_on_by_recipe,
       today: starts_on,
       random: random
     )

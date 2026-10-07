@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ShoppingListsControllerTest < ActionDispatch::IntegrationTest
+  setup { sign_in_as(users(:one)) }
+
   setup do
     @plan = meal_plans(:last_week) # has Big Pot Chili: Kidney beans "2 cans", Onion "1"
   end

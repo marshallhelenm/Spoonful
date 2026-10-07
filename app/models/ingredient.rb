@@ -1,15 +1,18 @@
 # A shared ingredient name ("Tomato") that recipes reference, so the same
 # ingredient isn't stored under several spellings.
 class Ingredient < ApplicationRecord
+  belongs_to :user
   has_many :recipe_ingredients, dependent: :restrict_with_error
   has_many :recipes, through: :recipe_ingredients
   has_many :shopping_list_checks, dependent: :delete_all
 
   normalizes :name, with: ->(name) { name.squish }
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { scope: :user_id, case_sensitive: false }
 
-  # Finds an ingredient by name ignoring capitalization and extra spaces, or creates it.
+  # Finds an ingredient by name ignoring capitalization and extra spaces, or
+  # creates it. Call it on a user's ingredients (user.ingredients.find_or_create_by_name!)
+  # so both the lookup and the new record are scoped to that user.
   def self.find_or_create_by_name!(name)
     normalized = normalize_value_for(:name, name)
     find_by("lower(name) = ?", normalized.downcase) || create!(name: normalized)
@@ -21,6 +24,7 @@ class Ingredient < ApplicationRecord
   # ("1 can + 2 cups").
   def merge_into!(target)
     raise ArgumentError, "can't merge an ingredient into itself" if target == self
+    raise ArgumentError, "can't merge into another user's ingredient" if target.user_id != user_id
 
     transaction do
       recipe_ingredients.find_each do |line|

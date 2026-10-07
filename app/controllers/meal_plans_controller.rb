@@ -2,22 +2,22 @@ class MealPlansController < InertiaController
   before_action :set_meal_plan, only: %i[show reshuffle destroy]
 
   def index
-    plans = MealPlan.includes(:recipes).order(starts_on: :desc, created_at: :desc)
+    plans = Current.user.meal_plans.includes(:recipes).order(starts_on: :desc, created_at: :desc)
 
     render inertia: { meal_plans: plans.map { |plan| summary(plan) } }
   end
 
   def new
-    plan = MealPlan.new
+    plan = Current.user.meal_plans.new
 
     render inertia: {
       defaults: plan.as_json(only: %i[meal_count starts_on]),
-      recipe_count: Recipe.count
+      recipe_count: Current.user.recipes.count
     }
   end
 
   def create
-    plan = MealPlan.new(meal_plan_params)
+    plan = Current.user.meal_plans.new(meal_plan_params)
 
     if plan.save_and_fill
       redirect_to meal_plan_path(plan)
@@ -33,7 +33,7 @@ class MealPlansController < InertiaController
           entry.recipe.as_json(only: %i[id name spoons meals_covered]).merge(entry_id: entry.id)
         end
       ),
-      recipes: Recipe.order(:spoons, :name).as_json(only: %i[id name spoons])
+      recipes: Current.user.recipes.order(:spoons, :name).as_json(only: %i[id name spoons])
     }
   end
 
@@ -50,7 +50,7 @@ class MealPlansController < InertiaController
   private
 
   def set_meal_plan
-    @meal_plan = MealPlan.find(params[:id])
+    @meal_plan = Current.user.meal_plans.find(params[:id])
   end
 
   def meal_plan_params

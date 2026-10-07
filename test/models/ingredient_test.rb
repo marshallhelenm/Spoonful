@@ -2,30 +2,30 @@ require "test_helper"
 
 class IngredientTest < ActiveSupport::TestCase
   test "names are unique regardless of capitalization" do
-    duplicate = Ingredient.new(name: "TOMATO")
+    duplicate = users(:one).ingredients.new(name: "TOMATO")
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:name], "has already been taken"
   end
 
   test "the database also rejects case-only duplicates" do
     assert_raises(ActiveRecord::RecordNotUnique) do
-      Ingredient.new(name: "tomato").save!(validate: false)
+      users(:one).ingredients.new(name: "tomato").save!(validate: false)
     end
   end
 
   test "squishes whitespace in names" do
-    assert_equal "Green onion", Ingredient.new(name: "  Green   onion ").name
+    assert_equal "Green onion", users(:one).ingredients.new(name: "  Green   onion ").name
   end
 
   test "find_or_create_by_name! reuses an existing ingredient ignoring case and spacing" do
     assert_no_difference -> { Ingredient.count } do
-      assert_equal ingredients(:tomato), Ingredient.find_or_create_by_name!("  tomato ")
+      assert_equal ingredients(:tomato), users(:one).ingredients.find_or_create_by_name!("  tomato ")
     end
   end
 
   test "find_or_create_by_name! creates new ingredients" do
     assert_difference -> { Ingredient.count } do
-      assert_equal "Garlic", Ingredient.find_or_create_by_name!("Garlic").name
+      assert_equal "Garlic", users(:one).ingredients.find_or_create_by_name!("Garlic").name
     end
   end
 
@@ -36,7 +36,7 @@ class IngredientTest < ActiveSupport::TestCase
 
   test "merge_into! moves recipe lines to the target and deletes the merged ingredient" do
     beans = ingredients(:kidney_beans)
-    target = Ingredient.create!(name: "Red kidney beans")
+    target = users(:one).ingredients.create!(name: "Red kidney beans")
 
     beans.merge_into!(target)
 
@@ -65,8 +65,8 @@ class IngredientTest < ActiveSupport::TestCase
 
   test "merge_into! moves shopping list checks without duplicating them" do
     plan = meal_plans(:last_week)
-    other_plan = MealPlan.create!(spoon_budget: 5)
-    onions = Ingredient.create!(name: "Onions")
+    other_plan = users(:one).meal_plans.create!(spoon_budget: 5)
+    onions = users(:one).ingredients.create!(name: "Onions")
     plan.shopping_list_checks.create!(ingredient: onions)
     plan.shopping_list_checks.create!(ingredient: ingredients(:onion))
     other_plan.shopping_list_checks.create!(ingredient: onions)

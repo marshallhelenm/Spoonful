@@ -1,6 +1,6 @@
 class ShoppingListsController < InertiaController
   def show
-    meal_plan = MealPlan.find(params[:meal_plan_id])
+    meal_plan = Current.user.meal_plans.find(params[:meal_plan_id])
     list = meal_plan.shopping_list
 
     render inertia: {

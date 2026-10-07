@@ -8,7 +8,7 @@ class MealPlanEntryTest < ActiveSupport::TestCase
   end
 
   test "last_made_on_by_recipe returns each recipe's most recent plan date" do
-    newer = MealPlan.create!(starts_on: Date.new(2026, 10, 5), spoon_budget: 5)
+    newer = users(:one).meal_plans.create!(starts_on: Date.new(2026, 10, 5), spoon_budget: 5)
     newer.entries.create!(recipe: recipes(:pasta), position: 0)
     newer.entries.create!(recipe: recipes(:chili), position: 1)
 
@@ -16,5 +16,11 @@ class MealPlanEntryTest < ActiveSupport::TestCase
       { recipes(:chili).id => Date.new(2026, 10, 5), recipes(:pasta).id => Date.new(2026, 10, 5) },
       MealPlanEntry.last_made_on_by_recipe
     )
+  end
+
+  test "can't use another user's recipe" do
+    entry = meal_plans(:last_week).entries.build(recipe: recipes(:secret_soup), position: 9)
+    assert_not entry.valid?
+    assert_includes entry.errors[:recipe], "must be one of your recipes"
   end
 end

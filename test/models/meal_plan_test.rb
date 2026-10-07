@@ -10,14 +10,14 @@ class MealPlanTest < ActiveSupport::TestCase
   end
 
   test "requires a start date and a non-negative whole budget" do
-    plan = MealPlan.new(spoon_budget: -1, starts_on: nil)
+    plan = users(:one).meal_plans.new(spoon_budget: -1, starts_on: nil)
     assert_not plan.valid?
     assert plan.errors[:starts_on].any?
     assert plan.errors[:spoon_budget].any?
   end
 
   test "max spoons is optional but must be 0 to 5 when set" do
-    plan = MealPlan.new(starts_on: Date.current, spoon_budget: 5)
+    plan = users(:one).meal_plans.new(starts_on: Date.current, spoon_budget: 5)
     assert plan.valid?
     plan.max_spoons = 3
     assert plan.valid?
@@ -26,14 +26,14 @@ class MealPlanTest < ActiveSupport::TestCase
   end
 
   test "fill! respects the plan's spoon cap" do
-    plan = MealPlan.new(spoon_budget: 10, meal_count: 6, max_spoons: 2)
+    plan = users(:one).meal_plans.new(spoon_budget: 10, meal_count: 6, max_spoons: 2)
     plan.save_and_fill(random: Random.new(3))
     assert plan.recipes.any?
     assert plan.recipes.all? { it.spoons <= 2 }
   end
 
   test "replacement_for picks a different recipe that isn't already in the plan" do
-    plan = MealPlan.create!(spoon_budget: 5)
+    plan = users(:one).meal_plans.create!(spoon_budget: 5)
     chili = plan.entries.create!(recipe: recipes(:chili), position: 0)
     plan.entries.create!(recipe: recipes(:pasta), position: 1)
 
@@ -41,7 +41,7 @@ class MealPlanTest < ActiveSupport::TestCase
   end
 
   test "meal count must be at least 1" do
-    assert_not MealPlan.new(starts_on: Date.current, spoon_budget: 5, meal_count: 0).valid?
+    assert_not users(:one).meal_plans.new(starts_on: Date.current, spoon_budget: 5, meal_count: 0).valid?
   end
 
   test "starts on defaults to today" do
@@ -49,7 +49,7 @@ class MealPlanTest < ActiveSupport::TestCase
   end
 
   test "save_and_fill saves a plan with ordered entries" do
-    plan = MealPlan.new(spoon_budget: 5, meal_count: 6, starts_on: Date.new(2026, 10, 5))
+    plan = users(:one).meal_plans.new(spoon_budget: 5, meal_count: 6, starts_on: Date.new(2026, 10, 5))
 
     assert plan.save_and_fill(random: Random.new(1))
     assert plan.persisted?
@@ -59,7 +59,7 @@ class MealPlanTest < ActiveSupport::TestCase
   end
 
   test "save_and_fill returns false and saves nothing when invalid" do
-    plan = MealPlan.new(spoon_budget: -1)
+    plan = users(:one).meal_plans.new(spoon_budget: -1)
     assert_no_difference -> { MealPlan.count } do
       assert_not plan.save_and_fill
     end

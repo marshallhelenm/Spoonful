@@ -1,6 +1,8 @@
 require "test_helper"
 
 class IngredientsControllerTest < ActionDispatch::IntegrationTest
+  setup { sign_in_as(users(:one)) }
+
   test "index lists ingredients alphabetically with the recipes that use them" do
     get ingredients_path
 
