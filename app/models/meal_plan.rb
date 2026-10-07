@@ -1,4 +1,6 @@
 class MealPlan < ApplicationRecord
+  include RecipeTotals
+
   DEFAULT_MEAL_COUNT = 14
 
   belongs_to :user
@@ -44,14 +46,6 @@ class MealPlan < ApplicationRecord
 
   def shopping_list
     ShoppingList.new(self)
-  end
-
-  def total_spoons
-    recipes.sum(&:spoons)
-  end
-
-  def meals_planned
-    recipes.sum(&:meals_covered)
   end
 
   private

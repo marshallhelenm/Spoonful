@@ -14,8 +14,7 @@
 # Pure Ruby, no database access: callers pass recipes and last-made dates in.
 class MealPlanner
   Result = Data.define(:recipes) do
-    def total_spoons = recipes.sum(&:spoons)
-    def meals_planned = recipes.sum(&:meals_covered)
+    include RecipeTotals
   end
 
   DEFAULT_ATTEMPTS = 300
