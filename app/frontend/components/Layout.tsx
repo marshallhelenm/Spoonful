@@ -5,7 +5,11 @@ import ThemeSwitcher from '@/components/ThemeSwitcher'
 
 const navItems = [
   { href: '/', label: 'Plan', matches: (url: string) => url === '/' || url === '/meal_plans/new' },
-  { href: '/recipes', label: 'Recipes', matches: (url: string) => url.startsWith('/recipes') },
+  {
+    href: '/recipes',
+    label: 'Recipes',
+    matches: (url: string) => url.startsWith('/recipes') || url.startsWith('/ingredients'),
+  },
   {
     href: '/meal_plans',
     label: 'History',

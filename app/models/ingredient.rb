@@ -14,4 +14,35 @@ class Ingredient < ApplicationRecord
     normalized = normalize_value_for(:name, name)
     find_by("lower(name) = ?", normalized.downcase) || create!(name: normalized)
   end
+
+  # Folds this ingredient into `target` (e.g. "Tomatoes" into "Tomato") and
+  # deletes it. Every recipe line and shopping-list checkmark moves to the
+  # target. If a recipe lists both, they become one line with both amounts
+  # ("1 can + 2 cups").
+  def merge_into!(target)
+    raise ArgumentError, "can't merge an ingredient into itself" if target == self
+
+    transaction do
+      recipe_ingredients.find_each do |line|
+        existing = target.recipe_ingredients.find_by(recipe_id: line.recipe_id)
+        if existing
+          existing.update!(amount: [ existing.amount, line.amount ].compact.join(" + ").presence)
+          line.destroy!
+        else
+          line.update!(ingredient: target)
+        end
+      end
+
+      shopping_list_checks.find_each do |check|
+        if target.shopping_list_checks.exists?(meal_plan_id: check.meal_plan_id)
+          check.destroy!
+        else
+          check.update!(ingredient: target)
+        end
+      end
+
+      recipe_ingredients.reset
+      destroy!
+    end
+  end
 end

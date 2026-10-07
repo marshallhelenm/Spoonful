@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   root "meal_plans#new"
 
   resources :recipes, except: :show
+  resources :ingredients, only: %i[index update destroy] do
+    post :merge, on: :member
+  end
   resources :meal_plans, only: %i[index new create show destroy] do
     post :reshuffle, on: :member
     resources :entries, only: %i[update destroy], controller: "meal_plan_entries" do

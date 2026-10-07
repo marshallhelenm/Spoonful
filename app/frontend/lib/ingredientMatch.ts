@@ -100,3 +100,20 @@ export function findNearMatch(typed: string, savedNames: string[]) {
   }
   return best?.name ?? null
 }
+
+// Pairs of saved names that are probably the same ingredient: equal apart
+// from case/accents/plurals ("Tomato" / "Tomatoes"), or a likely typo
+// ("Brocoli" / "Broccoli"). Used to suggest merges.
+export function findLikelyDuplicates(names: string[]): [string, string][] {
+  const keyed = names.map((name) => ({ name, key: matchKey(name) }))
+  const pairs: [string, string][] = []
+  for (let i = 0; i < keyed.length; i++) {
+    for (let j = i + 1; j < keyed.length; j++) {
+      const [a, b] = [keyed[i], keyed[j]]
+      const shorter = a.key.length <= b.key.length ? a.key : b.key
+      const longer = shorter === a.key ? b.key : a.key
+      if (a.key === b.key || isTypoOf(shorter, longer)) pairs.push([a.name, b.name])
+    }
+  }
+  return pairs
+}

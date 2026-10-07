@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { editDistance, findNearMatch, matchKey, normalize, suggestIngredients } from './ingredientMatch'
+import { editDistance, findLikelyDuplicates, findNearMatch, matchKey, normalize, suggestIngredients } from './ingredientMatch'
 
 const saved = ['Tomato', 'Tomato paste', 'Cherry tomatoes', 'Green onion', 'Onion', 'Kidney beans', 'Broccoli', 'Rice']
 
@@ -73,5 +73,19 @@ describe('findNearMatch', () => {
 
   it('returns null for genuinely new ingredients', () => {
     expect(findNearMatch('Garlic', saved)).toBeNull()
+  })
+})
+
+describe('findLikelyDuplicates', () => {
+  it('pairs plurals, accent differences, and typos', () => {
+    expect(findLikelyDuplicates(['Tomato', 'Garlic', 'Tomatoes', 'Jalapeño', 'jalapeno', 'Brocoli', 'Broccoli'])).toEqual([
+      ['Tomato', 'Tomatoes'],
+      ['Jalapeño', 'jalapeno'],
+      ['Brocoli', 'Broccoli'],
+    ])
+  })
+
+  it("doesn't pair different ingredients that share a word", () => {
+    expect(findLikelyDuplicates(['Onion', 'Green onion', 'Rice', 'Ice', 'Tomato paste', 'Tomato'])).toEqual([])
   })
 })

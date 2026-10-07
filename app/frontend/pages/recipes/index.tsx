@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react'
 
 import Spoons from '@/components/Spoons'
-import { card, pageHeading, primaryButton } from '@/components/ui'
+import { card, pageHeading, primaryButton, secondaryButton } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
 import type { RecipeWithHistory } from '@/types'
 
@@ -9,11 +9,16 @@ export default function RecipesIndex({ recipes }: { recipes: RecipeWithHistory[]
   return (
     <>
       <Head title="Recipes" />
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className={pageHeading}>Recipes</h1>
-        <Link href="/recipes/new" className={primaryButton}>
-          Add recipe
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/ingredients" className={secondaryButton}>
+            Ingredients
+          </Link>
+          <Link href="/recipes/new" className={primaryButton}>
+            Add recipe
+          </Link>
+        </div>
       </div>
 
       {recipes.length === 0 ? (
