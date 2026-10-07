@@ -1,6 +1,10 @@
 @import 'tailwindcss';
-/* Bagel Fat One (SIL Open Font License), bundled from npm instead of loaded from Google */
+/*
+  Fonts (both SIL Open Font License), bundled from npm instead of loaded from Google:
+  Bagel Fat One for titles (font-display), Quicksand (variable, 300–700) for everything else.
+*/
 @import '@fontsource/bagel-fat-one/latin-400.css';
+@import '@fontsource-variable/quicksand';
 
 @plugin '@tailwindcss/forms';
 
@@ -11,6 +15,7 @@
 */
 @theme {
   --font-display: 'Bagel Fat One', ui-rounded, system-ui, sans-serif;
+  --font-sans: 'Quicksand Variable', ui-rounded, system-ui, sans-serif;
 
   --color-page: #fafaf9;
   --color-surface: #ffffff;
