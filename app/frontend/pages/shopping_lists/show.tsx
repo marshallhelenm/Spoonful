@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { useState } from 'react'
 
-import { callout, card, checkbox, pageHeading } from '@/components/ui'
+import { callout, card, checkbox, pageHeading, textLink } from '@/components/ui'
 import { formatDate } from '@/lib/format'
 import type { ShoppingListItem, ShoppingListUse } from '@/types'
 
@@ -70,7 +70,7 @@ export default function ShowShoppingList({ meal_plan: plan, items, recipes_witho
       <h1 className={pageHeading}>Shopping list</h1>
       <p className="mt-1 text-sm text-muted">
         For the{' '}
-        <Link href={`/meal_plans/${plan.id}`} className="font-semibold text-accent-ink underline">
+        <Link href={`/meal_plans/${plan.id}`} className={textLink}>
           week of {formatDate(plan.starts_on)}
         </Link>
         {items.length > 0 && ` · ${inCart.length} of ${items.length} in your cart`}
@@ -82,7 +82,7 @@ export default function ShowShoppingList({ meal_plan: plan, items, recipes_witho
           <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
             {missing.map((recipe) => (
               <li key={recipe.id}>
-                <Link href={`/recipes/${recipe.id}/edit`} className="font-semibold text-accent-ink underline">
+                <Link href={`/recipes/${recipe.id}/edit`} className={textLink}>
                   {recipe.name}
                 </Link>
               </li>

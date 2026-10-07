@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 
 import AuthCard from '@/components/AuthCard'
 import { EmailField, NewPasswordField } from '@/components/AuthFields'
-import { primaryButton } from '@/components/ui'
+import { primaryButton, textLink } from '@/components/ui'
 
 export default function SignUp() {
   const { data, setData, post, processing, errors } = useForm({ email_address: '', password: '' })
@@ -33,7 +33,7 @@ export default function SignUp() {
       </form>
       <p className="mt-4 text-center text-sm text-muted">
         Already have an account?{' '}
-        <Link href="/session/new" className="font-semibold text-accent-ink underline">
+        <Link href="/session/new" className={textLink}>
           Sign in
         </Link>
       </p>

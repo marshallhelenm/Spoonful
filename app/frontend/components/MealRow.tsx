@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 
-import { card, dangerButton, inputBase, secondaryButton } from '@/components/ui'
+import { card, dangerButton, ghostButton, inputBase, secondaryButton } from '@/components/ui'
 import { pluralize } from '@/lib/format'
 import type { RecipeOption } from '@/types'
 
@@ -62,7 +62,7 @@ export default function MealRow({
             onClick={onToggle}
             aria-expanded={open}
             aria-controls={panelId}
-            className="min-h-11 rounded-lg px-2 text-sm font-semibold text-accent-ink hover:bg-accent-soft"
+            className={ghostButton}
           >
             {open ? 'Done' : 'Change'}
           </button>

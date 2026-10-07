@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import IngredientNameInput from '@/components/IngredientNameInput'
-import { inputBase, secondaryButton } from '@/components/ui'
+import { calloutButton, calloutQuietButton, inputBase, secondaryButton } from '@/components/ui'
 import { findNearMatch } from '@/lib/ingredientMatch'
 
 export type IngredientRow = {
@@ -177,14 +177,14 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
                         <button
                           type="button"
                           onClick={() => update(row.id, { name: nearMatch })}
-                          className="min-h-9 rounded-lg bg-accent px-3 font-semibold text-on-accent hover:bg-accent-hover"
+                          className={calloutButton}
                         >
                           Use {nearMatch}
                         </button>
                         <button
                           type="button"
                           onClick={() => setKeptIds((set) => withId(set, row.id, true))}
-                          className="min-h-9 rounded-lg px-3 font-semibold text-accent-ink hover:bg-surface"
+                          className={calloutQuietButton}
                         >
                           Keep “{row.name.trim()}”
                         </button>

@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import Field from '@/components/Field'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { callout, card, checkbox, input, pageHeading, primaryButton } from '@/components/ui'
+import { callout, card, checkbox, choiceColors, input, pageHeading, primaryButton, textLink } from '@/components/ui'
 
 type Props = {
   defaults: { meal_count: number; starts_on: string }
@@ -48,7 +48,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
         <div className={`${callout} mt-6`}>
           <p className="font-semibold">You don't have any recipes yet.</p>
           <p className="mt-1 text-sm text-ink-soft">
-            <Link href="/recipes/new" className="font-semibold text-accent-ink underline">
+            <Link href="/recipes/new" className={textLink}>
               Add a few recipes
             </Link>{' '}
             first, including some 0-spoon meals for low-energy days.
@@ -68,11 +68,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
                       type="button"
                       onClick={() => setData('spoon_budget', preset.value)}
                       aria-pressed={data.spoon_budget === preset.value}
-                      className={`min-h-11 rounded-full px-4 text-sm font-medium ring-1 ${
-                        data.spoon_budget === preset.value
-                          ? 'bg-accent text-on-accent ring-accent'
-                          : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
-                      }`}
+                      className={`min-h-11 rounded-full px-4 text-sm font-medium ring-1 ${choiceColors(data.spoon_budget === preset.value)}`}
                     >
                       {preset.label} · {preset.value}
                     </button>

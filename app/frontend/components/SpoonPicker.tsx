@@ -1,3 +1,5 @@
+import { choiceColors } from '@/components/ui'
+
 const OPTIONS = [0, 1, 2, 3, 4, 5]
 
 type Props = {
@@ -23,11 +25,7 @@ export default function SpoonPicker({ label = 'Spoons', value, onChange, describ
             role="radio"
             aria-checked={selected}
             onClick={() => onChange(option)}
-            className={`min-h-11 rounded-xl text-base font-semibold ring-1 transition ${
-              selected
-                ? 'bg-accent text-on-accent ring-accent'
-                : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
-            }`}
+            className={`min-h-11 rounded-xl text-base font-semibold ring-1 transition ${choiceColors(selected)}`}
           >
             {option}
           </button>

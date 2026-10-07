@@ -5,7 +5,7 @@ import AuthCard from '@/components/AuthCard'
 import { EmailField } from '@/components/AuthFields'
 import Field from '@/components/Field'
 import PasswordInput from '@/components/PasswordInput'
-import { primaryButton } from '@/components/ui'
+import { primaryButton, textLink } from '@/components/ui'
 
 export default function SignIn() {
   const { data, setData, post, processing } = useForm({ email_address: '', password: '' })
@@ -23,7 +23,7 @@ export default function SignIn() {
           id="password"
           label="Password"
           labelAside={
-            <Link href="/passwords/new" className="text-sm font-semibold text-accent-ink underline">
+            <Link href="/passwords/new" className={`${textLink} text-sm`}>
               Forgot it?
             </Link>
           }
@@ -43,7 +43,7 @@ export default function SignIn() {
       </form>
       <p className="mt-4 text-center text-sm text-muted">
         New here?{' '}
-        <Link href="/sign_up" className="font-semibold text-accent-ink underline">
+        <Link href="/sign_up" className={textLink}>
           Create an account
         </Link>
       </p>

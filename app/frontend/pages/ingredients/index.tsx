@@ -3,7 +3,21 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 
 import Field from '@/components/Field'
-import { callout, card, dangerButton, input, inputBase, label, pageHeading, primaryButton, secondaryButton } from '@/components/ui'
+import {
+  callout,
+  calloutButton,
+  calloutQuietButton,
+  card,
+  dangerButton,
+  ghostButton,
+  input,
+  inputBase,
+  label,
+  pageHeading,
+  primaryButton,
+  secondaryButton,
+  textLink,
+} from '@/components/ui'
 import { pluralize } from '@/lib/format'
 import { findLikelyDuplicates, normalize } from '@/lib/ingredientMatch'
 
@@ -69,7 +83,7 @@ function IngredientRow({
           onClick={onToggle}
           aria-expanded={open}
           aria-controls={panelId}
-          className="min-h-11 shrink-0 rounded-lg px-2 text-sm font-semibold text-accent-ink hover:bg-accent-soft"
+          className={`${ghostButton} shrink-0`}
         >
           {open ? 'Done' : 'Edit'}
         </button>
@@ -83,7 +97,7 @@ function IngredientRow({
               {ingredient.recipes.map((recipe, index) => (
                 <span key={recipe.id}>
                   {index > 0 && ', '}
-                  <Link href={`/recipes/${recipe.id}/edit`} className="font-semibold text-accent-ink underline">
+                  <Link href={`/recipes/${recipe.id}/edit`} className={textLink}>
                     {recipe.name}
                   </Link>
                 </span>
@@ -181,7 +195,7 @@ export default function IngredientsIndex({ ingredients }: { ingredients: Ingredi
       <Head title="Ingredients" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className={pageHeading}>Ingredients</h1>
-        <Link href="/recipes" className="text-sm font-semibold text-accent-ink underline">
+        <Link href="/recipes" className={`${textLink} text-sm`}>
           Back to recipes
         </Link>
       </div>
@@ -205,14 +219,14 @@ export default function IngredientsIndex({ ingredients }: { ingredients: Ingredi
                   <button
                     type="button"
                     onClick={() => merge(drop, keep)}
-                    className="min-h-9 rounded-lg bg-accent px-3 font-semibold text-on-accent hover:bg-accent-hover"
+                    className={calloutButton}
                   >
                     Keep “{keep.name}”
                   </button>
                   <button
                     type="button"
                     onClick={() => merge(keep, drop)}
-                    className="min-h-9 rounded-lg px-3 font-semibold text-accent-ink hover:bg-surface"
+                    className={calloutQuietButton}
                   >
                     Keep “{drop.name}”
                   </button>

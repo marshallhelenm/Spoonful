@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 
 import AuthCard from '@/components/AuthCard'
 import { EmailField } from '@/components/AuthFields'
-import { primaryButton } from '@/components/ui'
+import { primaryButton, textLink } from '@/components/ui'
 
 export default function ForgotPassword() {
   const { data, setData, post, processing } = useForm({ email_address: '' })
@@ -22,7 +22,7 @@ export default function ForgotPassword() {
         </button>
       </form>
       <p className="mt-4 text-center text-sm text-muted">
-        <Link href="/session/new" className="font-semibold text-accent-ink underline">
+        <Link href="/session/new" className={textLink}>
           Back to sign in
         </Link>
       </p>

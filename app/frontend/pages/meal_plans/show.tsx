@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import MealRow from '@/components/MealRow'
 import Spoons from '@/components/Spoons'
-import { card, dangerButton, pageHeading, primaryButton, secondaryButton } from '@/components/ui'
+import { card, dangerButton, pageHeading, primaryButton, secondaryButton, textLink } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
 import type { MealPlan, MealPlanEntry, RecipeOption } from '@/types'
 
@@ -105,7 +105,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
       {plan.entries.length === 0 ? (
         <div className={`${card} mt-6 text-ink-soft`}>
           No recipes could be picked.{' '}
-          <Link href="/recipes/new" className="font-semibold text-accent-ink underline">
+          <Link href="/recipes/new" className={textLink}>
             Add some recipes
           </Link>{' '}
           and reshuffle.

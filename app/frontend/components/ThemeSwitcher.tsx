@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { tabColors } from '@/components/ui'
 import { getThemePreference, setThemePreference } from '@/lib/theme'
 import type { ThemePreference } from '@/lib/theme'
 
@@ -29,9 +30,7 @@ export default function ThemeSwitcher() {
             aria-checked={selected}
             title={option.value === 'system' ? "Match your device's setting" : undefined}
             onClick={() => choose(option.value)}
-            className={`min-h-9 rounded-lg px-3 text-sm font-medium transition ${
-              selected ? 'bg-accent-soft text-accent-ink' : 'text-muted hover:bg-surface-hover'
-            }`}
+            className={`min-h-9 rounded-lg px-3 text-sm font-medium transition ${tabColors(selected)}`}
           >
             {option.label}
           </button>

@@ -2,7 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
-import { callout } from '@/components/ui'
+import { callout, tabColors, textLink } from '@/components/ui'
 
 const navItems = [
   { href: '/', label: 'Plan', matches: (url: string) => url === '/' || url === '/meal_plans/new' },
@@ -38,9 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     key={item.href}
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                      active ? 'bg-accent-soft text-accent-ink' : 'text-muted hover:bg-surface-hover'
-                    }`}
+                    className={`rounded-lg px-3 py-2 text-sm font-medium ${tabColors(active)}`}
                   >
                     {item.label}
                   </Link>
@@ -59,7 +57,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => router.delete('/session', { onSuccess: () => router.visit('/sign_up') })}
-              className="font-semibold text-accent-ink underline underline-offset-2"
+              className={`${textLink} underline-offset-2`}
             >
               Sign up
             </button>{' '}
