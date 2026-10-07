@@ -1,4 +1,6 @@
 class Recipe < ApplicationRecord
+  include UniqueNamePerUser
+
   SPOON_RANGE = 0..5
 
   belongs_to :user
@@ -8,9 +10,6 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients, -> { order(:position) }, dependent: :destroy
   has_many :ingredients, through: :recipe_ingredients
 
-  normalizes :name, with: ->(name) { name.squish }
-
-  validates :name, presence: true, uniqueness: { scope: :user_id, case_sensitive: false }
   validates :spoons, presence: { message: "needs a rating" },
                      numericality: { only_integer: true, in: SPOON_RANGE, allow_nil: true }
   validates :meals_covered, numericality: { only_integer: true, greater_than_or_equal_to: 1 }

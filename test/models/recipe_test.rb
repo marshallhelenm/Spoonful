@@ -23,6 +23,10 @@ class RecipeTest < ActiveSupport::TestCase
     assert_equal "Lentil Soup", build_recipe(name: "  Lentil   Soup ").name
   end
 
+  test "named finds a recipe ignoring case and spacing" do
+    assert_equal [ recipes(:chili) ], users(:one).recipes.named("  big POT   chili ").to_a
+  end
+
   test "names are unique regardless of case" do
     recipe = build_recipe(name: "big pot chili")
     assert_not recipe.valid?

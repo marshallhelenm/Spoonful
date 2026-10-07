@@ -51,11 +51,11 @@ class SampleRecipes
   def self.add_to(user)
     user.transaction do
       added = RECIPES.count do |attrs|
-        user.recipes.where("lower(name) = ?", attrs[:name].downcase).none? && user.recipes.create!(attrs)
+        user.recipes.named(attrs[:name]).none? && user.recipes.create!(attrs)
       end
 
       INGREDIENTS.each do |recipe_name, lines|
-        recipe = user.recipes.find_by("lower(name) = ?", recipe_name.downcase)
+        recipe = user.recipes.named(recipe_name).first
         next if recipe.nil? || recipe.recipe_ingredients.any?
 
         recipe.save_with_ingredients(lines.map { |name, amount| { name: name, amount: amount } })

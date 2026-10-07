@@ -55,7 +55,7 @@ class IngredientsController < InertiaController
   # existing ingredient as it's actually spelled.
   def rename_errors
     if @ingredient.errors.of_kind?(:name, :taken)
-      existing = Current.user.ingredients.where.not(id: @ingredient.id).find_by("lower(name) = ?", @ingredient.name.downcase)
+      existing = Current.user.ingredients.where.not(id: @ingredient.id).named(@ingredient.name).first
       { name: [ "There's already an ingredient called #{existing.name}. Use “Merge into” to combine them." ] }
     else
       @ingredient.errors.to_hash
