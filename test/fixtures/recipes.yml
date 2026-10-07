@@ -1,0 +1,14 @@
+chili:
+  name: Big Pot Chili
+  spoons: 3
+  meals_covered: 4
+
+pasta:
+  name: Weeknight Pasta
+  spoons: 2
+  meals_covered: 1
+
+takeout:
+  name: Takeout
+  spoons: 0
+  meals_covered: 1

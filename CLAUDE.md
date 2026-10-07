@@ -33,14 +33,10 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `meal_count`: number of meals to plan; default **14** (lunch + dinner × 7), user can change it
 - `spoon_budget`: a **target**, not a hard cap — get as close as possible, over or under
 - A recipe's spoons count **once** per use, even if it covers several meals (you cook it once)
-- **No repeats within a plan** (see open question about 0-spoon fillers)
+- **No repeats within a plan**, except 0-spoon fillers (`Recipe#filler?`), which may repeat (takeout twice is fine)
+- If the last pick covers more meals than slots remain, allow it — the extra meals are leftovers
 - **Recency weighting**: prefer recipes not made recently, but recent ones still have a non-zero chance
 - "Last made" is derived from past meal plan entries (no separate field for now)
-
-## Open questions
-
-- Can 0-spoon fillers repeat within a week (e.g. takeout twice)? Leaning yes.
-- If the last pick covers more meals than slots remain, allow overflow (leftovers) or skip it?
 
 ## Future (not MVP)
 
