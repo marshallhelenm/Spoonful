@@ -2,12 +2,26 @@
 
 A meal planner that budgets *effort* (spoons) instead of money. The user saves recipes with a spoon rating, then asks for a week's meal plan that targets a spoon budget for that week.
 
-## Stack (decided, not yet scaffolded)
+## Stack
 
-- Rails 8 + Inertia.js + React (TypeScript), Vite via `vite_ruby`
+- Rails 8.1 (Ruby 4.0.3 via chruby, pinned in `.ruby-version`) + Inertia.js + React 19 (TypeScript), Vite via `vite_ruby`, Tailwind v4
 - SQLite
 - One responsive, mobile-first web app (no separate mobile build); PWA later maybe
 - Single user for MVP; no auth until the MVP works
+- Generated without Hotwire, Jbuilder, Action Mailbox, Action Text
+
+## Layout
+
+- React pages: `app/frontend/pages/<controller>/<action>.tsx`, rendered from controllers with `render inertia: ...`
+- Vite entrypoints: `app/frontend/entrypoints/` (`inertia.tsx`, `application.css`)
+
+## Commands
+
+- `bin/dev` — Rails on http://localhost:3000 + Vite dev server (3036), via Foreman and `Procfile.dev`
+- `bin/rails test` — Ruby tests
+- `npm run check` — TypeScript type-check
+
+**Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
 
 ## MVP domain rules
 
