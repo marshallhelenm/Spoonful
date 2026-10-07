@@ -27,6 +27,8 @@ class MealPlanner
   OVERSHOOT_PENALTY = 2
   # Single-meal swaps use a gentler budget fit so "random" still feels random.
   REPLACEMENT_FIT_SOFTNESS = 2.0
+  # How strongly single-meal swaps prefer recipes covering the same number of meals.
+  MEALS_MATCH_STRENGTH = 1.0
 
   def initialize(recipes:, meal_count:, spoon_budget:, max_spoons: nil, budget_is_ceiling: false,
                  last_made_on: {}, today: Date.current, attempts: DEFAULT_ATTEMPTS, random: Random.new)
@@ -52,7 +54,8 @@ class MealPlanner
 
   # Picks one recipe to swap in for `replacing`, given the rest of the plan
   # (`others`). Follows the same rules as a full plan: no repeated non-fillers,
-  # the spoon cap, and the ceiling if set. Returns nil if nothing else fits.
+  # the spoon cap, and the ceiling if set. Prefers recipes that cover as many
+  # meals as the one being replaced. Returns nil if nothing else fits.
   def pick_replacement(others:, replacing:)
     used_ids = others.reject(&:filler?).to_set(&:id)
     target = @spoon_budget - others.sum(&:spoons)
@@ -65,7 +68,9 @@ class MealPlanner
     return if candidates.empty?
 
     weighted_pick(candidates, candidates.map do |recipe|
-      @recency_weights.fetch(recipe.id) * Math.exp(-(recipe.spoons - target).abs / REPLACEMENT_FIT_SOFTNESS)
+      budget_fit = Math.exp(-(recipe.spoons - target).abs / REPLACEMENT_FIT_SOFTNESS)
+      meals_match = Math.exp(-(recipe.meals_covered - replacing.meals_covered).abs * MEALS_MATCH_STRENGTH)
+      @recency_weights.fetch(recipe.id) * budget_fit * meals_match
     end)
   end
 

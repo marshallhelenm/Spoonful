@@ -114,6 +114,16 @@ class MealPlannerTest < ActiveSupport::TestCase
     assert_operator picks.count(3), :>, 0
   end
 
+  test "a replacement prefers recipes covering the same number of meals, but isn't limited to them" do
+    pasta = recipe(1, 2, 2)
+    recipes = [ pasta, recipe(2, 2, 2), recipe(3, 2, 1) ]
+    picks = (1..200).map do |seed|
+      replacement(recipes, others: [ recipe(7, 4), recipe(8, 4) ], replacing: pasta, seed: seed).id
+    end
+    assert_operator picks.count(2), :>, picks.count(3) * 2
+    assert_operator picks.count(3), :>, 0
+  end
+
   test "no replacement when nothing else fits" do
     assert_nil replacement([ recipe(1, 2) ], others: [], replacing: recipe(1, 2))
   end
