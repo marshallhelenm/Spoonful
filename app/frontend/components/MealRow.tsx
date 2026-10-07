@@ -53,7 +53,7 @@ export default function MealRow({
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="font-semibold">{name}</p>
-          {details && <p className="text-sm text-stone-600">{details}</p>}
+          {details && <p className="text-sm text-muted">{details}</p>}
         </div>
         <div className="flex shrink-0 items-center gap-3">
           {aside}
@@ -62,7 +62,7 @@ export default function MealRow({
             onClick={onToggle}
             aria-expanded={open}
             aria-controls={panelId}
-            className="min-h-11 rounded-lg px-2 text-sm font-semibold text-amber-800 hover:bg-amber-50"
+            className="min-h-11 rounded-lg px-2 text-sm font-semibold text-accent-ink hover:bg-accent-soft"
           >
             {open ? 'Done' : 'Change'}
           </button>
@@ -70,7 +70,7 @@ export default function MealRow({
       </div>
 
       {open && (
-        <div id={panelId} className="mt-3 space-y-3 border-t border-stone-200 pt-3">
+        <div id={panelId} className="mt-3 space-y-3 border-t border-line pt-3">
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -90,7 +90,7 @@ export default function MealRow({
             </button>
           </div>
           <div>
-            <label htmlFor={`replace-${entryId}`} className="text-sm font-semibold text-stone-800">
+            <label htmlFor={`replace-${entryId}`} className="text-sm font-semibold text-ink">
               Replace with
             </label>
             <select

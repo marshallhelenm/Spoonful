@@ -40,15 +40,15 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
     <>
       <Head title="Plan your week" />
       <h1 className="text-2xl font-bold">How many spoons this week?</h1>
-      <p className="mt-1 text-stone-600">
+      <p className="mt-1 text-muted">
         Set a spoon budget and Spoonful will pick meals that add up to about that much effort.
       </p>
 
       {recipe_count === 0 && (
-        <div className={`${card} mt-6 bg-amber-50 ring-amber-200`}>
+        <div className={`${card} mt-6 bg-accent-soft ring-accent-line`}>
           <p className="font-medium">You don't have any recipes yet.</p>
-          <p className="mt-1 text-sm text-stone-700">
-            <Link href="/recipes/new" className="font-semibold text-amber-800 underline">
+          <p className="mt-1 text-sm text-ink-soft">
+            <Link href="/recipes/new" className="font-semibold text-accent-ink underline">
               Add a few recipes
             </Link>{' '}
             first, including some 0-spoon meals for low-energy days.
@@ -70,8 +70,8 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
                 aria-pressed={data.spoon_budget === preset.value}
                 className={`min-h-11 rounded-full px-4 text-sm font-medium ring-1 ${
                   data.spoon_budget === preset.value
-                    ? 'bg-amber-700 text-white ring-amber-700'
-                    : 'bg-white text-stone-700 ring-stone-300 hover:bg-stone-100'
+                    ? 'bg-accent text-on-accent ring-accent'
+                    : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
                 }`}
               >
                 {preset.label} · {preset.value}
@@ -96,8 +96,8 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
               className={checkbox}
             />
             <label htmlFor="budget_is_ceiling" className="text-sm">
-              <span className="font-semibold text-stone-800">Never go over this budget</span>
-              <span className="block text-stone-600">
+              <span className="font-semibold text-ink">Never go over this budget</span>
+              <span className="block text-muted">
                 Otherwise Spoonful may go a little over if that gets closer to the budget.
               </span>
             </label>
@@ -114,8 +114,8 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
               className={checkbox}
             />
             <label htmlFor="cap_enabled" className="text-sm">
-              <span className="font-semibold text-stone-800">Limit how hard any one meal can be</span>
-              <span className="block text-stone-600">
+              <span className="font-semibold text-ink">Limit how hard any one meal can be</span>
+              <span className="block text-muted">
                 Leave this off if one big cooking day is fine this week.
               </span>
             </label>
@@ -140,7 +140,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
           <label htmlFor="meal_count" className={label}>
             Meals to plan
           </label>
-          <p id="meal_count-hint" className="text-sm text-stone-600">
+          <p id="meal_count-hint" className="text-sm text-muted">
             14 is lunch and dinner for a week.
           </p>
           <NumberStepper

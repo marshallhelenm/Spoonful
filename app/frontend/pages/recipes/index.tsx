@@ -17,8 +17,8 @@ export default function RecipesIndex({ recipes }: { recipes: RecipeWithHistory[]
       </div>
 
       {recipes.length === 0 ? (
-        <div className={`${card} text-center text-stone-600`}>
-          <p className="font-medium text-stone-800">No recipes yet.</p>
+        <div className={`${card} text-center text-muted`}>
+          <p className="font-medium text-ink">No recipes yet.</p>
           <p className="mt-1 text-sm">
             Add the meals you make, plus a few 0-spoon options like takeout or leftovers.
           </p>
@@ -29,13 +29,13 @@ export default function RecipesIndex({ recipes }: { recipes: RecipeWithHistory[]
             <li key={recipe.id}>
               <Link
                 href={`/recipes/${recipe.id}/edit`}
-                className={`${card} block h-full transition hover:ring-amber-400`}
+                className={`${card} block h-full transition hover:ring-accent`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <h2 className="font-semibold">{recipe.name}</h2>
                   <Spoons count={recipe.spoons} />
                 </div>
-                <p className="mt-2 text-sm text-stone-600">
+                <p className="mt-2 text-sm text-muted">
                   Makes {pluralize(recipe.meals_covered, 'meal')}
                   {' · '}
                   {recipe.last_made_on ? `Last planned ${formatDate(recipe.last_made_on)}` : 'Never planned'}

@@ -54,7 +54,7 @@ export default function RecipeForm({ recipe, submitLabel, onSubmit, extraActions
 
       <div>
         <span className={label}>Spoons</span>
-        <p id="spoons-hint" className="text-sm text-stone-600">
+        <p id="spoons-hint" className="text-sm text-muted">
           How much energy it takes, from 0 (takeout, leftovers) to 5 (a real project).
         </p>
         <SpoonPicker
@@ -81,7 +81,7 @@ export default function RecipeForm({ recipe, submitLabel, onSubmit, extraActions
 
       <div>
         <label htmlFor="notes" className={label}>
-          Notes <span className="font-normal text-stone-500">(optional)</span>
+          Notes <span className="font-normal text-subtle">(optional)</span>
         </label>
         <textarea
           id="notes"

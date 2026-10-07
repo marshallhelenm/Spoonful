@@ -15,10 +15,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { url, flash } = usePage()
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900">
-      <header className="border-b border-stone-200 bg-white/90 backdrop-blur">
+    <div className="min-h-screen bg-page text-ink">
+      <header className="border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-3">
-          <Link href="/" className="text-lg font-bold tracking-tight text-amber-800">
+          <Link href="/" className="text-lg font-bold tracking-tight text-accent-ink">
             <span aria-hidden="true">🥄</span> Spoonful
           </Link>
           <nav aria-label="Main" className="flex gap-1">
@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                    active ? 'bg-amber-100 text-amber-900' : 'text-stone-600 hover:bg-stone-100'
+                    active ? 'bg-accent-soft text-accent-ink' : 'text-muted hover:bg-surface-hover'
                   }`}
                 >
                   {item.label}
@@ -43,12 +43,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <main className="mx-auto max-w-3xl px-4 py-6 pb-16">
         {flash.notice && (
-          <p role="status" className="mb-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-900 ring-1 ring-emerald-200">
+          <p role="status" className="mb-4 rounded-xl bg-success-soft px-4 py-3 text-sm text-success ring-1 ring-success-line">
             {flash.notice}
           </p>
         )}
         {flash.alert && (
-          <p role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-900 ring-1 ring-red-200">
+          <p role="alert" className="mb-4 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger ring-1 ring-danger-line">
             {flash.alert}
           </p>
         )}

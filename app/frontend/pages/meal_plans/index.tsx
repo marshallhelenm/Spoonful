@@ -16,17 +16,17 @@ export default function MealPlansIndex({ meal_plans: plans }: { meal_plans: Meal
       </div>
 
       {plans.length === 0 ? (
-        <div className={`${card} text-center text-stone-600`}>No meal plans yet.</div>
+        <div className={`${card} text-center text-muted`}>No meal plans yet.</div>
       ) : (
         <ul className="space-y-2">
           {plans.map((plan) => (
             <li key={plan.id}>
               <Link
                 href={`/meal_plans/${plan.id}`}
-                className={`${card} flex items-center justify-between gap-3 transition hover:ring-amber-400`}
+                className={`${card} flex items-center justify-between gap-3 transition hover:ring-accent`}
               >
                 <span className="font-semibold">Week of {formatDate(plan.starts_on)}</span>
-                <span className="text-right text-sm text-stone-600">
+                <span className="text-right text-sm text-muted">
                   {plan.total_spoons} / {plan.spoon_budget} spoons
                   <br />
                   {pluralize(plan.meals_planned, 'meal')}

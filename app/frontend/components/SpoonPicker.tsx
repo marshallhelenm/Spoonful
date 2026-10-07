@@ -22,8 +22,8 @@ export default function SpoonPicker({ label = 'Spoons', value, onChange, describ
             onClick={() => onChange(option)}
             className={`min-h-11 rounded-xl text-base font-semibold ring-1 transition ${
               selected
-                ? 'bg-amber-700 text-white ring-amber-700'
-                : 'bg-white text-stone-700 ring-stone-300 hover:bg-stone-100'
+                ? 'bg-accent text-on-accent ring-accent'
+                : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
             }`}
           >
             {option}

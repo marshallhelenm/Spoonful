@@ -2,3 +2,73 @@
 
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
+
+/*
+  Semantic color roles. Components use these (bg-surface, text-muted,
+  bg-accent, ...) instead of raw palette colors, so dark mode only has to
+  redefine the roles below.
+*/
+@theme {
+  --color-page: #fafaf9;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f5f5f4;
+  --color-ink: #1c1917;
+  --color-ink-soft: #44403c;
+  --color-muted: #57534e;
+  --color-subtle: #78716c;
+  --color-line: #e7e5e4;
+  --color-line-strong: #d6d3d1;
+
+  --color-accent: #b45309;
+  --color-accent-hover: #92400e;
+  --color-on-accent: #ffffff;
+  --color-accent-ink: #92400e;
+  --color-accent-soft: #fef3c7;
+  --color-accent-line: #fcd34d;
+
+  --color-success: #047857;
+  --color-success-soft: #ecfdf5;
+  --color-success-line: #a7f3d0;
+
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fef2f2;
+  --color-danger-line: #fecaca;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #1c1917;
+    --color-surface: #292524;
+    --color-surface-hover: #3a3532;
+    --color-ink: #f5f5f4;
+    --color-ink-soft: #e7e5e4;
+    --color-muted: #d6d3d1;
+    --color-subtle: #a8a29e;
+    --color-line: #44403c;
+    --color-line-strong: #57534e;
+
+    --color-accent: #f59e0b;
+    --color-accent-hover: #fbbf24;
+    --color-on-accent: #1c1917;
+    --color-accent-ink: #fcd34d;
+    --color-accent-soft: #451a03;
+    --color-accent-line: #92400e;
+
+    --color-success: #6ee7b7;
+    --color-success-soft: #022c22;
+    --color-success-line: #065f46;
+
+    --color-danger: #fca5a5;
+    --color-danger-soft: #450a0a;
+    --color-danger-line: #991b1b;
+  }
+}
+
+body {
+  background-color: var(--color-page);
+  color: var(--color-ink);
+}

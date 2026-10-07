@@ -15,8 +15,8 @@ export default function NumberStepper({ id, value, onChange, min = 0, max, descr
   const current = value === '' ? min : value
 
   const stepButton =
-    'flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-xl font-semibold text-stone-700 ' +
-    'ring-1 ring-stone-300 hover:bg-stone-100 disabled:opacity-40'
+    'flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface text-xl font-semibold text-ink-soft ' +
+    'ring-1 ring-line-strong hover:bg-surface-hover disabled:opacity-40'
 
   return (
     <div className="mt-1 flex items-center gap-2">

@@ -9,9 +9,9 @@ import type { MealPlan, MealPlanEntry, RecipeOption } from '@/types'
 
 function budgetStatus(total: number, budget: number) {
   const difference = total - budget
-  if (difference === 0) return { text: 'Right on budget', tone: 'text-emerald-700' }
-  if (difference < 0) return { text: `${pluralize(-difference, 'spoon')} under budget`, tone: 'text-emerald-700' }
-  return { text: `${pluralize(difference, 'spoon')} over budget`, tone: 'text-amber-800' }
+  if (difference === 0) return { text: 'Right on budget', tone: 'text-success' }
+  if (difference < 0) return { text: `${pluralize(-difference, 'spoon')} under budget`, tone: 'text-success' }
+  return { text: `${pluralize(difference, 'spoon')} over budget`, tone: 'text-accent-ink' }
 }
 
 function mealsStatus(planned: number, wanted: number) {
@@ -69,7 +69,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
       <Head title={`Week of ${formatDate(plan.starts_on)}`} />
       <h1 className="text-2xl font-bold">Week of {formatDate(plan.starts_on)}</h1>
       {(plan.budget_is_ceiling || plan.max_spoons !== null) && (
-        <p className="mt-1 text-sm text-stone-600">
+        <p className="mt-1 text-sm text-muted">
           {[
             plan.budget_is_ceiling && 'Never over budget',
             plan.max_spoons !== null && `No meal harder than ${pluralize(plan.max_spoons, 'spoon')}`,
@@ -81,27 +81,27 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
 
       <dl className="mt-4 grid grid-cols-2 gap-3">
         <div className={card}>
-          <dt className="text-sm text-stone-600">Spoons</dt>
+          <dt className="text-sm text-muted">Spoons</dt>
           <dd className="mt-1 text-2xl font-bold">
             {plan.total_spoons}
-            <span className="text-base font-medium text-stone-500"> / {plan.spoon_budget}</span>
+            <span className="text-base font-medium text-subtle"> / {plan.spoon_budget}</span>
           </dd>
           <dd className={`mt-1 text-sm font-medium ${budget.tone}`}>{budget.text}</dd>
         </div>
         <div className={card}>
-          <dt className="text-sm text-stone-600">Meals</dt>
+          <dt className="text-sm text-muted">Meals</dt>
           <dd className="mt-1 text-2xl font-bold">
             {plan.meals_planned}
-            <span className="text-base font-medium text-stone-500"> / {plan.meal_count}</span>
+            <span className="text-base font-medium text-subtle"> / {plan.meal_count}</span>
           </dd>
-          {meals && <dd className="mt-1 text-sm font-medium text-stone-700">{meals}</dd>}
+          {meals && <dd className="mt-1 text-sm font-medium text-ink-soft">{meals}</dd>}
         </div>
       </dl>
 
       {plan.entries.length === 0 ? (
-        <div className={`${card} mt-6 text-stone-700`}>
+        <div className={`${card} mt-6 text-ink-soft`}>
           No recipes could be picked.{' '}
-          <Link href="/recipes/new" className="font-semibold text-amber-800 underline">
+          <Link href="/recipes/new" className="font-semibold text-accent-ink underline">
             Add some recipes
           </Link>{' '}
           and reshuffle.
@@ -155,7 +155,7 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
                       name={entry.name}
                       details={entryIds.length > 1 ? 'Changes apply to one of these at a time' : undefined}
                       aside={
-                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200">
+                        <span className="rounded-full bg-success-soft px-3 py-1 text-sm font-semibold text-success ring-1 ring-success-line">
                           <span className="sr-only">{pluralize(meals, 'meal')}</span>
                           <span aria-hidden="true">× {meals}</span>
                         </span>

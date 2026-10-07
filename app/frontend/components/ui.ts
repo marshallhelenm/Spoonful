@@ -2,17 +2,18 @@
 
 const buttonBase =
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold ' +
-  'transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700 ' +
+  'transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 
-export const primaryButton = `${buttonBase} bg-amber-700 text-white hover:bg-amber-800`
-export const secondaryButton = `${buttonBase} bg-white text-stone-800 ring-1 ring-stone-300 hover:bg-stone-100`
-export const dangerButton = `${buttonBase} bg-white text-red-700 ring-1 ring-red-200 hover:bg-red-50`
+export const primaryButton = `${buttonBase} bg-accent text-on-accent hover:bg-accent-hover`
+export const secondaryButton = `${buttonBase} bg-surface text-ink ring-1 ring-line-strong hover:bg-surface-hover`
+export const dangerButton = `${buttonBase} bg-surface text-danger ring-1 ring-danger-line hover:bg-danger-soft`
 
-export const card = 'rounded-2xl bg-white p-4 shadow-sm ring-1 ring-stone-200'
+export const card = 'rounded-2xl bg-surface p-4 shadow-sm ring-1 ring-line'
 
-export const label = 'block text-sm font-semibold text-stone-800'
+export const label = 'block text-sm font-semibold text-ink'
 export const inputBase =
-  'rounded-xl border-stone-300 text-base shadow-sm focus:border-amber-600 focus:ring-amber-600'
+  'rounded-xl border-line-strong bg-surface text-base text-ink shadow-sm focus:border-accent focus:ring-accent'
 export const input = `mt-1 block w-full ${inputBase}`
-export const checkbox = 'mt-0.5 size-5 shrink-0 rounded border-stone-300 text-amber-700 focus:ring-amber-600'
+export const checkbox =
+  'mt-0.5 size-5 shrink-0 rounded border-line-strong bg-surface text-accent focus:ring-accent focus:ring-offset-surface'
