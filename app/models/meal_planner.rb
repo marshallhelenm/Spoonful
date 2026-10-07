@@ -8,6 +8,8 @@
 # so candidates cluster near the target instead of being pure luck.
 #
 # An optional `max_spoons` cap excludes any recipe harder than that.
+# With `budget_is_ceiling`, the total never goes over the budget: recipes that
+# would push past it are skipped, even if that leaves meals unfilled.
 #
 # Pure Ruby, no database access: callers pass recipes and last-made dates in.
 class MealPlanner
@@ -24,11 +26,12 @@ class MealPlanner
   # How strongly to avoid picks that blow past the remaining budget.
   OVERSHOOT_PENALTY = 2
 
-  def initialize(recipes:, meal_count:, spoon_budget:, max_spoons: nil, last_made_on: {}, today: Date.current,
-                 attempts: DEFAULT_ATTEMPTS, random: Random.new)
+  def initialize(recipes:, meal_count:, spoon_budget:, max_spoons: nil, budget_is_ceiling: false,
+                 last_made_on: {}, today: Date.current, attempts: DEFAULT_ATTEMPTS, random: Random.new)
     @recipes = max_spoons ? recipes.select { |recipe| recipe.spoons <= max_spoons } : recipes
     @meal_count = meal_count
     @spoon_budget = spoon_budget
+    @budget_is_ceiling = budget_is_ceiling
     @today = today
     @attempts = attempts
     @random = random
@@ -54,7 +57,9 @@ class MealPlanner
     spoons_left = @spoon_budget
 
     while meals_left.positive?
-      available = @recipes.reject { |recipe| used_ids.include?(recipe.id) && !recipe.filler? }
+      available = @recipes.reject do |recipe|
+        (used_ids.include?(recipe.id) && !recipe.filler?) || (@budget_is_ceiling && recipe.spoons > spoons_left)
+      end
       break if available.empty?
 
       recipe = weighted_sample(available, meals_left, spoons_left)

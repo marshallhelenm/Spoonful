@@ -32,7 +32,8 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 
 **Meal plan**
 - `meal_count`: number of meals to plan; default **14** (lunch + dinner × 7), user can change it
-- `spoon_budget`: a **target**, not a hard cap — get as close as possible, over or under
+- `spoon_budget`: a **target** by default — get as close as possible, over or under
+- `budget_is_ceiling` (default off): never exceed the budget; recipes that would push past it are skipped, even if meals go unfilled
 - `max_spoons` (optional, 0–5): per-plan cap — no single recipe harder than this. Off (NULL) by default, so one hard meal can land in a light week
 - A recipe's spoons count **once** per use, even if it covers several meals (you cook it once)
 - **No repeats within a plan**, except 0-spoon fillers (`Recipe#filler?`), which may repeat (takeout twice is fine)

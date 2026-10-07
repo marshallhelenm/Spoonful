@@ -28,6 +28,7 @@ class MealPlan < ApplicationRecord
         meal_count: meal_count,
         spoon_budget: spoon_budget,
         max_spoons: max_spoons,
+        budget_is_ceiling: budget_is_ceiling,
         last_made_on: MealPlanEntry.last_made_on_by_recipe,
         today: starts_on,
         random: random

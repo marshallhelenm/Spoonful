@@ -1,6 +1,10 @@
 require "test_helper"
 
 class MealPlanTest < ActiveSupport::TestCase
+  test "budget is a target, not a ceiling, by default" do
+    assert_not MealPlan.new.budget_is_ceiling
+  end
+
   test "meal count defaults to 14" do
     assert_equal 14, MealPlan.new.meal_count
   end

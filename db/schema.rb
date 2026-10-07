@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_151501) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_151936) do
   create_table "meal_plan_entries", force: :cascade do |t|
     t.integer "meal_plan_id", null: false
     t.integer "recipe_id", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_151501) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "max_spoons"
+    t.boolean "budget_is_ceiling", default: false, null: false
     t.index ["starts_on"], name: "index_meal_plans_on_starts_on"
     t.check_constraint "max_spoons BETWEEN 0 AND 5", name: "max_spoons_range"
     t.check_constraint "meal_count >= 1", name: "meal_count_positive"

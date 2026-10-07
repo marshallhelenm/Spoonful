@@ -15,3 +15,4 @@ export const label = 'block text-sm font-semibold text-stone-800'
 export const inputBase =
   'rounded-xl border-stone-300 text-base shadow-sm focus:border-amber-600 focus:ring-amber-600'
 export const input = `mt-1 block w-full ${inputBase}`
+export const checkbox = 'mt-0.5 size-5 shrink-0 rounded border-stone-300 text-amber-700 focus:ring-amber-600'

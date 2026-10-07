@@ -27,6 +27,13 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, inertia.props[:meal_plan][:max_spoons]
   end
 
+  test "create saves the budget ceiling option" do
+    post meal_plans_path, params: { meal_plan: { spoon_budget: 5, meal_count: 4, budget_is_ceiling: true } }
+    plan = MealPlan.order(:created_at).last
+    assert plan.budget_is_ceiling
+    assert_operator plan.total_spoons, :<=, 5
+  end
+
   test "create with an invalid budget redirects back with errors" do
     assert_no_difference -> { MealPlan.count } do
       post meal_plans_path, params: { meal_plan: { spoon_budget: "", meal_count: 14 } }

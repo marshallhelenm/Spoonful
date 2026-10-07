@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import FieldError from '@/components/FieldError'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { card, input, label, primaryButton } from '@/components/ui'
+import { card, checkbox, input, label, primaryButton } from '@/components/ui'
 
 type Props = {
   defaults: { meal_count: number; starts_on: string }
@@ -25,6 +25,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
     meal_count: defaults.meal_count as number | '',
     starts_on: defaults.starts_on,
     max_spoons: null as number | null,
+    budget_is_ceiling: false,
   })
   const capEnabled = data.max_spoons !== null
 
@@ -83,6 +84,22 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
             describedBy={errors.spoon_budget ? 'spoon_budget-error' : undefined}
           />
           <FieldError id="spoon_budget-error" error={errors.spoon_budget} />
+
+          <div className="mt-4 flex items-start gap-3">
+            <input
+              id="budget_is_ceiling"
+              type="checkbox"
+              checked={data.budget_is_ceiling}
+              onChange={(event) => setData('budget_is_ceiling', event.target.checked)}
+              className={checkbox}
+            />
+            <label htmlFor="budget_is_ceiling" className="text-sm">
+              <span className="font-semibold text-stone-800">Never go over this budget</span>
+              <span className="block text-stone-600">
+                Otherwise Spoonful may go a little over if that gets closer to the budget.
+              </span>
+            </label>
+          </div>
         </div>
 
         <div>
@@ -92,7 +109,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
               type="checkbox"
               checked={capEnabled}
               onChange={(event) => setData('max_spoons', event.target.checked ? DEFAULT_CAP : null)}
-              className="mt-0.5 size-5 rounded border-stone-300 text-amber-700 focus:ring-amber-600"
+              className={checkbox}
             />
             <label htmlFor="cap_enabled" className="text-sm">
               <span className="font-semibold text-stone-800">Limit how hard any one meal can be</span>

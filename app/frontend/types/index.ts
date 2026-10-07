@@ -23,6 +23,7 @@ export type MealPlanSummary = {
   meal_count: number
   spoon_budget: number
   max_spoons: number | null
+  budget_is_ceiling: boolean
   total_spoons: number
   meals_planned: number
 }

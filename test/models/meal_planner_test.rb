@@ -8,9 +8,10 @@ class MealPlannerTest < ActiveSupport::TestCase
     Recipe.new(id: id, name: "Recipe #{id}", spoons: spoons, meals_covered: meals_covered)
   end
 
-  def plan(recipes, meal_count:, spoon_budget:, max_spoons: nil, last_made_on: {}, seed: 1)
+  def plan(recipes, meal_count:, spoon_budget:, max_spoons: nil, budget_is_ceiling: false, last_made_on: {}, seed: 1)
     MealPlanner.new(recipes: recipes, meal_count: meal_count, spoon_budget: spoon_budget, max_spoons: max_spoons,
-                    last_made_on: last_made_on, today: TODAY, random: Random.new(seed)).call
+                    budget_is_ceiling: budget_is_ceiling, last_made_on: last_made_on, today: TODAY,
+                    random: Random.new(seed)).call
   end
 
   def varied_recipes
@@ -37,6 +38,20 @@ class MealPlannerTest < ActiveSupport::TestCase
   test "a high budget can go over a little when it can't be hit exactly" do
     result = plan([ recipe(1, 5), recipe(2, 5) ], meal_count: 2, spoon_budget: 9)
     assert_equal 10, result.total_spoons
+  end
+
+  test "as a ceiling, the budget is never exceeded even if that leaves meals unfilled" do
+    result = plan([ recipe(1, 5), recipe(2, 5) ], meal_count: 2, spoon_budget: 9, budget_is_ceiling: true)
+    assert_equal 5, result.total_spoons
+    assert_equal 1, result.meals_planned
+  end
+
+  test "as a ceiling, it still gets as close to the budget as it can" do
+    [ 1, 2, 3, 4, 5 ].each do |seed|
+      result = plan(varied_recipes, meal_count: 14, spoon_budget: 12, budget_is_ceiling: true, seed: seed)
+      assert_equal 12, result.total_spoons, "seed #{seed}"
+      assert_operator result.meals_planned, :>=, 14, "seed #{seed}"
+    end
   end
 
   test "a spoon cap excludes harder recipes, even when they'd fit the budget" do

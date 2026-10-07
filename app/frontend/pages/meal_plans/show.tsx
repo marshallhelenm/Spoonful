@@ -59,9 +59,14 @@ export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan 
     <>
       <Head title={`Week of ${formatDate(plan.starts_on)}`} />
       <h1 className="text-2xl font-bold">Week of {formatDate(plan.starts_on)}</h1>
-      {plan.max_spoons !== null && (
+      {(plan.budget_is_ceiling || plan.max_spoons !== null) && (
         <p className="mt-1 text-sm text-stone-600">
-          No meal harder than {pluralize(plan.max_spoons, 'spoon')}
+          {[
+            plan.budget_is_ceiling && 'Never over budget',
+            plan.max_spoons !== null && `No meal harder than ${pluralize(plan.max_spoons, 'spoon')}`,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
         </p>
       )}
 
