@@ -14,5 +14,6 @@ class RecipeIngredientTest < ActiveSupport::TestCase
   test "can't use another user's ingredient" do
     line = recipes(:chili).recipe_ingredients.build(ingredient: ingredients(:secret_spice), position: 9)
     assert_not line.valid?
+    assert_includes line.errors[:ingredient], "must be one of your ingredients"
   end
 end

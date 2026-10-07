@@ -41,7 +41,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 ## Accounts and data ownership
 
 - `Recipe`, `Ingredient`, and `MealPlan` belong to a `User`; entries, ingredient lines, and shopping checks are owned through those. Each user has a separate ingredient catalog; names are unique per user
-- **Always load records through `Current.user`** (`Current.user.recipes.find(id)`), never `Recipe.find` — another user's id then 404s. Models also validate that linked records share an owner (e.g. a plan entry's recipe)
+- **Always load records through `Current.user`** (`Current.user.recipes.find(id)`), never `Recipe.find` — another user's id then 404s. Models also validate that linked records share an owner with `validates :recipe, same_owner_as: :meal_plan` (`app/validators/same_owner_as_validator.rb`)
 - Every controller requires sign-in by default (`Authentication` concern); public actions opt out with `allow_unauthenticated_access`. `current_user` is shared to all pages
 - **Demo account** (`DemoAccount`, login in the README): public and shared. `User` refuses email/password changes on it (keep that true for any future account settings), it never gets reset emails, and the layout shows a banner when `current_user.demo`. `bin/rails demo:reset` wipes it back to `SampleRecipes`; Heroku Scheduler runs that nightly in production
 - `test/controllers/data_isolation_test.rb` covers cross-user access; controller tests `sign_in_as(users(:one))`
