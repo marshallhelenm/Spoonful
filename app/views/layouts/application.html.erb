@@ -2,7 +2,8 @@
 <html>
   <head>
     <title data-inertia><%= content_for(:title) || "Spoonful" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#fffbf5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Spoonful">
     <meta name="mobile-web-app-capable" content="yes">
@@ -25,16 +26,6 @@
     <%= vite_client_tag %>
     <%= vite_typescript_tag "inertia.tsx" %>
     <%= inertia_ssr_head %>
-    <%= vite_typescript_tag 'application' %>
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
 
   </head>
 

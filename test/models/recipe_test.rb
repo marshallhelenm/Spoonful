@@ -37,6 +37,12 @@ class RecipeTest < ActiveSupport::TestCase
     assert_not build_recipe(spoons: nil).valid?
   end
 
+  test "a missing spoon rating gets a friendly message" do
+    recipe = build_recipe(spoons: nil)
+    assert_not recipe.valid?
+    assert_equal [ "needs a rating" ], recipe.errors[:spoons]
+  end
+
   test "spoons must be a whole number" do
     assert_not build_recipe(spoons: 2.5).valid?
   end
