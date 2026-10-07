@@ -1,0 +1,99 @@
+# Picks recipes for a meal plan that fills `meal_count` meals while landing as
+# close as possible to `spoon_budget` (a target, not a cap).
+#
+# Approach: build many random candidate plans and keep the one closest to the
+# budget. Each draw is weighted by
+#   - recency: recipes made recently are less likely (but never impossible), and
+#   - fit: recipes whose spoons match the remaining budget per meal are likelier,
+# so candidates cluster near the target instead of being pure luck.
+#
+# Pure Ruby, no database access: callers pass recipes and last-made dates in.
+class MealPlanner
+  Result = Data.define(:recipes) do
+    def total_spoons = recipes.sum(&:spoons)
+    def meals_planned = recipes.sum(&:meals_covered)
+  end
+
+  DEFAULT_ATTEMPTS = 300
+  # A recipe made this many days ago (or never) gets full weight.
+  FULL_WEIGHT_AFTER_DAYS = 28
+  # Floor so recently made recipes can still be picked.
+  MIN_RECENCY_WEIGHT = 0.1
+  # How strongly to avoid picks that blow past the remaining budget.
+  OVERSHOOT_PENALTY = 2
+
+  def initialize(recipes:, meal_count:, spoon_budget:, last_made_on: {}, today: Date.current,
+                 attempts: DEFAULT_ATTEMPTS, random: Random.new)
+    @recipes = recipes
+    @meal_count = meal_count
+    @spoon_budget = spoon_budget
+    @today = today
+    @attempts = attempts
+    @random = random
+    @recency_weights = recipes.to_h { |recipe| [ recipe.id, recency_weight(last_made_on[recipe.id]) ] }
+  end
+
+  def call
+    best = nil
+    @attempts.times do
+      candidate = build_candidate
+      best = candidate if best.nil? || distance(candidate) < distance(best)
+      break if distance(best).zero?
+    end
+    best || Result.new(recipes: [])
+  end
+
+  private
+
+  def build_candidate
+    picks = []
+    used_ids = Set.new
+    meals_left = @meal_count
+    spoons_left = @spoon_budget
+
+    while meals_left.positive?
+      available = @recipes.reject { |recipe| used_ids.include?(recipe.id) && !recipe.filler? }
+      break if available.empty?
+
+      recipe = weighted_sample(available, meals_left, spoons_left)
+      picks << recipe
+      used_ids << recipe.id
+      meals_left -= recipe.meals_covered # may go negative: the extra meals are leftovers
+      spoons_left -= recipe.spoons
+    end
+
+    Result.new(recipes: picks)
+  end
+
+  def weighted_sample(available, meals_left, spoons_left)
+    weights = available.map do |recipe|
+      @recency_weights.fetch(recipe.id) * fit_weight(recipe, meals_left, spoons_left)
+    end
+
+    target = @random.rand * weights.sum
+    available.zip(weights).each do |recipe, weight|
+      target -= weight
+      return recipe if target <= 0
+    end
+    available.last
+  end
+
+  # How well this recipe's spoons match its share of the remaining budget,
+  # with an extra penalty for overshooting what's left of the budget.
+  def fit_weight(recipe, meals_left, spoons_left)
+    fair_share = spoons_left.to_f * [ recipe.meals_covered, meals_left ].min / meals_left
+    overshoot = [ recipe.spoons - spoons_left, 0 ].max
+    Math.exp(-(recipe.spoons - fair_share).abs - (OVERSHOOT_PENALTY * overshoot))
+  end
+
+  def recency_weight(last_made_on)
+    return 1.0 if last_made_on.nil?
+
+    days_ago = (@today - last_made_on).to_i
+    (days_ago.to_f / FULL_WEIGHT_AFTER_DAYS).clamp(MIN_RECENCY_WEIGHT, 1.0)
+  end
+
+  def distance(result)
+    (result.total_spoons - @spoon_budget).abs
+  end
+end

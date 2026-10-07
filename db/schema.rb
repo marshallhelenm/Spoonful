@@ -10,7 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_045904) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_050012) do
+  create_table "meal_plan_entries", force: :cascade do |t|
+    t.integer "meal_plan_id", null: false
+    t.integer "recipe_id", null: false
+    t.integer "position", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meal_plan_id", "position"], name: "index_meal_plan_entries_on_meal_plan_id_and_position", unique: true
+    t.index ["meal_plan_id"], name: "index_meal_plan_entries_on_meal_plan_id"
+    t.index ["recipe_id"], name: "index_meal_plan_entries_on_recipe_id"
+  end
+
+  create_table "meal_plans", force: :cascade do |t|
+    t.date "starts_on", null: false
+    t.integer "meal_count", default: 14, null: false
+    t.integer "spoon_budget", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["starts_on"], name: "index_meal_plans_on_starts_on"
+    t.check_constraint "meal_count >= 1", name: "meal_count_positive"
+    t.check_constraint "spoon_budget >= 0", name: "spoon_budget_non_negative"
+  end
+
   create_table "recipes", force: :cascade do |t|
     t.string "name", null: false
     t.integer "spoons", null: false
@@ -22,4 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_045904) do
     t.check_constraint "meals_covered >= 1", name: "meals_covered_positive"
     t.check_constraint "spoons BETWEEN 0 AND 5", name: "spoons_range"
   end
+
+  add_foreign_key "meal_plan_entries", "meal_plans"
+  add_foreign_key "meal_plan_entries", "recipes"
 end

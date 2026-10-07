@@ -1,6 +1,9 @@
 class Recipe < ApplicationRecord
   SPOON_RANGE = 0..5
 
+  # Keep past plans intact: a recipe that's been planned can't be deleted.
+  has_many :meal_plan_entries, dependent: :restrict_with_error
+
   normalizes :name, with: ->(name) { name.squish }
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
