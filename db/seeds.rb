@@ -1,7 +1,4 @@
 # Development sample data: a demo account with sample recipes.
 # Safe to run repeatedly: `bin/rails db:seed`. Sign in as the demo user below.
-demo = User.find_or_create_by!(email_address: "demo@example.com") do |user|
-  user.password = "spoonful-demo"
-end
-
-SampleRecipes.add_to(demo)
+# Adds any missing sample recipes without wiping your changes; `bin/rails demo:reset` starts it fresh.
+SampleRecipes.add_to(DemoAccount.user)

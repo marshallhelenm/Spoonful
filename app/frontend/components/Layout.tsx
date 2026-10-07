@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
+import { callout } from '@/components/ui'
 
 const navItems = [
   { href: '/', label: 'Plan', matches: (url: string) => url === '/' || url === '/meal_plans/new' },
@@ -51,6 +52,20 @@ export default function Layout({ children }: { children: ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-6 pb-10">
+        {user?.demo && (
+          <p className={`${callout} mb-4 text-sm`}>
+            You're using the shared demo account, so other visitors can see your changes, and everything resets
+            nightly.{' '}
+            <button
+              type="button"
+              onClick={() => router.delete('/session', { onSuccess: () => router.visit('/sign_up') })}
+              className="font-semibold text-accent-ink underline underline-offset-2"
+            >
+              Sign up
+            </button>{' '}
+            to keep your own recipes.
+          </p>
+        )}
         {flash.notice && (
           <p role="status" className="mb-4 rounded-xl bg-success-soft px-4 py-3 text-sm text-success ring-1 ring-success-line">
             {flash.notice}

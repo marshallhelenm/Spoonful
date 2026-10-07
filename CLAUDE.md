@@ -24,7 +24,8 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `bin/rails test` — Ruby tests
 - `npm run check` — TypeScript type-check
 - `npm test` — Vitest unit tests for plain TS in `app/frontend` (`*.test.ts`)
-- `bin/rails db:seed` — creates a demo account with sample recipes (idempotent; credentials in `db/seeds.rb`)
+- `bin/rails db:seed` — creates the demo account with sample recipes (idempotent; doesn't wipe changes)
+- `bin/rails demo:reset` — wipes the demo account back to just the sample recipes
 - http://localhost:3000/letter_opener — emails "sent" in development (e.g. password resets) via `letter_opener_web`
 
 **Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
@@ -42,6 +43,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `Recipe`, `Ingredient`, and `MealPlan` belong to a `User`; entries, ingredient lines, and shopping checks are owned through those. Each user has a separate ingredient catalog; names are unique per user
 - **Always load records through `Current.user`** (`Current.user.recipes.find(id)`), never `Recipe.find` — another user's id then 404s. Models also validate that linked records share an owner (e.g. a plan entry's recipe)
 - Every controller requires sign-in by default (`Authentication` concern); public actions opt out with `allow_unauthenticated_access`. `current_user` is shared to all pages
+- **Demo account** (`DemoAccount`, login in the README): public and shared. `User` refuses email/password changes on it (keep that true for any future account settings), it never gets reset emails, and the layout shows a banner when `current_user.demo`. `bin/rails demo:reset` wipes it back to `SampleRecipes`; Heroku Scheduler runs that nightly in production
 - `test/controllers/data_isolation_test.rb` covers cross-user access; controller tests `sign_in_as(users(:one))`
 
 ## MVP domain rules

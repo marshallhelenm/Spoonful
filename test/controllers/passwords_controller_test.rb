@@ -24,6 +24,13 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_match "we've sent a link", flash[:notice]
   end
 
+  test "create never emails the demo account" do
+    post passwords_path, params: { email_address: DemoAccount.user.email_address }
+
+    assert_enqueued_emails 0
+    assert_match "we've sent a link", flash[:notice]
+  end
+
   test "edit shows the new password page" do
     get edit_password_path(@user.password_reset_token)
     assert_inertia_component "passwords/edit"

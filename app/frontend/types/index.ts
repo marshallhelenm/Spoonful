@@ -6,6 +6,7 @@ export type FlashData = {
 export type CurrentUser = {
   id: number
   email_address: string
+  demo: boolean
 }
 
 export type SharedProps = {

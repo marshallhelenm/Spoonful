@@ -8,7 +8,8 @@ class PasswordsController < InertiaController
   end
 
   def create
-    if user = User.find_by(email_address: params[:email_address])
+    # The demo address can't receive mail, and its password is fixed anyway.
+    if (user = User.find_by(email_address: params[:email_address])) && !user.demo?
       PasswordsMailer.reset(user).deliver_later
     end
 

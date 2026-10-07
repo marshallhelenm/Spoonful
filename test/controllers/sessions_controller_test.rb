@@ -55,5 +55,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
     get recipes_path
     assert_equal "one@example.com", inertia.props[:current_user][:email_address]
+    assert_equal false, inertia.props[:current_user][:demo]
+  end
+
+  test "pages flag the demo account so it can show a banner" do
+    sign_in_as(DemoAccount.user)
+    get recipes_path
+    assert_equal true, inertia.props[:current_user][:demo]
   end
 end
