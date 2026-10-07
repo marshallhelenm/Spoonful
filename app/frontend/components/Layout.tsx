@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className="border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-3">
           <Link href="/" className="text-lg font-bold tracking-tight text-accent-ink">
-            <span aria-hidden="true">🥄</span> Spoonful
+            <span aria-hidden="true" className="mr-1">🥄</span> Spoonful
           </Link>
           <nav aria-label="Main" className="flex gap-1">
             {navItems.map((item) => {
