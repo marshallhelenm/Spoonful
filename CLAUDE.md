@@ -20,6 +20,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `bin/dev` — Rails on http://localhost:3000 + Vite dev server (3036), via Foreman and `Procfile.dev`
 - `bin/rails test` — Ruby tests
 - `npm run check` — TypeScript type-check
+- `bin/rails db:seed` — load sample recipes (idempotent)
 
 **Shell note for Claude:** non-interactive shells don't load `~/.zshrc`, so chruby isn't active and `ruby`/`rails` resolve to the macOS system Ruby 2.6. Run Ruby commands through `zsh -ic '...'`.
 
