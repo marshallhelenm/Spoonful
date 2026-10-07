@@ -2,7 +2,6 @@
 /* Bagel Fat One (SIL Open Font License), bundled from npm instead of loaded from Google */
 @import '@fontsource/bagel-fat-one/latin-400.css';
 
-@plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
 
 /*
