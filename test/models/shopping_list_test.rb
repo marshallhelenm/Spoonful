@@ -21,13 +21,13 @@ class ShoppingListTest < ActiveSupport::TestCase
     ], onion.uses
   end
 
-  test "items are alphabetical with checked ones last" do
+  test "items are alphabetical, checked or not" do
     plan_recipes(:chili, :pasta)
-    @plan.shopping_list_checks.create!(ingredient: ingredients(:kidney_beans))
+    @plan.shopping_list_checks.create!(ingredient: ingredients(:onion))
 
     items = @plan.shopping_list.items
-    assert_equal [ "Onion", "Spaghetti", "Kidney beans" ], items.map(&:name)
-    assert_equal [ false, false, true ], items.map(&:checked)
+    assert_equal [ "Kidney beans", "Onion", "Spaghetti" ], items.map(&:name)
+    assert_equal [ false, true, false ], items.map(&:checked)
   end
 
   test "a recipe planned twice counts its amounts twice" do

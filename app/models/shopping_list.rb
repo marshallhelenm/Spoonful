@@ -9,14 +9,15 @@ class ShoppingList
     @meal_plan = meal_plan
   end
 
-  # Items sorted by name, unchecked ones first.
+  # Items sorted by name. (The page splits them into "to buy" and "in your
+  # cart" itself, since checkmarks change on screen before the server hears.)
   def items
     checked_ids = @meal_plan.shopping_list_checks.pluck(:ingredient_id).to_set
 
     lines_by_ingredient.map do |ingredient, uses|
       Item.new(ingredient_id: ingredient.id, name: ingredient.name, uses: uses,
                checked: checked_ids.include?(ingredient.id))
-    end.sort_by { |item| [ item.checked ? 1 : 0, item.name.downcase ] }
+    end.sort_by { |item| item.name.downcase }
   end
 
   # Recipes in the plan that don't list any ingredients yet (0-spoon fillers excluded).

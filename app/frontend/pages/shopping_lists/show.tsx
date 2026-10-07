@@ -43,9 +43,9 @@ export default function ShowShoppingList({ meal_plan: plan, items, recipes_witho
     )
   }
 
-  const byName = [...items].sort((a, b) => a.name.localeCompare(b.name))
-  const toBuy = byName.filter((item) => !checked.has(item.ingredient_id))
-  const inCart = byName.filter((item) => checked.has(item.ingredient_id))
+  // Items arrive sorted by name.
+  const toBuy = items.filter((item) => !checked.has(item.ingredient_id))
+  const inCart = items.filter((item) => checked.has(item.ingredient_id))
 
   const renderItem = (item: ShoppingListItem, done: boolean) => (
     <li key={item.ingredient_id}>
