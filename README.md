@@ -6,6 +6,13 @@ Spoonful is built around [spoon theory](https://en.wikipedia.org/wiki/Spoon_theo
 
 **Live at [spoonful.eldev.net](https://spoonful.eldev.net)**
 
+<p align="center">
+  <img src="docs/screenshots/plan-form.jpg" width="200" alt="Choosing a spoon budget for the week">
+  <img src="docs/screenshots/meal-plan.jpg" width="200" alt="A week's meal plan that lands right on a 12-spoon budget">
+  <img src="docs/screenshots/shopping-list.jpg" width="200" alt="The shopping list for a meal plan">
+  <img src="docs/screenshots/recipes-dark.jpg" width="200" alt="The recipe list in dark mode">
+</p>
+
 ### Try the demo
 
 Sign in with the shared demo account to look around without signing up:

@@ -23,6 +23,13 @@ class SampleRecipes
   ].freeze
 
   INGREDIENTS = {
+    "Toast and eggs" => [ [ "Bread", "2 slices" ], [ "Eggs", "2" ], [ "Butter", "1 tbsp" ] ],
+    "Sandwiches" => [ [ "Bread", "4 slices" ], [ "Sliced turkey", "4 oz" ], [ "Cheddar cheese", "2 slices" ],
+                      [ "Lettuce", "a few leaves" ] ],
+    "Instant ramen with veggies" => [ [ "Instant ramen", "1 pack" ], [ "Eggs", "1" ], [ "Frozen peas", "1/2 cup" ],
+                                      [ "Green onions", "2" ] ],
+    "Sheet pan sausage and veg" => [ [ "Smoked sausage", "1 lb" ], [ "Potatoes", "1 lb" ], [ "Bell peppers", "2" ],
+                                     [ "Onion", "1" ], [ "Olive oil", "2 tbsp" ] ],
     "Big pot chili" => [ [ "Ground beef", "1 lb" ], [ "Kidney beans", "2 cans" ], [ "Diced tomatoes", "1 can" ],
                          [ "Onion", "1" ], [ "Garlic", "3 cloves" ], [ "Chili powder", "2 tbsp" ] ],
     "Weeknight pasta" => [ [ "Spaghetti", "1 lb" ], [ "Garlic", "2 cloves" ], [ "Olive oil", "1/4 cup" ],
@@ -31,7 +38,13 @@ class SampleRecipes
     "Stir fry" => [ [ "Rice", "1 cup" ], [ "Broccoli", "1 head" ], [ "Soy sauce", "3 tbsp" ], [ "Garlic", "2 cloves" ],
                     [ "Ginger", "1 inch" ] ],
     "Lentil soup" => [ [ "Red lentils", "1 1/2 cups" ], [ "Onion", "1" ], [ "Carrot", "2" ], [ "Cumin", "1 tsp" ],
-                       [ "Vegetable broth", "6 cups" ] ]
+                       [ "Vegetable broth", "6 cups" ] ],
+    "Homemade curry" => [ [ "Chicken thighs", "1 1/2 lbs" ], [ "Coconut milk", "1 can" ], [ "Curry paste", "3 tbsp" ],
+                          [ "Onion", "1" ], [ "Garlic", "3 cloves" ], [ "Ginger", "1 inch" ], [ "Rice", "2 cups" ] ],
+    "Lasagna" => [ [ "Lasagna noodles", "12" ], [ "Ground beef", "1 lb" ], [ "Marinara sauce", "1 jar" ],
+                   [ "Ricotta", "15 oz" ], [ "Mozzarella", "2 cups" ], [ "Parmesan", "1/2 cup" ], [ "Eggs", "1" ] ],
+    "Roast chicken dinner" => [ [ "Whole chicken", "1 (4 lb)" ], [ "Potatoes", "2 lbs" ], [ "Carrot", "4" ],
+                                [ "Lemon", "1" ], [ "Garlic", "1 head" ], [ "Butter", "2 tbsp" ] ]
   }.freeze
 
   # Returns the number of recipes added.
