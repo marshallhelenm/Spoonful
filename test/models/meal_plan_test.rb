@@ -32,6 +32,14 @@ class MealPlanTest < ActiveSupport::TestCase
     assert plan.recipes.all? { it.spoons <= 2 }
   end
 
+  test "replacement_for picks a different recipe that isn't already in the plan" do
+    plan = MealPlan.create!(spoon_budget: 5)
+    chili = plan.entries.create!(recipe: recipes(:chili), position: 0)
+    plan.entries.create!(recipe: recipes(:pasta), position: 1)
+
+    assert_equal recipes(:takeout), plan.replacement_for(chili, random: Random.new(1))
+  end
+
   test "meal count must be at least 1" do
     assert_not MealPlan.new(starts_on: Date.current, spoon_budget: 5, meal_count: 0).valid?
   end

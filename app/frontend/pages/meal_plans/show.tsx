@@ -1,10 +1,11 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { useState } from 'react'
 
+import MealRow from '@/components/MealRow'
 import Spoons from '@/components/Spoons'
 import { card, dangerButton, primaryButton } from '@/components/ui'
 import { formatDate, pluralize } from '@/lib/format'
-import type { MealPlan, MealPlanEntry } from '@/types'
+import type { MealPlan, MealPlanEntry, RecipeOption } from '@/types'
 
 function budgetStatus(total: number, budget: number) {
   const difference = total - budget
@@ -16,10 +17,10 @@ function budgetStatus(total: number, budget: number) {
 function mealsStatus(planned: number, wanted: number) {
   if (planned === wanted) return null
   if (planned > wanted) return `${pluralize(planned - wanted, 'meal')} of leftovers`
-  return `${pluralize(wanted - planned, 'meal')} short. Add more recipes to fill the week.`
+  return `${pluralize(wanted - planned, 'meal')} short`
 }
 
-type FillerGroup = { entry: MealPlanEntry; count: number }
+type FillerGroup = { entry: MealPlanEntry; entryIds: number[] }
 
 // Cooked meals keep their plan order; 0-spoon fillers (which can repeat) are
 // collapsed into one row per recipe, most frequent first.
@@ -29,14 +30,22 @@ function groupEntries(entries: MealPlanEntry[]) {
   for (const entry of entries) {
     if (entry.spoons > 0) continue
     const group = fillers.get(entry.id)
-    if (group) group.count += 1
-    else fillers.set(entry.id, { entry, count: 1 })
+    if (group) group.entryIds.push(entry.entry_id)
+    else fillers.set(entry.id, { entry, entryIds: [entry.entry_id] })
   }
-  return { cooked, fillers: [...fillers.values()].sort((a, b) => b.count - a.count) }
+  return { cooked, fillers: [...fillers.values()].sort((a, b) => b.entryIds.length - a.entryIds.length) }
 }
 
-export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan }) {
+type Props = {
+  meal_plan: MealPlan
+  recipes: RecipeOption[]
+}
+
+export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
   const [reshuffling, setReshuffling] = useState(false)
+  // Which row's "Change" panel is open, if any.
+  const [openRow, setOpenRow] = useState<string | null>(null)
+  const toggleRow = (key: string) => setOpenRow((current) => (current === key ? null : key))
   const budget = budgetStatus(plan.total_spoons, plan.spoon_budget)
   const meals = mealsStatus(plan.meals_planned, plan.meal_count)
   const { cooked, fillers } = groupEntries(plan.entries)
@@ -105,17 +114,24 @@ export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan 
                 To cook
               </h2>
               <ol className="space-y-2">
-                {cooked.map((entry) => (
-                  <li key={entry.entry_id} className={`${card} flex items-center justify-between gap-3`}>
-                    <div>
-                      <p className="font-semibold">{entry.name}</p>
-                      {entry.meals_covered > 1 && (
-                        <p className="text-sm text-stone-600">Covers {pluralize(entry.meals_covered, 'meal')}</p>
-                      )}
-                    </div>
-                    <Spoons count={entry.spoons} />
-                  </li>
-                ))}
+                {cooked.map((entry) => {
+                  const key = `entry-${entry.entry_id}`
+                  return (
+                    <MealRow
+                      key={key}
+                      planId={plan.id}
+                      entryId={entry.entry_id}
+                      recipeId={entry.id}
+                      name={entry.name}
+                      details={entry.meals_covered > 1 ? `Covers ${pluralize(entry.meals_covered, 'meal')}` : undefined}
+                      aside={<Spoons count={entry.spoons} />}
+                      recipes={recipes}
+                      maxSpoons={plan.max_spoons}
+                      open={openRow === key}
+                      onToggle={() => toggleRow(key)}
+                    />
+                  )
+                })}
               </ol>
             </section>
           )}
@@ -126,15 +142,31 @@ export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan 
                 No-effort meals
               </h2>
               <ul className="space-y-2">
-                {fillers.map(({ entry, count }) => (
-                  <li key={entry.id} className={`${card} flex items-center justify-between gap-3`}>
-                    <p className="font-semibold">{entry.name}</p>
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200">
-                      <span className="sr-only">{pluralize(count * entry.meals_covered, 'meal')}</span>
-                      <span aria-hidden="true">× {count * entry.meals_covered}</span>
-                    </span>
-                  </li>
-                ))}
+                {fillers.map(({ entry, entryIds }) => {
+                  const key = `filler-${entry.id}`
+                  const meals = entryIds.length * entry.meals_covered
+                  return (
+                    <MealRow
+                      key={key}
+                      planId={plan.id}
+                      // Changes apply to one of the grouped meals at a time.
+                      entryId={entryIds[entryIds.length - 1]}
+                      recipeId={entry.id}
+                      name={entry.name}
+                      details={entryIds.length > 1 ? 'Changes apply to one of these at a time' : undefined}
+                      aside={
+                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200">
+                          <span className="sr-only">{pluralize(meals, 'meal')}</span>
+                          <span aria-hidden="true">× {meals}</span>
+                        </span>
+                      }
+                      recipes={recipes}
+                      maxSpoons={plan.max_spoons}
+                      open={openRow === key}
+                      onToggle={() => toggleRow(key)}
+                    />
+                  )
+                })}
               </ul>
             </section>
           )}
@@ -143,7 +175,7 @@ export default function ShowMealPlan({ meal_plan: plan }: { meal_plan: MealPlan 
 
       <div className="mt-6 flex flex-wrap gap-3">
         <button type="button" onClick={reshuffle} disabled={reshuffling} className={primaryButton}>
-          {reshuffling ? 'Reshuffling…' : 'Reshuffle'}
+          {reshuffling ? 'Reshuffling…' : 'Reshuffle all'}
         </button>
         <button type="button" onClick={handleDelete} className={`${dangerButton} ml-auto`}>
           Delete plan

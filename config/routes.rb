@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   resources :recipes, except: :show
   resources :meal_plans, only: %i[index new create show destroy] do
     post :reshuffle, on: :member
+    resources :entries, only: %i[update destroy], controller: "meal_plan_entries" do
+      post :shuffle, on: :member
+    end
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

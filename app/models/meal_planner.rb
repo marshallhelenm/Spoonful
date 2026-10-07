@@ -25,6 +25,8 @@ class MealPlanner
   MIN_RECENCY_WEIGHT = 0.1
   # How strongly to avoid picks that blow past the remaining budget.
   OVERSHOOT_PENALTY = 2
+  # Single-meal swaps use a gentler budget fit so "random" still feels random.
+  REPLACEMENT_FIT_SOFTNESS = 2.0
 
   def initialize(recipes:, meal_count:, spoon_budget:, max_spoons: nil, budget_is_ceiling: false,
                  last_made_on: {}, today: Date.current, attempts: DEFAULT_ATTEMPTS, random: Random.new)
@@ -48,6 +50,25 @@ class MealPlanner
     best || Result.new(recipes: [])
   end
 
+  # Picks one recipe to swap in for `replacing`, given the rest of the plan
+  # (`others`). Follows the same rules as a full plan: no repeated non-fillers,
+  # the spoon cap, and the ceiling if set. Returns nil if nothing else fits.
+  def pick_replacement(others:, replacing:)
+    used_ids = others.reject(&:filler?).to_set(&:id)
+    target = @spoon_budget - others.sum(&:spoons)
+
+    candidates = @recipes.reject do |recipe|
+      recipe.id == replacing.id ||
+        (used_ids.include?(recipe.id) && !recipe.filler?) ||
+        (@budget_is_ceiling && recipe.spoons > target)
+    end
+    return if candidates.empty?
+
+    weighted_pick(candidates, candidates.map do |recipe|
+      @recency_weights.fetch(recipe.id) * Math.exp(-(recipe.spoons - target).abs / REPLACEMENT_FIT_SOFTNESS)
+    end)
+  end
+
   private
 
   def build_candidate
@@ -62,7 +83,9 @@ class MealPlanner
       end
       break if available.empty?
 
-      recipe = weighted_sample(available, meals_left, spoons_left)
+      recipe = weighted_pick(available, available.map do |candidate|
+        @recency_weights.fetch(candidate.id) * fit_weight(candidate, meals_left, spoons_left)
+      end)
       picks << recipe
       used_ids << recipe.id
       meals_left -= recipe.meals_covered # may go negative: the extra meals are leftovers
@@ -72,17 +95,13 @@ class MealPlanner
     Result.new(recipes: picks)
   end
 
-  def weighted_sample(available, meals_left, spoons_left)
-    weights = available.map do |recipe|
-      @recency_weights.fetch(recipe.id) * fit_weight(recipe, meals_left, spoons_left)
-    end
-
+  def weighted_pick(items, weights)
     target = @random.rand * weights.sum
-    available.zip(weights).each do |recipe, weight|
+    items.zip(weights).each do |item, weight|
       target -= weight
-      return recipe if target <= 0
+      return item if target <= 0
     end
-    available.last
+    items.last
   end
 
   # How well this recipe's spoons match its share of the remaining budget,

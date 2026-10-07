@@ -67,6 +67,57 @@ class MealPlannerTest < ActiveSupport::TestCase
     assert_includes result.recipes.map(&:id), 1
   end
 
+  def replacement(recipes, others:, replacing:, spoon_budget: 10, seed: 1, **options)
+    MealPlanner.new(recipes: recipes, meal_count: 14, spoon_budget: spoon_budget, today: TODAY,
+                    random: Random.new(seed), **options)
+      .pick_replacement(others: others, replacing: replacing)
+  end
+
+  test "a replacement is never the recipe being replaced or another planned recipe" do
+    recipes = [ recipe(1, 2), recipe(2, 2), recipe(3, 2), recipe(4, 2) ]
+    picks = (1..50).map do |seed|
+      replacement(recipes, others: [ recipes[1], recipes[2] ], replacing: recipes[0], seed: seed).id
+    end
+    assert_equal [ 4 ], picks.uniq
+  end
+
+  test "a replacement can be a filler that's already in the plan" do
+    takeout = recipe(9, 0)
+    result = replacement([ recipe(1, 3), takeout ], others: [ takeout ], replacing: recipe(1, 3), spoon_budget: 0)
+    assert_equal 9, result.id
+  end
+
+  test "a replacement respects the spoon cap" do
+    recipes = [ recipe(1, 2), recipe(2, 5), recipe(3, 1) ]
+    picks = (1..50).map do |seed|
+      replacement(recipes, others: [], replacing: recipes[0], max_spoons: 2, seed: seed).id
+    end
+    assert_equal [ 3 ], picks.uniq
+  end
+
+  test "a replacement respects the budget ceiling" do
+    recipes = [ recipe(1, 2), recipe(2, 4), recipe(3, 1) ]
+    # Others use 8 of 10 spoons, so at most 2 spoons are left for the swap.
+    picks = (1..50).map do |seed|
+      replacement(recipes, others: [ recipe(7, 4), recipe(8, 4) ], replacing: recipes[0],
+                           budget_is_ceiling: true, seed: seed).id
+    end
+    assert_equal [ 3 ], picks.uniq
+  end
+
+  test "a replacement leans toward keeping the plan near budget but stays random" do
+    recipes = [ recipe(1, 2), recipe(2, 2), recipe(3, 5) ]
+    picks = (1..200).map do |seed|
+      replacement(recipes, others: [ recipe(7, 4), recipe(8, 4) ], replacing: recipes[0], seed: seed).id
+    end
+    assert_operator picks.count(2), :>, picks.count(3)
+    assert_operator picks.count(3), :>, 0
+  end
+
+  test "no replacement when nothing else fits" do
+    assert_nil replacement([ recipe(1, 2) ], others: [], replacing: recipe(1, 2))
+  end
+
   test "never repeats a non-filler recipe" do
     result = plan(varied_recipes, meal_count: 14, spoon_budget: 20)
     non_filler_ids = result.recipes.reject(&:filler?).map(&:id)

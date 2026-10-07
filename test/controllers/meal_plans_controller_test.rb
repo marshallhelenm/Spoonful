@@ -51,6 +51,7 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     assert_equal 3, plan[:total_spoons]
     assert_equal 4, plan[:meals_planned]
     assert_equal [ "Big Pot Chili" ], plan[:entries].map { it[:name] }
+    assert_equal [ "Takeout", "Weeknight Pasta", "Big Pot Chili" ], inertia.props[:recipes].map { it[:name] }
   end
 
   test "reshuffle re-picks the plan's recipes" do

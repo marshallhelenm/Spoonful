@@ -32,6 +32,8 @@ export type MealPlanEntry = Pick<Recipe, 'id' | 'name' | 'spoons' | 'meals_cover
   entry_id: number
 }
 
+export type RecipeOption = Pick<Recipe, 'id' | 'name' | 'spoons'>
+
 export type MealPlan = MealPlanSummary & {
   entries: MealPlanEntry[]
 }
