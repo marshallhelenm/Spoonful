@@ -2,6 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 
+import ExpandableCard, { useSingleOpen } from '@/components/ExpandableCard'
 import Field from '@/components/Field'
 import {
   callout,
@@ -9,7 +10,6 @@ import {
   calloutQuietButton,
   card,
   dangerButton,
-  ghostButton,
   input,
   inputBase,
   label,
@@ -72,108 +72,95 @@ function IngredientRow({
   }
 
   return (
-    <li className={card}>
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="font-semibold">{ingredient.name}</p>
-          <p className={`text-sm ${unused ? 'text-subtle' : 'text-muted'}`}>{usageText(ingredient)}</p>
-        </div>
+    <ExpandableCard
+      title={ingredient.name}
+      subtitle={unused ? <span className="text-subtle">{usageText(ingredient)}</span> : usageText(ingredient)}
+      toggleLabel="Edit"
+      panelId={panelId}
+      open={open}
+      onToggle={onToggle}
+    >
+      {!unused && (
+        <p className="text-sm text-muted">
+          Used in:{' '}
+          {ingredient.recipes.map((recipe, index) => (
+            <span key={recipe.id}>
+              {index > 0 && ', '}
+              <Link href={`/recipes/${recipe.id}/edit`} className={textLink}>
+                {recipe.name}
+              </Link>
+            </span>
+          ))}
+        </p>
+      )}
+
+      <form onSubmit={submitRename} noValidate>
+        <Field id={`${panelId}-name`} label="Rename" error={rename.errors.name}>
+          {({ id, describedBy, invalid }) => (
+            <div className="mt-1 flex gap-2">
+              <input
+                id={id}
+                type="text"
+                value={rename.data.name}
+                onChange={(event) => rename.setData('name', event.target.value)}
+                aria-invalid={invalid}
+                aria-describedby={describedBy}
+                className={`${inputBase} min-w-0 flex-1`}
+              />
+              <button type="submit" disabled={rename.processing} className={primaryButton}>
+                Save
+              </button>
+            </div>
+          )}
+        </Field>
+      </form>
+
+      {others.length > 0 && (
+        <form onSubmit={submitMerge}>
+          <label htmlFor={`${panelId}-merge`} className={label}>
+            Merge into
+          </label>
+          <p className="text-sm text-muted">For duplicates: recipes switch to the other ingredient and this one is removed.</p>
+          <div className="mt-1 flex gap-2">
+            <select
+              id={`${panelId}-merge`}
+              value={mergeTargetId}
+              onChange={(event) => setMergeTargetId(event.target.value)}
+              className={`${inputBase} min-w-0 flex-1`}
+            >
+              <option value="">Choose an ingredient…</option>
+              {others.map((other) => (
+                <option key={other.id} value={other.id}>
+                  {other.name}
+                </option>
+              ))}
+            </select>
+            <button type="submit" disabled={!mergeTargetId} className={secondaryButton}>
+              Merge
+            </button>
+          </div>
+        </form>
+      )}
+
+      {unused && (
         <button
           type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          aria-controls={panelId}
-          className={`${ghostButton} shrink-0`}
+          onClick={() => {
+            if (window.confirm(`Delete “${ingredient.name}”?`)) {
+              router.delete(`/ingredients/${ingredient.id}`, visitOptions)
+            }
+          }}
+          className={dangerButton}
         >
-          {open ? 'Done' : 'Edit'}
+          Delete
         </button>
-      </div>
-
-      {open && (
-        <div id={panelId} className="mt-3 space-y-4 border-t border-line pt-3">
-          {!unused && (
-            <p className="text-sm text-muted">
-              Used in:{' '}
-              {ingredient.recipes.map((recipe, index) => (
-                <span key={recipe.id}>
-                  {index > 0 && ', '}
-                  <Link href={`/recipes/${recipe.id}/edit`} className={textLink}>
-                    {recipe.name}
-                  </Link>
-                </span>
-              ))}
-            </p>
-          )}
-
-          <form onSubmit={submitRename} noValidate>
-            <Field id={`${panelId}-name`} label="Rename" error={rename.errors.name}>
-              {({ id, describedBy, invalid }) => (
-                <div className="mt-1 flex gap-2">
-                  <input
-                    id={id}
-                    type="text"
-                    value={rename.data.name}
-                    onChange={(event) => rename.setData('name', event.target.value)}
-                    aria-invalid={invalid}
-                    aria-describedby={describedBy}
-                    className={`${inputBase} min-w-0 flex-1`}
-                  />
-                  <button type="submit" disabled={rename.processing} className={primaryButton}>
-                    Save
-                  </button>
-                </div>
-              )}
-            </Field>
-          </form>
-
-          {others.length > 0 && (
-            <form onSubmit={submitMerge}>
-              <label htmlFor={`${panelId}-merge`} className={label}>
-                Merge into
-              </label>
-              <p className="text-sm text-muted">For duplicates: recipes switch to the other ingredient and this one is removed.</p>
-              <div className="mt-1 flex gap-2">
-                <select
-                  id={`${panelId}-merge`}
-                  value={mergeTargetId}
-                  onChange={(event) => setMergeTargetId(event.target.value)}
-                  className={`${inputBase} min-w-0 flex-1`}
-                >
-                  <option value="">Choose an ingredient…</option>
-                  {others.map((other) => (
-                    <option key={other.id} value={other.id}>
-                      {other.name}
-                    </option>
-                  ))}
-                </select>
-                <button type="submit" disabled={!mergeTargetId} className={secondaryButton}>
-                  Merge
-                </button>
-              </div>
-            </form>
-          )}
-
-          {unused && (
-            <button
-              type="button"
-              onClick={() => {
-                if (window.confirm(`Delete “${ingredient.name}”?`)) {
-                  router.delete(`/ingredients/${ingredient.id}`, visitOptions)
-                }
-              }}
-              className={dangerButton}
-            >
-              Delete
-            </button>
-          )}
-        </div>
       )}
-    </li>
+    </ExpandableCard>
   )
 }
 
 export default function IngredientsIndex({ ingredients }: { ingredients: IngredientWithRecipes[] }) {
-  const [openId, setOpenId] = useState<number | null>(null)
+  const rows = useSingleOpen<number>()
   const [filter, setFilter] = useState('')
 
   const byName = new Map(ingredients.map((ingredient) => [ingredient.name, ingredient]))
@@ -265,8 +252,8 @@ export default function IngredientsIndex({ ingredients }: { ingredients: Ingredi
                   key={ingredient.id}
                   ingredient={ingredient}
                   others={ingredients.filter((other) => other.id !== ingredient.id)}
-                  open={openId === ingredient.id}
-                  onToggle={() => setOpenId((current) => (current === ingredient.id ? null : ingredient.id))}
+                  open={rows.isOpen(ingredient.id)}
+                  onToggle={() => rows.toggle(ingredient.id)}
                 />
               ))}
             </ul>

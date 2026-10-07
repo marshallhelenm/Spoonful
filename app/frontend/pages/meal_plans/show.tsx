@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { useState } from 'react'
 
+import { useSingleOpen } from '@/components/ExpandableCard'
 import MealRow from '@/components/MealRow'
 import Spoons from '@/components/Spoons'
 import { card, dangerButton, pageHeading, primaryButton, secondaryButton, textLink } from '@/components/ui'
@@ -44,8 +45,7 @@ type Props = {
 export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
   const [reshuffling, setReshuffling] = useState(false)
   // Which row's "Change" panel is open, if any.
-  const [openRow, setOpenRow] = useState<string | null>(null)
-  const toggleRow = (key: string) => setOpenRow((current) => (current === key ? null : key))
+  const rows = useSingleOpen<string>()
   const budget = budgetStatus(plan.total_spoons, plan.spoon_budget)
   const meals = mealsStatus(plan.meals_planned, plan.meal_count)
   const { cooked, fillers } = groupEntries(plan.entries)
@@ -131,8 +131,8 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
                       aside={<Spoons count={entry.spoons} />}
                       recipes={recipes}
                       maxSpoons={plan.max_spoons}
-                      open={openRow === key}
-                      onToggle={() => toggleRow(key)}
+                      open={rows.isOpen(key)}
+                      onToggle={() => rows.toggle(key)}
                     />
                   )
                 })}
@@ -166,8 +166,8 @@ export default function ShowMealPlan({ meal_plan: plan, recipes }: Props) {
                       }
                       recipes={recipes}
                       maxSpoons={plan.max_spoons}
-                      open={openRow === key}
-                      onToggle={() => toggleRow(key)}
+                      open={rows.isOpen(key)}
+                      onToggle={() => rows.toggle(key)}
                     />
                   )
                 })}
