@@ -1,7 +1,7 @@
 import { Link, useForm } from '@inertiajs/react'
 import type { FormEvent, ReactNode } from 'react'
 
-import FieldError from '@/components/FieldError'
+import Field from '@/components/Field'
 import IngredientsEditor, { newIngredientRow } from '@/components/IngredientsEditor'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
@@ -47,50 +47,51 @@ export default function RecipeForm({ recipe, ingredientNames, submitLabel, onSub
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-      <div>
-        <label htmlFor="name" className={label}>
-          Name
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={data.name}
-          onChange={(event) => setData('name', event.target.value)}
-          aria-invalid={errors.name ? true : undefined}
-          aria-describedby={errors.name ? 'name-error' : undefined}
-          className={input}
-          autoComplete="off"
-          required
-        />
-        <FieldError id="name-error" error={errors.name} />
-      </div>
+      <Field id="name" label="Name" error={errors.name}>
+        {({ id, describedBy, invalid }) => (
+          <input
+            id={id}
+            type="text"
+            value={data.name}
+            onChange={(event) => setData('name', event.target.value)}
+            aria-invalid={invalid}
+            aria-describedby={describedBy}
+            className={input}
+            autoComplete="off"
+            required
+          />
+        )}
+      </Field>
 
-      <div>
-        <span className={label}>Spoons</span>
-        <p id="spoons-hint" className="text-sm text-muted">
-          How much energy it takes, from 0 (takeout, leftovers) to 5 (a real project).
-        </p>
-        <SpoonPicker
-          value={data.spoons}
-          onChange={(value) => setData('spoons', value)}
-          describedBy={errors.spoons ? 'spoons-hint spoons-error' : 'spoons-hint'}
-        />
-        <FieldError id="spoons-error" error={errors.spoons} />
-      </div>
+      <Field
+        id="spoons"
+        label="Spoons"
+        group
+        hint="How much energy it takes, from 0 (takeout, leftovers) to 5 (a real project)."
+        error={errors.spoons}
+      >
+        {({ describedBy, invalid }) => (
+          <SpoonPicker
+            value={data.spoons}
+            onChange={(value) => setData('spoons', value)}
+            describedBy={describedBy}
+            invalid={invalid}
+          />
+        )}
+      </Field>
 
-      <div>
-        <label htmlFor="meals_covered" className={label}>
-          Meals it makes
-        </label>
-        <NumberStepper
-          id="meals_covered"
-          value={data.meals_covered}
-          onChange={(value) => setData('meals_covered', value)}
-          min={1}
-          describedBy={errors.meals_covered ? 'meals_covered-error' : undefined}
-        />
-        <FieldError id="meals_covered-error" error={errors.meals_covered} />
-      </div>
+      <Field id="meals_covered" label="Meals it makes" error={errors.meals_covered}>
+        {({ id, describedBy, invalid }) => (
+          <NumberStepper
+            id={id}
+            value={data.meals_covered}
+            onChange={(value) => setData('meals_covered', value)}
+            min={1}
+            describedBy={describedBy}
+            invalid={invalid}
+          />
+        )}
+      </Field>
 
       <fieldset>
         <legend className={label}>Ingredients</legend>
@@ -102,18 +103,18 @@ export default function RecipeForm({ recipe, ingredientNames, submitLabel, onSub
         />
       </fieldset>
 
-      <div>
-        <label htmlFor="notes" className={label}>
-          Notes <span className="font-medium text-subtle">(optional)</span>
-        </label>
-        <textarea
-          id="notes"
-          rows={4}
-          value={data.notes}
-          onChange={(event) => setData('notes', event.target.value)}
-          className={input}
-        />
-      </div>
+      <Field
+        id="notes"
+        label={
+          <>
+            Notes <span className="font-medium text-subtle">(optional)</span>
+          </>
+        }
+      >
+        {({ id }) => (
+          <textarea id={id} rows={4} value={data.notes} onChange={(event) => setData('notes', event.target.value)} className={input} />
+        )}
+      </Field>
 
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={processing} className={primaryButton}>

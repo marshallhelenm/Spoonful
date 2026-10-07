@@ -2,8 +2,10 @@ import { Link, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 
 import AuthCard from '@/components/AuthCard'
+import { EmailField } from '@/components/AuthFields'
+import Field from '@/components/Field'
 import PasswordInput from '@/components/PasswordInput'
-import { input, label, primaryButton } from '@/components/ui'
+import { primaryButton } from '@/components/ui'
 
 export default function SignIn() {
   const { data, setData, post, processing } = useForm({ email_address: '', password: '' })
@@ -16,36 +18,25 @@ export default function SignIn() {
   return (
     <AuthCard title="Sign in" intro="Plan meals around how many spoons you have this week.">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email_address" className={label}>
-            Email
-          </label>
-          <input
-            id="email_address"
-            type="email"
-            autoComplete="email"
-            value={data.email_address}
-            onChange={(event) => setData('email_address', event.target.value)}
-            className={input}
-            required
-          />
-        </div>
-        <div>
-          <div className="flex items-baseline justify-between">
-            <label htmlFor="password" className={label}>
-              Password
-            </label>
+        <EmailField value={data.email_address} onChange={(value) => setData('email_address', value)} />
+        <Field
+          id="password"
+          label="Password"
+          labelAside={
             <Link href="/passwords/new" className="text-sm font-semibold text-accent-ink underline">
               Forgot it?
             </Link>
-          </div>
-          <PasswordInput
-            id="password"
-            value={data.password}
-            onChange={(value) => setData('password', value)}
-            autoComplete="current-password"
-          />
-        </div>
+          }
+        >
+          {({ id }) => (
+            <PasswordInput
+              id={id}
+              value={data.password}
+              onChange={(value) => setData('password', value)}
+              autoComplete="current-password"
+            />
+          )}
+        </Field>
         <button type="submit" disabled={processing} className={`${primaryButton} w-full`}>
           Sign in
         </button>

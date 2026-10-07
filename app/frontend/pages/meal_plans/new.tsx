@@ -1,10 +1,10 @@
 import { Head, Link, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 
-import FieldError from '@/components/FieldError'
+import Field from '@/components/Field'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { callout, card, checkbox, input, label, pageHeading, primaryButton } from '@/components/ui'
+import { callout, card, checkbox, input, pageHeading, primaryButton } from '@/components/ui'
 
 type Props = {
   defaults: { meal_count: number; starts_on: string }
@@ -58,34 +58,37 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
 
       <form onSubmit={handleSubmit} className={`${card} mt-6 space-y-6`} noValidate>
         <div>
-          <label htmlFor="spoon_budget" className={label}>
-            Spoon budget
-          </label>
-          <div className="mt-2 flex flex-wrap gap-2" aria-label="Budget presets">
-            {BUDGET_PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => setData('spoon_budget', preset.value)}
-                aria-pressed={data.spoon_budget === preset.value}
-                className={`min-h-11 rounded-full px-4 text-sm font-medium ring-1 ${
-                  data.spoon_budget === preset.value
-                    ? 'bg-accent text-on-accent ring-accent'
-                    : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
-                }`}
-              >
-                {preset.label} · {preset.value}
-              </button>
-            ))}
-          </div>
-          <NumberStepper
-            id="spoon_budget"
-            value={data.spoon_budget}
-            onChange={(value) => setData('spoon_budget', value)}
-            min={0}
-            describedBy={errors.spoon_budget ? 'spoon_budget-error' : undefined}
-          />
-          <FieldError id="spoon_budget-error" error={errors.spoon_budget} />
+          <Field id="spoon_budget" label="Spoon budget" error={errors.spoon_budget}>
+            {({ id, describedBy, invalid }) => (
+              <>
+                <div className="mt-2 flex flex-wrap gap-2" aria-label="Budget presets">
+                  {BUDGET_PRESETS.map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => setData('spoon_budget', preset.value)}
+                      aria-pressed={data.spoon_budget === preset.value}
+                      className={`min-h-11 rounded-full px-4 text-sm font-medium ring-1 ${
+                        data.spoon_budget === preset.value
+                          ? 'bg-accent text-on-accent ring-accent'
+                          : 'bg-surface text-ink-soft ring-line-strong hover:bg-surface-hover'
+                      }`}
+                    >
+                      {preset.label} · {preset.value}
+                    </button>
+                  ))}
+                </div>
+                <NumberStepper
+                  id={id}
+                  value={data.spoon_budget}
+                  onChange={(value) => setData('spoon_budget', value)}
+                  min={0}
+                  describedBy={describedBy}
+                  invalid={invalid}
+                />
+              </>
+            )}
+          </Field>
 
           <div className="mt-4 flex items-start gap-3">
             <input
@@ -121,52 +124,46 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
             </label>
           </div>
           {capEnabled && (
-            <div className="mt-3">
-              <span className={label}>
-                Hardest meal allowed
-              </span>
-              <SpoonPicker
-                label="Hardest meal allowed, in spoons"
-                value={data.max_spoons}
-                onChange={(value) => setData('max_spoons', value)}
-                describedBy={errors.max_spoons ? 'max_spoons-error' : undefined}
-              />
-              <FieldError id="max_spoons-error" error={errors.max_spoons} />
-            </div>
+            <Field id="max_spoons" label="Hardest meal allowed" group error={errors.max_spoons} className="mt-3">
+              {({ describedBy, invalid }) => (
+                <SpoonPicker
+                  label="Hardest meal allowed, in spoons"
+                  value={data.max_spoons}
+                  onChange={(value) => setData('max_spoons', value)}
+                  describedBy={describedBy}
+                  invalid={invalid}
+                />
+              )}
+            </Field>
           )}
         </div>
 
-        <div>
-          <label htmlFor="meal_count" className={label}>
-            Meals to plan
-          </label>
-          <p id="meal_count-hint" className="text-sm text-muted">
-            14 is lunch and dinner for a week.
-          </p>
-          <NumberStepper
-            id="meal_count"
-            value={data.meal_count}
-            onChange={(value) => setData('meal_count', value)}
-            min={1}
-            describedBy={errors.meal_count ? 'meal_count-hint meal_count-error' : 'meal_count-hint'}
-          />
-          <FieldError id="meal_count-error" error={errors.meal_count} />
-        </div>
+        <Field id="meal_count" label="Meals to plan" hint="14 is lunch and dinner for a week." error={errors.meal_count}>
+          {({ id, describedBy, invalid }) => (
+            <NumberStepper
+              id={id}
+              value={data.meal_count}
+              onChange={(value) => setData('meal_count', value)}
+              min={1}
+              describedBy={describedBy}
+              invalid={invalid}
+            />
+          )}
+        </Field>
 
-        <div>
-          <label htmlFor="starts_on" className={label}>
-            Week starting
-          </label>
-          <input
-            id="starts_on"
-            type="date"
-            value={data.starts_on}
-            onChange={(event) => setData('starts_on', event.target.value)}
-            aria-describedby={errors.starts_on ? 'starts_on-error' : undefined}
-            className={`${input} sm:max-w-xs`}
-          />
-          <FieldError id="starts_on-error" error={errors.starts_on} />
-        </div>
+        <Field id="starts_on" label="Week starting" error={errors.starts_on}>
+          {({ id, describedBy, invalid }) => (
+            <input
+              id={id}
+              type="date"
+              value={data.starts_on}
+              onChange={(event) => setData('starts_on', event.target.value)}
+              aria-invalid={invalid}
+              aria-describedby={describedBy}
+              className={`${input} sm:max-w-xs`}
+            />
+          )}
+        </Field>
 
         <button type="submit" disabled={processing || recipe_count === 0} className={`${primaryButton} w-full sm:w-auto`}>
           Plan my week

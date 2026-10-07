@@ -7,10 +7,11 @@ type Props = {
   min?: number
   max?: number
   describedBy?: string
+  invalid?: boolean
 }
 
 // A number field with big − / + buttons, easier to hit on a phone than tiny spinner arrows.
-export default function NumberStepper({ id, value, onChange, min = 0, max, describedBy }: Props) {
+export default function NumberStepper({ id, value, onChange, min = 0, max, describedBy, invalid }: Props) {
   const clamp = (n: number) => Math.max(min, max === undefined ? n : Math.min(max, n))
   const current = value === '' ? min : value
 
@@ -37,6 +38,7 @@ export default function NumberStepper({ id, value, onChange, min = 0, max, descr
         max={max}
         value={value}
         aria-describedby={describedBy}
+        aria-invalid={invalid || undefined}
         onChange={(event) => onChange(event.target.value === '' ? '' : clamp(Number(event.target.value)))}
         className={`${inputBase} w-20 text-center`}
       />

@@ -2,7 +2,8 @@ import { Link, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 
 import AuthCard from '@/components/AuthCard'
-import { input, label, primaryButton } from '@/components/ui'
+import { EmailField } from '@/components/AuthFields'
+import { primaryButton } from '@/components/ui'
 
 export default function ForgotPassword() {
   const { data, setData, post, processing } = useForm({ email_address: '' })
@@ -15,20 +16,7 @@ export default function ForgotPassword() {
   return (
     <AuthCard title="Reset your password" intro="We'll email you a link to choose a new one.">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email_address" className={label}>
-            Email
-          </label>
-          <input
-            id="email_address"
-            type="email"
-            autoComplete="email"
-            value={data.email_address}
-            onChange={(event) => setData('email_address', event.target.value)}
-            className={input}
-            required
-          />
-        </div>
+        <EmailField value={data.email_address} onChange={(value) => setData('email_address', value)} />
         <button type="submit" disabled={processing} className={`${primaryButton} w-full`}>
           Send reset link
         </button>

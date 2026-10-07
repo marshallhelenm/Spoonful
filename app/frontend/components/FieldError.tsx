@@ -1,5 +1,10 @@
+// Rails sends a list of messages per field; show the first.
+export function errorMessage(error?: string | string[]) {
+  return Array.isArray(error) ? error[0] : error
+}
+
 export default function FieldError({ id, error }: { id: string; error?: string | string[] }) {
-  const message = Array.isArray(error) ? error[0] : error
+  const message = errorMessage(error)
   if (!message) return null
 
   return (

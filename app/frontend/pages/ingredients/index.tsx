@@ -2,7 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 
-import FieldError from '@/components/FieldError'
+import Field from '@/components/Field'
 import { callout, card, dangerButton, input, inputBase, label, pageHeading, primaryButton, secondaryButton } from '@/components/ui'
 import { pluralize } from '@/lib/format'
 import { findLikelyDuplicates, normalize } from '@/lib/ingredientMatch'
@@ -92,24 +92,24 @@ function IngredientRow({
           )}
 
           <form onSubmit={submitRename} noValidate>
-            <label htmlFor={`${panelId}-name`} className={label}>
-              Rename
-            </label>
-            <div className="mt-1 flex gap-2">
-              <input
-                id={`${panelId}-name`}
-                type="text"
-                value={rename.data.name}
-                onChange={(event) => rename.setData('name', event.target.value)}
-                aria-invalid={rename.errors.name ? true : undefined}
-                aria-describedby={rename.errors.name ? `${panelId}-name-error` : undefined}
-                className={`${inputBase} min-w-0 flex-1`}
-              />
-              <button type="submit" disabled={rename.processing} className={primaryButton}>
-                Save
-              </button>
-            </div>
-            <FieldError id={`${panelId}-name-error`} error={rename.errors.name} />
+            <Field id={`${panelId}-name`} label="Rename" error={rename.errors.name}>
+              {({ id, describedBy, invalid }) => (
+                <div className="mt-1 flex gap-2">
+                  <input
+                    id={id}
+                    type="text"
+                    value={rename.data.name}
+                    onChange={(event) => rename.setData('name', event.target.value)}
+                    aria-invalid={invalid}
+                    aria-describedby={describedBy}
+                    className={`${inputBase} min-w-0 flex-1`}
+                  />
+                  <button type="submit" disabled={rename.processing} className={primaryButton}>
+                    Save
+                  </button>
+                </div>
+              )}
+            </Field>
           </form>
 
           {others.length > 0 && (

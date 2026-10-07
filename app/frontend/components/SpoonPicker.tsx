@@ -5,12 +5,15 @@ type Props = {
   value: number | null
   onChange: (value: number) => void
   describedBy?: string
+  invalid?: boolean
 }
 
 // Pick a 0–5 spoon rating with large tap targets.
-export default function SpoonPicker({ label = 'Spoons', value, onChange, describedBy }: Props) {
+export default function SpoonPicker({ label = 'Spoons', value, onChange, describedBy, invalid }: Props) {
   return (
-    <div role="radiogroup" aria-label={label} aria-describedby={describedBy} className="mt-1 grid grid-cols-6 gap-2">
+    <div role="radiogroup" aria-label={label} aria-describedby={describedBy}
+      aria-invalid={invalid || undefined}
+      className="mt-1 grid grid-cols-6 gap-2">
       {OPTIONS.map((option) => {
         const selected = value === option
         return (
