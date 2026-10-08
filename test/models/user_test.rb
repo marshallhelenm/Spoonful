@@ -32,4 +32,21 @@ class UserTest < ActiveSupport::TestCase
     end
     assert Recipe.exists?(recipes(:secret_soup).id)
   end
+
+  test "the demo account can't be deleted" do
+    demo = DemoAccount.user
+    assert_not demo.destroy
+    assert User.exists?(demo.id)
+  end
+
+  test "a taken email suggests signing in only when signing up" do
+    taken = users(:two).email_address
+    assert_includes User.new(email_address: taken, password: "a-good-password").tap(&:validate).errors[:email_address],
+                    "already has an account. Try signing in instead"
+
+    user = users(:one)
+    user.email_address = taken
+    user.validate
+    assert_equal [ "already has an account" ], user.errors[:email_address]
+  end
 end

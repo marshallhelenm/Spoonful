@@ -3,6 +3,13 @@ Rails.application.routes.draw do
   get "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
   resources :passwords, param: :token
+  # Settings for the signed-in user: /account, /account/email, /account/password.
+  resource :account, only: %i[show destroy] do
+    scope module: :accounts do
+      resource :email, only: :update
+      resource :password, only: :update
+    end
+  end
   # Redirect to localhost from 127.0.0.1 to use same IP address with Vite server
   constraints(host: "127.0.0.1") do
     get "(*path)", to: redirect { |params, req| "#{req.protocol}localhost:#{req.port}/#{params[:path]}" }

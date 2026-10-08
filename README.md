@@ -88,5 +88,4 @@ Production runs on a single Heroku dyno with Heroku Postgres. The `Procfile` sta
 ## Roadmap
 
 - Structured ingredient amounts (number + unit) so the shopping list can add up totals
-- Account settings: change email or password, delete account
 - Households that share recipes and plans

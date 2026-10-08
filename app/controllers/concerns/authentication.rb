@@ -11,10 +11,10 @@ module Authentication
       skip_before_action :require_authentication, **options
     end
 
-    # Limits form posts to `create` (sign in, sign up, reset requests) to 10
-    # per 3 minutes, sending visitors over the limit back to `back_to`.
-    def rate_limit_attempts(back_to:)
-      rate_limit to: 10, within: 3.minutes, only: :create,
+    # Limits form posts (sign in, sign up, reset requests, account changes) to
+    # 10 per 3 minutes, sending visitors over the limit back to `back_to`.
+    def rate_limit_attempts(back_to:, only: :create)
+      rate_limit to: 10, within: 3.minutes, only:,
                  with: -> { redirect_to send(back_to), alert: "Too many attempts. Try again in a few minutes." }
     end
   end

@@ -46,3 +46,22 @@ export function NewPasswordField({ label, value, onChange, error }: FieldProps &
     </Field>
   )
 }
+
+// Confirming it's really you before an account change. Takes an id because
+// the account page has several of these, one per form.
+export function CurrentPasswordField({ id, value, onChange, error }: FieldProps & { id: string }) {
+  return (
+    <Field id={id} label="Current password" error={error}>
+      {({ id, describedBy, invalid }) => (
+        <PasswordInput
+          id={id}
+          value={value}
+          onChange={onChange}
+          autoComplete="current-password"
+          describedBy={describedBy}
+          invalid={invalid}
+        />
+      )}
+    </Field>
+  )
+}

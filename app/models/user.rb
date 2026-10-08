@@ -9,10 +9,12 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  validates :email_address, presence: true, uniqueness: { message: "already has an account. Try signing in instead" },
+  validates :email_address, presence: true,
+                            uniqueness: { message: ->(user, _) { user.new_record? ? "already has an account. Try signing in instead" : "already has an account" } },
                             format: { with: URI::MailTo::EMAIL_REGEXP, message: "doesn't look like an email address" }
   validates :password, length: { minimum: 8 }, allow_nil: true
   validate :demo_login_unchanged, on: :update
+  before_destroy :keep_demo_account
 
   def demo?
     email_address == DemoAccount::EMAIL
@@ -31,5 +33,12 @@ class User < ApplicationRecord
 
       errors.add(:email_address, "can't be changed on the demo account") if will_save_change_to_email_address?
       errors.add(:password, "can't be changed on the demo account") if will_save_change_to_password_digest?
+    end
+
+    def keep_demo_account
+      return unless demo?
+
+      errors.add(:base, "The demo account can't be deleted")
+      throw :abort
     end
 end
