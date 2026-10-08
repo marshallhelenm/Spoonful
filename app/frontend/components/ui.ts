@@ -34,5 +34,7 @@ export const label = 'block text-sm font-semibold text-ink'
 export const inputBase =
   'rounded-xl border-line-strong bg-surface text-base text-ink shadow-sm focus:border-accent focus:ring-accent'
 export const input = `mt-1 block w-full ${inputBase}`
+// bg-surface would also cover the checked state (the forms plugin draws a white
+// check on the background color), so checked boxes set their own fill.
 export const checkbox =
-  'mt-0.5 size-5 shrink-0 rounded border-line-strong bg-surface text-accent focus:ring-accent focus:ring-offset-surface'
+  'mt-0.5 size-5 shrink-0 rounded border-line-strong bg-surface text-accent checked:border-transparent checked:bg-accent focus:ring-accent focus:ring-offset-surface'
