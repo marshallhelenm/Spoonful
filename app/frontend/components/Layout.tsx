@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
+import UserMenu from '@/components/UserMenu'
 import { callout, tabColors, textLink } from '@/components/ui'
 import spoonImage from '@/images/spoon.webp'
 
@@ -25,28 +26,35 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-page text-ink">
-      <header className="border-b border-line bg-surface/90 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-3">
+      <header className="relative z-10 border-b border-line bg-surface/90 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center gap-2 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 font-display text-xl font-normal text-accent-ink">
             <img src={spoonImage} alt="" width={105} height={96} className="h-8 w-auto" />
             Spoonful
           </Link>
           {user && (
-            <nav aria-label="Main" className="flex gap-1">
-              {navItems.map((item) => {
-                const active = item.matches(url)
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={active ? 'page' : undefined}
-                    className={`rounded-lg px-3 py-2 text-sm font-medium ${tabColors(active)}`}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              })}
-            </nav>
+            // Phones: logo and account menu on the top row, nav below.
+            // Wider: one row, with nav and account menu on the right.
+            <>
+              <nav aria-label="Main" className="order-last flex w-full justify-end gap-1 sm:order-none sm:ml-auto sm:w-auto">
+                {navItems.map((item) => {
+                  const active = item.matches(url)
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      className={`rounded-lg px-3 py-2 text-sm font-medium ${tabColors(active)}`}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </nav>
+              <div className="ml-auto sm:ml-0">
+                <UserMenu email={user.email_address} />
+              </div>
+            </>
           )}
         </div>
       </header>
@@ -79,21 +87,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 pb-8 text-sm text-muted">
-        {user ? (
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="truncate">{user.email_address}</span>
-            <button
-              type="button"
-              onClick={() => router.delete('/session')}
-              className="min-h-9 shrink-0 rounded-lg px-2 font-semibold text-accent-ink hover:bg-accent-soft"
-            >
-              Sign out
-            </button>
-          </div>
-        ) : (
-          <span />
-        )}
+      <footer className="mx-auto flex max-w-3xl flex-wrap items-center justify-end gap-3 px-4 pb-2 text-sm text-muted">
         <div className="flex items-center gap-3">
           <span aria-hidden="true">Theme</span>
           <ThemeSwitcher />

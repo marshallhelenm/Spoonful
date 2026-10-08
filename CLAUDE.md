@@ -43,6 +43,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `Recipe`, `Ingredient`, and `MealPlan` belong to a `User`; entries, ingredient lines, and shopping checks are owned through those. Each user has a separate ingredient catalog; names are unique per user
 - **Always load records through `Current.user`** (`Current.user.recipes.find(id)`), never `Recipe.find` — another user's id then 404s. Models also validate that linked records share an owner with `validates :recipe, same_owner_as: :meal_plan` (`app/validators/same_owner_as_validator.rb`)
 - Every controller requires sign-in by default (`Authentication` concern); public actions opt out with `allow_unauthenticated_access`. `current_user` is shared to all pages
+- Account settings at `/account` (from the person-icon menu in the header, `UserMenu`, which also has sign out): change email (`Accounts::EmailsController`), change password (`Accounts::PasswordsController`, signs out other sessions), delete account (`AccountsController#destroy`). Each change needs the current password, is rate limited, and is refused on the demo account (`AccountChange` concern; `User` also blocks demo login changes and deletion)
 - **Demo account** (`DemoAccount`, login in the README): public and shared. `User` refuses email/password changes on it (keep that true for any future account settings), it never gets reset emails, and the layout shows a banner when `current_user.demo`. `bin/rails demo:reset` wipes it back to `SampleRecipes`; Heroku Scheduler runs that nightly in production
 - `test/controllers/data_isolation_test.rb` covers cross-user access; controller tests `sign_in_as(users(:one))`
 
@@ -79,5 +80,4 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 ## Future (not MVP)
 
 - **Maybe later:** structured amounts (separate number + unit) so the shopping list can add up totals — keep `ShoppingList` uses as data, not pre-formatted strings, to make that switch easy
-- Account settings: change email/password, delete account
 - Households: share recipes and plans between accounts

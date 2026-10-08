@@ -1,27 +1,10 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 
+import Icon from '@/components/Icon'
 import { tabColors } from '@/components/ui'
 import { getThemePreference, setThemePreference } from '@/lib/theme'
 import type { ThemePreference } from '@/lib/theme'
-
-// Stroke icons drawn in the current text color, so they follow the selected/unselected colors.
-function Icon({ children }: { children: ReactNode }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-5"
-    >
-      {children}
-    </svg>
-  )
-}
 
 const SunIcon = () => (
   <Icon>
