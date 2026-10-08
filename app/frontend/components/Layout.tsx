@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import { callout, tabColors, textLink } from '@/components/ui'
+import spoonImage from '@/images/spoon.webp'
 
 const navItems = [
   { href: '/', label: 'Plan', matches: (url: string) => url === '/' || url === '/meal_plans/new' },
@@ -26,8 +27,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-page text-ink">
       <header className="border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-3">
-          <Link href="/" className="font-display text-xl font-normal text-accent-ink">
-            <span aria-hidden="true" className="mr-1">🥄</span> Spoonful
+          <Link href="/" className="flex items-center gap-2 font-display text-xl font-normal text-accent-ink">
+            <img src={spoonImage} alt="" width={105} height={96} className="h-8 w-auto" />
+            Spoonful
           </Link>
           {user && (
             <nav aria-label="Main" className="flex gap-1">
@@ -96,6 +98,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           <span aria-hidden="true">Theme</span>
           <ThemeSwitcher />
         </div>
+        <p className="w-full text-xs text-subtle">
+          Spoon image by{' '}
+          <a href="https://www.magnific.com/free-psd/single-wooden-spoon-cooking-serving_425416032.htm" className="underline">
+            muhammad.abdullah on Magnific
+          </a>
+        </p>
       </footer>
     </div>
   )
