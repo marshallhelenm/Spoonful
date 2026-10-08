@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const user = props.current_user
 
   return (
-    <div className="min-h-screen bg-page text-ink">
+    <div className="flex min-h-dvh flex-col bg-page text-ink">
       <header className="relative z-10 border-b border-line bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center gap-2 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 font-display text-xl font-normal text-accent-ink">
@@ -59,7 +59,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-6 pb-10">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 pb-10">
         {user?.demo && (
           <p className={`${callout} mb-4 text-sm`}>
             You're using the shared demo account, so other visitors can see your changes, and everything resets
@@ -87,7 +87,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mx-auto flex max-w-3xl flex-wrap items-center justify-end gap-3 px-4 pb-2 text-sm text-muted">
+      <footer className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-end gap-3 px-4 pb-2 text-sm text-muted">
         <div className="flex items-center gap-3">
           <span aria-hidden="true">Theme</span>
           <ThemeSwitcher />
