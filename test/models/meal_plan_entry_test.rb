@@ -14,7 +14,7 @@ class MealPlanEntryTest < ActiveSupport::TestCase
 
     assert_equal(
       { recipes(:chili).id => Date.new(2026, 10, 5), recipes(:pasta).id => Date.new(2026, 10, 5) },
-      MealPlanEntry.last_made_on_by_recipe
+      MealPlanEntry.where(meal_plan: users(:one).meal_plans).last_made_on_by_recipe
     )
   end
 

@@ -18,7 +18,6 @@ class UserTest < ActiveSupport::TestCase
     user = users(:one)
     newer = user.meal_plans.create!(starts_on: Date.new(2026, 10, 5), spoon_budget: 5)
     newer.entries.create!(recipe: recipes(:pasta), position: 0)
-    users(:two).meal_plans.first.entries.create!(recipe: recipes(:secret_soup), position: 0)
 
     assert_equal({ recipes(:chili).id => Date.new(2026, 9, 28), recipes(:pasta).id => Date.new(2026, 10, 5) },
                  user.last_made_on_by_recipe)

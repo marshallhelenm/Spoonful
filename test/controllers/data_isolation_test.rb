@@ -59,6 +59,63 @@ class DataIsolationTest < ActionDispatch::IntegrationTest
     assert Ingredient.exists?(ingredients(:onion).id)
   end
 
+  test "someone else's plan can't be reshuffled or deleted" do
+    plan = meal_plans(:someone_elses_week)
+
+    post reshuffle_meal_plan_path(plan)
+    assert_response :not_found
+
+    delete meal_plan_path(plan)
+    assert_response :not_found
+    assert MealPlan.exists?(plan.id)
+  end
+
+  test "meals in someone else's plan can't be swapped, shuffled, or removed" do
+    plan = meal_plans(:someone_elses_week)
+    entry = meal_plan_entries(:someone_elses_soup)
+
+    patch meal_plan_entry_path(plan, entry), params: { meal_plan_entry: { recipe_id: recipes(:chili).id } }
+    assert_response :not_found
+
+    post shuffle_meal_plan_entry_path(plan, entry)
+    assert_response :not_found
+
+    delete meal_plan_entry_path(plan, entry)
+    assert_response :not_found
+    assert_equal recipes(:secret_soup), entry.reload.recipe
+  end
+
+  test "someone else's shopping list can't be checked off" do
+    check_off = ->(plan, ingredient) do
+      patch meal_plan_shopping_list_item_path(plan, ingredient), params: { checked: true }
+    end
+
+    # Their plan, your ingredient
+    check_off.(meal_plans(:someone_elses_week), ingredients(:onion))
+    assert_response :not_found
+
+    # Your plan, their ingredient
+    check_off.(meal_plans(:last_week), ingredients(:secret_spice))
+    assert_response :not_found
+
+    assert_equal 0, ShoppingListCheck.count
+  end
+
+  test "someone else's ingredient can't be renamed, deleted, or merged away" do
+    spice = ingredients(:secret_spice)
+
+    patch ingredient_path(spice), params: { ingredient: { name: "Mine now" } }
+    assert_response :not_found
+
+    delete ingredient_path(spice)
+    assert_response :not_found
+
+    post merge_ingredient_path(spice), params: { target_id: ingredients(:onion).id }
+    assert_response :not_found
+
+    assert_equal "Secret spice", spice.reload.name
+  end
+
   test "new plans only use your own recipes" do
     post meal_plans_path, params: { meal_plan: { spoon_budget: 20, meal_count: 14 } }
 
