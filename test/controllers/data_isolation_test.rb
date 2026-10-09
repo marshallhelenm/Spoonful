@@ -27,6 +27,10 @@ class DataIsolationTest < ActionDispatch::IntegrationTest
     patch recipe_path(soup), params: { recipe: { name: "Mine now" } }
     assert_response :not_found
 
+    patch recipe_plan_inclusion_path(soup), params: { included: false }
+    assert_response :not_found
+    assert soup.reload.include_in_plans
+
     delete recipe_path(soup)
     assert_response :not_found
     assert_equal "Secret Soup", soup.reload.name

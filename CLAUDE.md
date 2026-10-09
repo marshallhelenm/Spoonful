@@ -52,6 +52,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 **Recipe**
 - `name`, `spoons` (0–5), `meals_covered` (integer ≥ 1, e.g. a big batch covers 2 meals), optional notes
 - 0-spoon "meals" (takeout, leftovers, frozen pizza) are ordinary recipes with `spoons: 0`
+- `include_in_plans` (default on): when off, the planner never picks it (new plans, reshuffles, random swaps — `Recipe.included_in_plans`), but it can still be swapped in by hand and stays in existing plans. Set from the recipe form or the checkbox on each recipe list card (`Recipes::PlanInclusionsController`, optimistic like the shopping list)
 
 **Meal plan**
 - `meal_count`: number of meals to plan; default **14** (lunch + dinner × 7), user can change it

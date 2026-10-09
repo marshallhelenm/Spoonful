@@ -52,7 +52,7 @@ class MealPlan < ApplicationRecord
 
   def planner(random)
     MealPlanner.new(
-      recipes: user.recipes.to_a,
+      recipes: user.recipes.included_in_plans.to_a,
       meal_count: meal_count,
       spoon_budget: spoon_budget,
       max_spoons: max_spoons,

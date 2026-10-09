@@ -9,6 +9,15 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     assert_inertia_component "meal_plans/new"
     assert_equal 14, inertia.props[:defaults][:meal_count]
     assert_equal 3, inertia.props[:recipe_count]
+    assert_equal 3, inertia.props[:included_recipe_count]
+  end
+
+  test "new counts only recipes included in meal plans" do
+    recipes(:chili).update!(include_in_plans: false)
+    get new_meal_plan_path
+
+    assert_equal 3, inertia.props[:recipe_count]
+    assert_equal 2, inertia.props[:included_recipe_count]
   end
 
   test "create builds a plan and shows it" do

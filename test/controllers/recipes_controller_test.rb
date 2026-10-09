@@ -91,6 +91,30 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, recipes(:pasta).reload.spoons
   end
 
+  test "update can leave a recipe out of meal plans" do
+    patch recipe_path(recipes(:pasta)), params: { recipe: { include_in_plans: false } }
+    assert_redirected_to recipes_path
+    assert_not recipes(:pasta).reload.include_in_plans
+  end
+
+  test "plan inclusion toggle leaves a recipe out and puts it back" do
+    patch recipe_plan_inclusion_path(recipes(:pasta)), params: { included: false }
+    assert_redirected_to recipes_path
+    assert_not recipes(:pasta).reload.include_in_plans
+
+    patch recipe_plan_inclusion_path(recipes(:pasta)), params: { included: true }
+    assert recipes(:pasta).reload.include_in_plans
+  end
+
+  test "index includes whether each recipe is in meal plans" do
+    recipes(:pasta).update!(include_in_plans: false)
+    get recipes_path
+
+    included = inertia.props[:recipes].to_h { [ it[:name], it[:include_in_plans] ] }
+    assert_equal false, included["Weeknight Pasta"]
+    assert_equal true, included["Takeout"]
+  end
+
   test "destroy deletes an unplanned recipe" do
     assert_difference -> { Recipe.count }, -1 do
       delete recipe_path(recipes(:pasta))

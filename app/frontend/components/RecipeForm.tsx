@@ -5,7 +5,7 @@ import Field from '@/components/Field'
 import IngredientsEditor, { newIngredientRow } from '@/components/IngredientsEditor'
 import NumberStepper from '@/components/NumberStepper'
 import SpoonPicker from '@/components/SpoonPicker'
-import { input, label, primaryButton, secondaryButton } from '@/components/ui'
+import { checkbox, input, label, primaryButton, secondaryButton } from '@/components/ui'
 import type { Recipe } from '@/types'
 
 type Props = {
@@ -23,6 +23,7 @@ export function useRecipeForm(recipe: Partial<Recipe>) {
     spoons: recipe.spoons ?? (null as number | null),
     meals_covered: (recipe.meals_covered ?? 1) as number | '',
     notes: recipe.notes ?? '',
+    include_in_plans: recipe.include_in_plans ?? true,
     ingredients: (recipe.ingredients ?? []).map((line) => newIngredientRow(line.name, line.amount ?? '')),
   })
 }
@@ -115,6 +116,22 @@ export default function RecipeForm({ recipe, ingredientNames, submitLabel, onSub
           <textarea id={id} rows={4} value={data.notes} onChange={(event) => setData('notes', event.target.value)} className={input} />
         )}
       </Field>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="include_in_plans"
+          type="checkbox"
+          checked={data.include_in_plans}
+          onChange={(event) => setData('include_in_plans', event.target.checked)}
+          className={checkbox}
+        />
+        <label htmlFor="include_in_plans" className="text-sm">
+          <span className="font-semibold text-ink">Include in meal plans</span>
+          <span className="block text-muted">
+            Turn this off to keep it out of planned and shuffled meals. You can still pick it by hand.
+          </span>
+        </label>
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={processing} className={primaryButton}>

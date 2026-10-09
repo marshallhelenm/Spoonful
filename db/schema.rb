@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_184000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_08_120000) do
   create_table "ingredients", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -67,6 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_184000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.boolean "include_in_plans", default: true, null: false
     t.index ["user_id", "name"], name: "index_recipes_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_recipes_on_user_id"
     t.check_constraint "meals_covered >= 1", name: "meals_covered_positive"

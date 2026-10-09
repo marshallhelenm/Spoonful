@@ -14,6 +14,10 @@ class Recipe < ApplicationRecord
                      numericality: { only_integer: true, in: SPOON_RANGE, allow_nil: true }
   validates :meals_covered, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
+  # Recipes the planner may pick. Turning `include_in_plans` off keeps a recipe
+  # out of new plans, reshuffles, and random swaps; it can still be chosen by hand.
+  scope :included_in_plans, -> { where(include_in_plans: true) }
+
   # 0-spoon meals (takeout, leftovers) may repeat within a plan; others may not.
   def filler?
     spoons.zero?

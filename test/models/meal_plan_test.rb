@@ -32,6 +32,27 @@ class MealPlanTest < ActiveSupport::TestCase
     assert plan.recipes.all? { it.spoons <= 2 }
   end
 
+  test "new recipes are included in meal plans by default" do
+    assert Recipe.new.include_in_plans
+  end
+
+  test "fill! never picks recipes left out of meal plans" do
+    recipes(:chili).update!(include_in_plans: false)
+    plan = users(:one).meal_plans.new(spoon_budget: 10, meal_count: 6)
+    plan.save_and_fill(random: Random.new(3))
+    assert plan.recipes.any?
+    assert_not_includes plan.recipes, recipes(:chili)
+  end
+
+  test "replacement_for skips recipes left out of meal plans" do
+    recipes(:takeout).update!(include_in_plans: false)
+    plan = users(:one).meal_plans.create!(spoon_budget: 5)
+    chili = plan.entries.create!(recipe: recipes(:chili), position: 0)
+    plan.entries.create!(recipe: recipes(:pasta), position: 1)
+
+    assert_nil plan.replacement_for(chili, random: Random.new(1))
+  end
+
   test "replacement_for picks a different recipe that isn't already in the plan" do
     plan = users(:one).meal_plans.create!(spoon_budget: 5)
     chili = plan.entries.create!(recipe: recipes(:chili), position: 0)

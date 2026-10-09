@@ -10,6 +10,8 @@ import { callout, card, checkbox, choiceColors, input, pageHeading, primaryButto
 type Props = {
   defaults: { meal_count: number; starts_on: string }
   recipe_count: number
+  // Recipes the planner may pick (the rest are left out of meal plans).
+  included_recipe_count: number
 }
 
 const MEDIUM_BUDGET = 12
@@ -22,7 +24,7 @@ const BUDGET_PRESETS = [
 
 const DEFAULT_CAP = 3
 
-export default function NewMealPlan({ defaults, recipe_count }: Props) {
+export default function NewMealPlan({ defaults, recipe_count, included_recipe_count }: Props) {
   const { data, setData, post, errors, processing } = useForm({
     spoon_budget: MEDIUM_BUDGET as number | '',
     meal_count: defaults.meal_count as number | '',
@@ -54,7 +56,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
         Set a spoon budget and Spoonful will pick meals that add up to about that much effort.
       </p>
 
-      {recipe_count === 0 && (
+      {recipe_count === 0 ? (
         <div className={`${callout} mt-6`}>
           <p className="font-semibold">You don't have any recipes yet.</p>
           <p className="mt-1 text-sm text-ink-soft">
@@ -64,6 +66,19 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
             first, including some 0-spoon meals for low-energy days.
           </p>
         </div>
+      ) : (
+        included_recipe_count === 0 && (
+          <div className={`${callout} mt-6`}>
+            <p className="font-semibold">All your recipes are left out of meal plans.</p>
+            <p className="mt-1 text-sm text-ink-soft">
+              Turn on "Include in meal plans" for a few{' '}
+              <Link href="/recipes" className={textLink}>
+                recipes
+              </Link>{' '}
+              so Spoonful has something to pick.
+            </p>
+          </div>
+        )
       )}
 
       <form onSubmit={handleSubmit} className={`${card} mt-6 space-y-6`} noValidate>
@@ -193,7 +208,7 @@ export default function NewMealPlan({ defaults, recipe_count }: Props) {
           )}
         </div>
 
-        <button type="submit" disabled={processing || recipe_count === 0} className={`${primaryButton} w-full sm:w-auto`}>
+        <button type="submit" disabled={processing || included_recipe_count === 0} className={`${primaryButton} w-full sm:w-auto`}>
           Plan my week
         </button>
       </form>

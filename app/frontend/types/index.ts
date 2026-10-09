@@ -24,6 +24,8 @@ export type Recipe = {
   spoons: number
   meals_covered: number
   notes: string | null
+  // Off keeps the recipe out of automatically picked meals.
+  include_in_plans: boolean
   ingredients: IngredientLine[]
 }
 

@@ -12,7 +12,8 @@ class MealPlansController < InertiaController
 
     render inertia: {
       defaults: plan.as_json(only: %i[meal_count starts_on]),
-      recipe_count: Current.user.recipes.count
+      recipe_count: Current.user.recipes.count,
+      included_recipe_count: Current.user.recipes.included_in_plans.count
     }
   end
 

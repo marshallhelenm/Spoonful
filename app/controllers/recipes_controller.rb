@@ -60,7 +60,7 @@ class RecipesController < InertiaController
   end
 
   def recipe_params
-    params.expect(recipe: %i[name spoons meals_covered notes])
+    params.expect(recipe: %i[name spoons meals_covered notes include_in_plans])
   end
 
   # [{ name:, amount: }, ...] from the form, or nil when the request doesn't
@@ -81,6 +81,6 @@ class RecipesController < InertiaController
   end
 
   def serialize(recipe)
-    recipe.as_json(only: %i[id name spoons meals_covered notes])
+    recipe.as_json(only: %i[id name spoons meals_covered notes include_in_plans])
   end
 end

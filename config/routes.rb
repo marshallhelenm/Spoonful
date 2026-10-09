@@ -17,7 +17,9 @@ Rails.application.routes.draw do
 
   root "meal_plans#new"
 
-  resources :recipes, except: :show
+  resources :recipes, except: :show do
+    resource :plan_inclusion, only: :update, module: :recipes
+  end
   resources :ingredients, only: %i[index update destroy] do
     post :merge, on: :member
   end
