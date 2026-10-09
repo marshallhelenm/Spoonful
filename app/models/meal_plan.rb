@@ -1,7 +1,7 @@
 class MealPlan < ApplicationRecord
   include RecipeTotals
 
-  DEFAULT_MEAL_COUNT = 14
+  DEFAULT_MEAL_COUNT = 7
 
   belongs_to :user
 

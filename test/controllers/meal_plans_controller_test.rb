@@ -7,7 +7,7 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_inertia_component "meal_plans/new"
-    assert_equal 14, inertia.props[:defaults][:meal_count]
+    assert_equal 7, inertia.props[:defaults][:meal_count]
     assert_equal 3, inertia.props[:recipe_count]
     assert_equal 3, inertia.props[:included_recipe_count]
   end
@@ -47,7 +47,7 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
 
   test "create with an invalid budget redirects back with errors" do
     assert_no_difference -> { MealPlan.count } do
-      post meal_plans_path, params: { meal_plan: { spoon_budget: "", meal_count: 14 } }
+      post meal_plans_path, params: { meal_plan: { spoon_budget: "", meal_count: 7 } }
     end
     assert_redirected_to new_meal_plan_path
     follow_redirect!

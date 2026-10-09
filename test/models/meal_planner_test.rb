@@ -23,16 +23,16 @@ class MealPlannerTest < ActiveSupport::TestCase
 
   test "hits the spoon budget and fills every meal when the recipes allow it" do
     [ 1, 2, 3, 4, 5 ].each do |seed|
-      result = plan(varied_recipes, meal_count: 14, spoon_budget: 12, seed: seed)
+      result = plan(varied_recipes, meal_count: 7, spoon_budget: 12, seed: seed)
       assert_equal 12, result.total_spoons, "seed #{seed}"
-      assert_operator result.meals_planned, :>=, 14, "seed #{seed}"
+      assert_operator result.meals_planned, :>=, 7, "seed #{seed}"
     end
   end
 
   test "a low budget is met by leaning on 0-spoon fillers" do
-    result = plan(varied_recipes, meal_count: 14, spoon_budget: 0)
+    result = plan(varied_recipes, meal_count: 7, spoon_budget: 0)
     assert_equal 0, result.total_spoons
-    assert_operator result.meals_planned, :>=, 14
+    assert_operator result.meals_planned, :>=, 7
   end
 
   test "a high budget can go over a little when it can't be hit exactly" do
@@ -48,15 +48,15 @@ class MealPlannerTest < ActiveSupport::TestCase
 
   test "as a ceiling, it still gets as close to the budget as it can" do
     [ 1, 2, 3, 4, 5 ].each do |seed|
-      result = plan(varied_recipes, meal_count: 14, spoon_budget: 12, budget_is_ceiling: true, seed: seed)
+      result = plan(varied_recipes, meal_count: 7, spoon_budget: 12, budget_is_ceiling: true, seed: seed)
       assert_equal 12, result.total_spoons, "seed #{seed}"
-      assert_operator result.meals_planned, :>=, 14, "seed #{seed}"
+      assert_operator result.meals_planned, :>=, 7, "seed #{seed}"
     end
   end
 
   test "a spoon cap excludes harder recipes, even when they'd fit the budget" do
     [ 1, 2, 3, 4, 5 ].each do |seed|
-      result = plan(varied_recipes, meal_count: 14, spoon_budget: 20, max_spoons: 2, seed: seed)
+      result = plan(varied_recipes, meal_count: 7, spoon_budget: 20, max_spoons: 2, seed: seed)
       assert result.recipes.any?, "seed #{seed}"
       assert result.recipes.all? { it.spoons <= 2 }, "seed #{seed}"
     end
@@ -68,7 +68,7 @@ class MealPlannerTest < ActiveSupport::TestCase
   end
 
   def replacement(recipes, others:, replacing:, spoon_budget: 10, seed: 1, **options)
-    MealPlanner.new(recipes: recipes, meal_count: 14, spoon_budget: spoon_budget, today: TODAY,
+    MealPlanner.new(recipes: recipes, meal_count: 7, spoon_budget: spoon_budget, today: TODAY,
                     random: Random.new(seed), **options)
       .pick_replacement(others: others, replacing: replacing)
   end
@@ -129,7 +129,7 @@ class MealPlannerTest < ActiveSupport::TestCase
   end
 
   test "never repeats a non-filler recipe" do
-    result = plan(varied_recipes, meal_count: 14, spoon_budget: 20)
+    result = plan(varied_recipes, meal_count: 7, spoon_budget: 20)
     non_filler_ids = result.recipes.reject(&:filler?).map(&:id)
     assert_equal non_filler_ids.uniq, non_filler_ids
   end
@@ -146,13 +146,13 @@ class MealPlannerTest < ActiveSupport::TestCase
   end
 
   test "stops early when it runs out of recipes" do
-    result = plan([ recipe(1, 1), recipe(2, 2) ], meal_count: 14, spoon_budget: 3)
+    result = plan([ recipe(1, 1), recipe(2, 2) ], meal_count: 7, spoon_budget: 3)
     assert_equal [ 1, 2 ], result.recipes.map(&:id).sort
     assert_equal 2, result.meals_planned
   end
 
   test "returns an empty plan when there are no recipes" do
-    result = plan([], meal_count: 14, spoon_budget: 10)
+    result = plan([], meal_count: 7, spoon_budget: 10)
     assert_empty result.recipes
     assert_equal 0, result.total_spoons
   end

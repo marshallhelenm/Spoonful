@@ -5,8 +5,8 @@ class MealPlanTest < ActiveSupport::TestCase
     assert_not MealPlan.new.budget_is_ceiling
   end
 
-  test "meal count defaults to 14" do
-    assert_equal 14, MealPlan.new.meal_count
+  test "meal count defaults to 7" do
+    assert_equal 7, MealPlan.new.meal_count
   end
 
   test "requires a start date and a non-negative whole budget" do

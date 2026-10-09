@@ -25,7 +25,7 @@ Other visitors use the same account, and it resets to the sample recipes every n
 ## Features
 
 - **Recipes with a spoon rating** from 0 to 5. Zero-spoon "meals" like takeout, leftovers, or frozen pizza are recipes too.
-- **Meal plans built around a spoon budget.** Pick how many meals to plan (14 by default: lunch and dinner for a week) and how many spoons you have to spend.
+- **Meal plans built around a spoon budget.** Pick how many meals to plan (7 by default: dinner for a week) and how many spoons you have to spend.
   - The budget is a target by default, or turn it into a hard ceiling.
   - Optionally cap how hard any single meal can be.
   - Big-batch recipes can cover several meals, and you only spend their spoons once.

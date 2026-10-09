@@ -14,12 +14,12 @@ type Props = {
   included_recipe_count: number
 }
 
-const MEDIUM_BUDGET = 12
+const MEDIUM_BUDGET = 6
 
 const BUDGET_PRESETS = [
-  { label: 'Low', value: 5 },
+  { label: 'Low', value: 3 },
   { label: 'Medium', value: MEDIUM_BUDGET },
-  { label: 'High', value: 20 },
+  { label: 'High', value: 10 },
 ]
 
 const DEFAULT_CAP = 3
@@ -110,7 +110,7 @@ export default function NewMealPlan({ defaults, recipe_count, included_recipe_co
           )}
         </Field>
 
-        <Field id="meal_count" label="Meals to plan" hint="14 is lunch and dinner for a week." error={errors.meal_count}>
+        <Field id="meal_count" label="Meals to plan" hint="7 is dinner for a week." error={errors.meal_count}>
           {({ id, describedBy, invalid }) => (
             <NumberStepper
               id={id}

@@ -121,7 +121,7 @@ class DataIsolationTest < ActionDispatch::IntegrationTest
   end
 
   test "new plans only use your own recipes" do
-    post meal_plans_path, params: { meal_plan: { spoon_budget: 20, meal_count: 14 } }
+    post meal_plans_path, params: { meal_plan: { spoon_budget: 20, meal_count: 7 } }
 
     plan = users(:one).meal_plans.order(:created_at).last
     assert_not_includes plan.recipes, recipes(:secret_soup)
