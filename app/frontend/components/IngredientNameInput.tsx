@@ -59,6 +59,8 @@ const IngredientNameInput = forwardRef<HTMLInputElement, Props>(function Ingredi
         ref={ref}
         type="text"
         role="combobox"
+        // Lets IngredientsEditor narrow the amount field while this one has focus.
+        data-ingredient-name
         aria-label={label}
         aria-autocomplete="list"
         aria-expanded={showList}

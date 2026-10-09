@@ -52,6 +52,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 **Recipe**
 - `name`, `spoons` (0–5), `meals_covered` (integer ≥ 1, e.g. a big batch covers 2 meals), optional notes
 - 0-spoon "meals" (takeout, leftovers, frozen pizza) are ordinary recipes with `spoons: 0`
+- The recipe list sorts client-side by name (A–Z/Z–A) or spoons (low–high/high–low; ties A–Z) via chips that flip direction on a second tap; the choice is saved per browser in localStorage (`app/frontend/lib/recipeSort.ts`)
 - `include_in_plans` (default on): when off, the planner never picks it (new plans, reshuffles, random swaps — `Recipe.included_in_plans`), but it can still be swapped in by hand and stays in existing plans. Set from the recipe form or the checkbox on each recipe list card (`Recipes::PlanInclusionsController`, optimistic like the shopping list)
 
 **Meal plan**
@@ -69,7 +70,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - `Ingredient` is a shared catalog of names, unique ignoring case (`lower(name)` index); `RecipeIngredient` links a recipe to an ingredient with an optional free-text `amount` and a `position`
 - `Recipe#save_with_ingredients(lines)` saves the recipe and replaces its list in one transaction; `nil` lines leave the list alone (so partial updates don't wipe it)
 - The form suggests saved names as you type and asks "did you mean …?" for plural/typo near-matches (`app/frontend/lib/ingredientMatch.ts`); the user can keep their spelling
-- Rows reorder with ▲▼ buttons (not drag and drop, for touch and keyboard); the server saves lines in the order sent
+- Rows reorder with ▲▼ buttons (not drag and drop, for touch and keyboard); the server saves lines in the order sent. On phones the focused field (name or amount) widens and the other narrows (CSS only, in `IngredientsEditor`)
 - Ingredients stay in the catalog when no recipe uses them (still useful for suggestions)
 - `/ingredients` (linked from Recipes): rename, delete unused, and `Ingredient#merge_into!(target)` — moves recipe lines and shopping checks to the target; if a recipe lists both, they become one line with amounts joined ("1 + half"). The page flags likely duplicate pairs (`findLikelyDuplicates`) with one-tap merges
 

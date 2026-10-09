@@ -98,7 +98,9 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
 
             return (
               <li key={row.id}>
-                <div className="flex items-center gap-2">
+                {/* On phones the focused field widens: the amount grows while it's being typed in and
+                    shrinks while the name is. The name field (flex-1) takes whatever is left. */}
+                <div className="group/row flex items-center gap-2">
                   {/* aria-disabled instead of disabled, so keyboard focus stays put when a row reaches the end */}
                   <div className="flex shrink-0 flex-col">
                     <button
@@ -149,7 +151,7 @@ export default function IngredientsEditor({ rows, onChange, savedNames }: Props)
                         addRow()
                       }
                     }}
-                    className={`${inputBase} w-24 shrink-0 sm:w-32`}
+                    className={`${inputBase} w-24 shrink-0 transition-[width] motion-reduce:transition-none max-sm:focus:w-36 max-sm:group-has-[[data-ingredient-name]:focus]/row:w-16 sm:w-32`}
                   />
                   <button
                     type="button"
