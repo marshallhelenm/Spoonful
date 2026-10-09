@@ -13,6 +13,13 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_nil recipes.last[:last_made_on]
   end
 
+  test "index sorts names ignoring case" do
+    users(:one).recipes.create!(name: "apple crumble", spoons: 2, meals_covered: 1)
+    get recipes_path
+
+    assert_equal [ "apple crumble", "Big Pot Chili", "Takeout", "Weeknight Pasta" ], inertia.props[:recipes].map { it[:name] }
+  end
+
   test "create saves a valid recipe" do
     assert_difference -> { Recipe.count } do
       post recipes_path, params: { recipe: { name: "Lentil Soup", spoons: 2, meals_covered: 3 } }

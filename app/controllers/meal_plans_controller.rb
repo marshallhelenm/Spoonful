@@ -33,7 +33,7 @@ class MealPlansController < InertiaController
           entry.recipe.as_json(only: %i[id name spoons meals_covered]).merge(entry_id: entry.id)
         end
       ),
-      recipes: Current.user.recipes.order(:spoons, :name).as_json(only: %i[id name spoons])
+      recipes: Current.user.recipes.order(:spoons).alphabetical.as_json(only: %i[id name spoons])
     }
   end
 

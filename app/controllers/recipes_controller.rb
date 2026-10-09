@@ -7,7 +7,7 @@ class RecipesController < InertiaController
     ingredient_counts = RecipeIngredient.where(recipe: recipes).group(:recipe_id).count
 
     render inertia: {
-      recipes: recipes.order(:name).map do |recipe|
+      recipes: recipes.alphabetical.map do |recipe|
         serialize(recipe).merge(
           last_made_on: last_made_on[recipe.id],
           ingredient_count: ingredient_counts.fetch(recipe.id, 0)
@@ -76,7 +76,7 @@ class RecipesController < InertiaController
     {
       recipe: serialize(recipe).merge(ingredients: recipe.ingredient_lines),
       # Every saved ingredient name, for suggestions while typing.
-      ingredient_names: Current.user.ingredients.order(:name).pluck(:name)
+      ingredient_names: Current.user.ingredients.alphabetical.pluck(:name)
     }
   end
 

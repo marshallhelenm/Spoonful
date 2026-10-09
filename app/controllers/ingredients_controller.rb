@@ -3,12 +3,12 @@ class IngredientsController < InertiaController
   before_action :set_ingredient, only: %i[update destroy merge]
 
   def index
-    ingredients = Current.user.ingredients.includes(:recipes).order(Arel.sql("lower(name)"))
+    ingredients = Current.user.ingredients.includes(:recipes).alphabetical
 
     render inertia: {
       ingredients: ingredients.map do |ingredient|
         ingredient.as_json(only: %i[id name]).merge(
-          recipes: ingredient.recipes.uniq.sort_by(&:name).map { it.as_json(only: %i[id name]) }
+          recipes: ingredient.recipes.uniq.sort_by { it.name.downcase }.map { it.as_json(only: %i[id name]) }
         )
       end
     }

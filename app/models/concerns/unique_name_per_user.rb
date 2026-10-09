@@ -11,5 +11,8 @@ module UniqueNamePerUser
     # Records with this name, ignoring case and extra spaces. Call it on one
     # user's records: user.recipes.named("big pot chili").
     scope :named, ->(name) { where("lower(name) = ?", normalize_value_for(:name, name).downcase) }
+
+    # Sorted by name ignoring case, so "apple pie" doesn't land after "Zucchini bread".
+    scope :alphabetical, -> { order(arel_table[:name].lower) }
   end
 end
