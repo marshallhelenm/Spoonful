@@ -20,6 +20,20 @@ class MealPlansControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, inertia.props[:included_recipe_count]
   end
 
+  test "new starts from the budget of the most recently created plan" do
+    users(:one).meal_plans.create!(spoon_budget: 4, starts_on: "2026-09-01")
+    get new_meal_plan_path
+
+    assert_equal 4, inertia.props[:defaults][:spoon_budget]
+  end
+
+  test "new has no budget default before the first plan" do
+    users(:one).meal_plans.destroy_all
+    get new_meal_plan_path
+
+    assert_nil inertia.props[:defaults][:spoon_budget]
+  end
+
   test "create builds a plan and shows it" do
     assert_difference -> { MealPlan.count } do
       post meal_plans_path, params: { meal_plan: { spoon_budget: 5, meal_count: 4, starts_on: "2026-10-05" } }

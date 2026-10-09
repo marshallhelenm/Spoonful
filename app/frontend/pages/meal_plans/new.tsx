@@ -8,7 +8,8 @@ import SpoonPicker from '@/components/SpoonPicker'
 import { callout, card, checkbox, choiceColors, input, pageHeading, primaryButton, textLink } from '@/components/ui'
 
 type Props = {
-  defaults: { meal_count: number; starts_on: string }
+  // spoon_budget is the last plan's budget, or null before the first plan.
+  defaults: { meal_count: number; starts_on: string; spoon_budget: number | null }
   recipe_count: number
   // Recipes the planner may pick (the rest are left out of meal plans).
   included_recipe_count: number
@@ -26,7 +27,7 @@ const DEFAULT_CAP = 3
 
 export default function NewMealPlan({ defaults, recipe_count, included_recipe_count }: Props) {
   const { data, setData, post, errors, processing } = useForm({
-    spoon_budget: MEDIUM_BUDGET as number | '',
+    spoon_budget: (defaults.spoon_budget ?? MEDIUM_BUDGET) as number | '',
     meal_count: defaults.meal_count as number | '',
     starts_on: defaults.starts_on,
     max_spoons: null as number | null,

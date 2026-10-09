@@ -22,6 +22,11 @@ class User < ApplicationRecord
 
   # { recipe_id => start date of the latest plan it's in } across this user's
   # plans, leaving out `except` (so a plan being refilled doesn't count itself).
+  # The budget of the most recently created plan, or nil if there are none yet.
+  def last_spoon_budget
+    meal_plans.order(created_at: :desc, id: :desc).pick(:spoon_budget)
+  end
+
   def last_made_on_by_recipe(except: nil)
     MealPlanEntry.where(meal_plan: meal_plans.excluding(except)).last_made_on_by_recipe
   end

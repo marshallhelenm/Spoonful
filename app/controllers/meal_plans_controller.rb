@@ -11,7 +11,8 @@ class MealPlansController < InertiaController
     plan = Current.user.meal_plans.new
 
     render inertia: {
-      defaults: plan.as_json(only: %i[meal_count starts_on]),
+      # The last plan's budget, so the form starts where you left off.
+      defaults: plan.as_json(only: %i[meal_count starts_on]).merge(spoon_budget: Current.user.last_spoon_budget),
       recipe_count: Current.user.recipes.count,
       included_recipe_count: Current.user.recipes.included_in_plans.count
     }
