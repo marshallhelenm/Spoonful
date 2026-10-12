@@ -40,13 +40,12 @@ class ShoppingList
 
   private
 
-  # "Garlic — Garlic noodles: 6 cloves · Stir fry", like the shopping list page.
+  # Amounts without recipe names, to keep the shared list short. An ingredient
+  # in several recipes says how many: "Garlic — 6 cloves · 2 cloves (2 recipes)".
   def describe(item)
-    uses = item.uses.map do |use|
-      recipe = with_times(use.recipe_name, use.times)
-      use.amount.present? ? "#{recipe}: #{use.amount}" : recipe
-    end
-    "#{item.name} — #{uses.join(" · ")}"
+    amounts = item.uses.filter_map { |use| with_times(use.amount, use.times) if use.amount.present? }
+    text = amounts.any? ? "#{item.name} — #{amounts.join(" · ")}" : item.name
+    item.uses.size > 1 ? "#{text} (#{item.uses.size} recipes)" : text
   end
 
   def with_times(name, times)

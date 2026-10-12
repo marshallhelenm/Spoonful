@@ -37,10 +37,19 @@ class ShoppingListTest < ActiveSupport::TestCase
 
       ## Ingredients
 
-      - [ ] Kidney beans — Big Pot Chili: 2 cans
-      - [x] Onion — Big Pot Chili: 1 · Weeknight Pasta ×2: half
-      - [ ] Spaghetti — Weeknight Pasta ×2: 1 lb
+      - [ ] Kidney beans — 2 cans
+      - [x] Onion — 1 · half ×2 (2 recipes)
+      - [ ] Spaghetti — 1 lb ×2
     MARKDOWN
+  end
+
+  test "to_markdown leaves out missing amounts" do
+    recipes(:pasta).save_with_ingredients([ { name: "Onion" } ])
+    recipes(:takeout).save_with_ingredients([ { name: "Onion" } ])
+    plan_recipes(:pasta, :takeout, :chili)
+
+    markdown = @plan.shopping_list.to_markdown
+    assert_includes markdown, "- [ ] Onion — 1 (3 recipes)\n"
   end
 
   test "to_markdown says so when the plan is empty" do

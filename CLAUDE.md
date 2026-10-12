@@ -78,7 +78,7 @@ A meal planner that budgets *effort* (spoons) instead of money. The user saves r
 - One item per ingredient across the plan's recipes, listing each recipe's amount ("Garlic noodles: 6 cloves · Stir fry: 2 cloves"); amounts are free text, so they aren't summed. A recipe planned twice shows "×2"
 - Checkmarks are saved server-side (`ShoppingListCheck` row = checked) so they follow you across devices; the page updates optimistically and sends `async` Inertia requests so rapid taps don't cancel each other
 - Recipes in the plan with no ingredients (excluding 0-spoon fillers) are listed with links to add them
-- "Share" opens `/meal_plans/:id/shopping_list/share`: `ShoppingList#to_markdown` (recipes, then a task list of items, checked ones ticked) shown as text with Copy and Print buttons. Printing hides the site header, footer and banners (`print:hidden`), and dark colors are `@media screen` only so printouts are always light
+- "Share" opens `/meal_plans/:id/shopping_list/share`: `ShoppingList#to_markdown` (recipes, then a task list of items with amounts but no recipe names, "(2 recipes)" when shared; checked ones ticked) shown as text with Copy and Print buttons. Printing hides the site header, footer and banners (`print:hidden`), and dark colors are `@media screen` only so printouts are always light
 
 ## Future (not MVP)
 

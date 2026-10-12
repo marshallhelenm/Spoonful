@@ -26,7 +26,7 @@ class ShoppingListsControllerTest < ActionDispatch::IntegrationTest
 
     assert_inertia_component "shopping_lists/share"
     assert_equal @plan.id, inertia.props[:meal_plan][:id]
-    assert_includes inertia.props[:markdown], "- [ ] Kidney beans — Big Pot Chili: 2 cans"
+    assert_includes inertia.props[:markdown], "- [ ] Kidney beans — 2 cans"
   end
 
   test "checking an item saves it" do
