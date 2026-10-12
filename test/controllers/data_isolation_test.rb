@@ -44,6 +44,9 @@ class DataIsolationTest < ActionDispatch::IntegrationTest
 
     get meal_plan_shopping_list_path(plan)
     assert_response :not_found
+
+    get share_meal_plan_shopping_list_path(plan)
+    assert_response :not_found
   end
 
   test "someone else's recipe can't be swapped into your plan" do

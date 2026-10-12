@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       post :shuffle, on: :member
     end
     resource :shopping_list, only: :show do
+      get :share
       resources :items, only: :update, controller: "shopping_list_items", param: :ingredient_id
     end
   end

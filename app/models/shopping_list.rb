@@ -25,7 +25,33 @@ class ShoppingList
     planned_recipes.uniq.reject { |recipe| recipe.filler? || recipe.recipe_ingredients.any? }
   end
 
+  # The plan's recipes, then every item as a Markdown task list (checked items
+  # ticked), for copying into another app or printing.
+  def to_markdown
+    recipes = planned_recipes.tally.map { |recipe, times| "- #{with_times(recipe.name, times)}" }
+    ingredients = items.map { |item| "- [#{item.checked ? "x" : " "}] #{describe(item)}" }
+
+    [
+      "# Shopping list: week of #{@meal_plan.starts_on.strftime("%B %-d, %Y")}",
+      "## Recipes\n\n#{recipes.any? ? recipes.join("\n") : "None yet."}",
+      "## Ingredients\n\n#{ingredients.any? ? ingredients.join("\n") : "Nothing to buy."}"
+    ].join("\n\n") + "\n"
+  end
+
   private
+
+  # "Garlic — Garlic noodles: 6 cloves · Stir fry", like the shopping list page.
+  def describe(item)
+    uses = item.uses.map do |use|
+      recipe = with_times(use.recipe_name, use.times)
+      use.amount.present? ? "#{recipe}: #{use.amount}" : recipe
+    end
+    "#{item.name} — #{uses.join(" · ")}"
+  end
+
+  def with_times(name, times)
+    times > 1 ? "#{name} ×#{times}" : name
+  end
 
   def planned_recipes
     @planned_recipes ||= @meal_plan.entries.includes(recipe: { recipe_ingredients: :ingredient }).map(&:recipe)

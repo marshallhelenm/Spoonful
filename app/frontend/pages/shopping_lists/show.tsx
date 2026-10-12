@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { useState } from 'react'
 
-import { callout, card, checkbox, pageHeading, textLink } from '@/components/ui'
+import { callout, card, checkbox, pageHeading, secondaryButton, textLink } from '@/components/ui'
 import { formatDate } from '@/lib/format'
 import { withMember } from '@/lib/sets'
 import type { ShoppingListItem, ShoppingListUse } from '@/types'
@@ -63,7 +63,12 @@ export default function ShowShoppingList({ meal_plan: plan, items, recipes_witho
   return (
     <>
       <Head title="Shopping list" />
-      <h1 className={pageHeading}>Shopping list</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className={pageHeading}>Shopping list</h1>
+        <Link href={`/meal_plans/${plan.id}/shopping_list/share`} className={secondaryButton}>
+          Share
+        </Link>
+      </div>
       <p className="mt-1 text-sm text-muted">
         For the{' '}
         <Link href={`/meal_plans/${plan.id}`} className={textLink}>

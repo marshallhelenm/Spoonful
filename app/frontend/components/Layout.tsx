@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-dvh flex-col bg-page text-ink">
-      <header className="relative z-10 border-b border-line bg-surface/90 backdrop-blur">
+      <header className="relative z-10 border-b border-line bg-surface/90 backdrop-blur print:hidden">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center gap-2 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 font-display text-xl font-normal text-accent-ink">
             <img src={spoonImage} alt="" width={105} height={96} className="h-8 w-auto" />
@@ -61,7 +61,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 pb-10">
         {user?.demo && (
-          <p className={`${callout} mb-4 text-sm`}>
+          <p className={`${callout} mb-4 text-sm print:hidden`}>
             You're using the shared demo account, so other visitors can see your changes, and everything resets
             nightly.{' '}
             <button
@@ -75,19 +75,19 @@ export default function Layout({ children }: { children: ReactNode }) {
           </p>
         )}
         {flash.notice && (
-          <p role="status" className="mb-4 rounded-xl bg-success-soft px-4 py-3 text-sm text-success ring-1 ring-success-line">
+          <p role="status" className="mb-4 rounded-xl bg-success-soft px-4 py-3 print:hidden text-sm text-success ring-1 ring-success-line">
             {flash.notice}
           </p>
         )}
         {flash.alert && (
-          <p role="alert" className="mb-4 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger ring-1 ring-danger-line">
+          <p role="alert" className="mb-4 rounded-xl bg-danger-soft px-4 py-3 print:hidden text-sm text-danger ring-1 ring-danger-line">
             {flash.alert}
           </p>
         )}
         {children}
       </main>
 
-      <footer className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-end gap-3 px-4 pb-2 text-sm text-muted">
+      <footer className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-end gap-3 px-4 pb-2 text-sm text-muted print:hidden">
         <div className="flex items-center gap-3">
           <span aria-hidden="true">Theme</span>
           <ThemeSwitcher />

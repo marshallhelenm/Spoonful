@@ -57,7 +57,8 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Dark colors are for screens only, so printouts always use the light theme. */
+@media screen and (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --color-page: #221a0f;
     --color-surface: #2e2414;
@@ -86,32 +87,34 @@
   }
 }
 
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --color-page: #221a0f;
-  --color-surface: #2e2414;
-  --color-surface-hover: #3d311c;
-  --color-ink: #f6ead8;
-  --color-ink-soft: #e9d8c0;
-  --color-muted: #d4bfa3;
-  --color-subtle: #a89077;
-  --color-line: #4a3b22;
-  --color-line-strong: #614e2e;
+@media screen {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --color-page: #221a0f;
+    --color-surface: #2e2414;
+    --color-surface-hover: #3d311c;
+    --color-ink: #f6ead8;
+    --color-ink-soft: #e9d8c0;
+    --color-muted: #d4bfa3;
+    --color-subtle: #a89077;
+    --color-line: #4a3b22;
+    --color-line-strong: #614e2e;
 
-  --color-accent: #ef7a5a;
-  --color-accent-hover: #f59a80;
-  --color-on-accent: #221a0f;
-  --color-accent-ink: #f7ab95;
-  --color-accent-soft: #4a1d12;
-  --color-accent-line: #8f3420;
+    --color-accent: #ef7a5a;
+    --color-accent-hover: #f59a80;
+    --color-on-accent: #221a0f;
+    --color-accent-ink: #f7ab95;
+    --color-accent-soft: #4a1d12;
+    --color-accent-line: #8f3420;
 
-  --color-success: #a9cf8f;
-  --color-success-soft: #1f2a18;
-  --color-success-line: #3f5a30;
+    --color-success: #a9cf8f;
+    --color-success-soft: #1f2a18;
+    --color-success-line: #3f5a30;
 
-  --color-danger: #f4a197;
-  --color-danger-soft: #4a1a15;
-  --color-danger-line: #8f2f25;
+    --color-danger: #f4a197;
+    --color-danger-soft: #4a1a15;
+    --color-danger-line: #8f2f25;
+  }
 }
 
 body {

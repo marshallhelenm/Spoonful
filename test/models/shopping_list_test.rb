@@ -21,6 +21,34 @@ class ShoppingListTest < ActiveSupport::TestCase
     ], onion.uses
   end
 
+  test "to_markdown lists the recipes, then items with amounts and check state" do
+    plan_recipes(:chili, :pasta, :pasta, :takeout)
+    @plan.update!(starts_on: Date.new(2026, 10, 5))
+    @plan.shopping_list_checks.create!(ingredient: ingredients(:onion))
+
+    assert_equal <<~MARKDOWN, @plan.shopping_list.to_markdown
+      # Shopping list: week of October 5, 2026
+
+      ## Recipes
+
+      - Big Pot Chili
+      - Weeknight Pasta ×2
+      - Takeout
+
+      ## Ingredients
+
+      - [ ] Kidney beans — Big Pot Chili: 2 cans
+      - [x] Onion — Big Pot Chili: 1 · Weeknight Pasta ×2: half
+      - [ ] Spaghetti — Weeknight Pasta ×2: 1 lb
+    MARKDOWN
+  end
+
+  test "to_markdown says so when the plan is empty" do
+    markdown = @plan.shopping_list.to_markdown
+    assert_includes markdown, "## Recipes\n\nNone yet."
+    assert_includes markdown, "## Ingredients\n\nNothing to buy."
+  end
+
   test "items are alphabetical, checked or not" do
     plan_recipes(:chili, :pasta)
     @plan.shopping_list_checks.create!(ingredient: ingredients(:onion))

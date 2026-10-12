@@ -21,6 +21,14 @@ class ShoppingListsControllerTest < ActionDispatch::IntegrationTest
     assert_empty inertia.props[:recipes_without_ingredients]
   end
 
+  test "share shows the list as Markdown" do
+    get share_meal_plan_shopping_list_path(@plan)
+
+    assert_inertia_component "shopping_lists/share"
+    assert_equal @plan.id, inertia.props[:meal_plan][:id]
+    assert_includes inertia.props[:markdown], "- [ ] Kidney beans — Big Pot Chili: 2 cans"
+  end
+
   test "checking an item saves it" do
     assert_difference -> { @plan.shopping_list_checks.count } do
       patch meal_plan_shopping_list_item_path(@plan, ingredients(:onion)), params: { checked: true }, as: :json
